@@ -60,6 +60,7 @@ namespace TUFF
         private IEnumerator LoadBattle(Battle battle, EventAction evtCallback)
         {
             m_inBattle = true;
+            if (battle.autoPlayBGM) AudioManager.instance.PlayMusic(battle.bgm);
             //Move To BattleHUD
             eventCallback = evtCallback;
             this.battle = Instantiate(battle, hud.battleStage);

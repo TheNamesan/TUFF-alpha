@@ -73,8 +73,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89d7564b6c07bed48b1b1c46f3658497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileColor: {r: 0, g: 1, b: 1, a: 0.2}
-  tilemap: {fileID: 0}
 --- !u!114 &7318497707203697808
 MonoBehaviour:
   m_ObjectHideFlags: 0

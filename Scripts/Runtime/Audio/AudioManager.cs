@@ -32,8 +32,8 @@ namespace TUFF
         [SerializeField] float volume = 1f;
         [SerializeField] float pitch = 1f;
         [SerializeField] bool loop = true;
-        public AudioClip introClip;
-        public AudioClip loopClip;
+        public AudioClip introClip = null;
+        public AudioClip loopClip = null;
         [SerializeField] private float targetVolume = 1;
         private bool queueLoopMusic = false;
         [Header("AMBS Data")]
@@ -87,13 +87,13 @@ namespace TUFF
         private void CheckQueuedMusic()
         {
             if (!queueLoopMusic) return;
-
             double introStart = AudioSettings.dspTime;
             auIntro.PlayScheduled(introStart);
             double introLength = (double)introClip.samples / introClip.frequency;
             introLength /= (pitch <= 0 ? 0.01f : pitch);
             auIntro.SetScheduledEndTime(introStart + introLength);
             auLoop.PlayScheduled(introStart + introLength);
+            
             queueLoopMusic = false;
         }
         private void SetVolume()
@@ -167,15 +167,15 @@ namespace TUFF
                     auLoop.loop = true;
                     auLoop.pitch = pitch;
 
-                    queueLoopMusic = true;
-                    if (forceInstantPlay) CheckQueuedMusic();
+                    //queueLoopMusic = true;
+                    //if (forceInstantPlay) CheckQueuedMusic();
 
-                    //if (currentBGM.loopStart > 0 || currentBGM.prebakedLoopMain != null)
-                    //{
-                    //    queueLoopMusic = true;
-                    //    if (forceInstantPlay) CheckQueuedMusic();
-                    //}
-                    //else auLoop.Play();
+                    if (currentBGM.loopStart > 0 || currentBGM.prebakedLoopMain != null)
+                    {
+                        queueLoopMusic = true;
+                        if (forceInstantPlay) CheckQueuedMusic();
+                    }
+                    else auLoop.Play();
                 }
             }
         }

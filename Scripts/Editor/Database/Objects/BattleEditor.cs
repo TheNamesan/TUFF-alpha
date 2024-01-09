@@ -12,9 +12,13 @@ namespace TUFF.TUFFEditor
         private ReorderableList list = null;
 
         SerializedProperty battleEvents = null;
+        SerializedProperty autoPlayBGM = null;
+        SerializedProperty bgm = null;
         public void OnEnable()
         {
             battleEvents = serializedObject.FindProperty("battleEvents");
+            autoPlayBGM = serializedObject.FindProperty("autoPlayBGM");
+            bgm = serializedObject.FindProperty("bgm");
         }
         override public void OnInspectorGUI()
         {
@@ -43,6 +47,9 @@ namespace TUFF.TUFFEditor
                     EventActionListWindow.ResetReferences();
                 }
             }
+
+            EditorGUILayout.PropertyField(autoPlayBGM);
+            if (autoPlayBGM.boolValue) EditorGUILayout.PropertyField(bgm);
             serializedObject.ApplyModifiedProperties();
         }
         private void GetList()

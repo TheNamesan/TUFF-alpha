@@ -13,6 +13,9 @@ namespace TUFF
         public List<EnemyReference> initialEnemies = new List<EnemyReference>();
         [Header("Battle Events")]
         public BattleEvent[] battleEvents = new BattleEvent[0];
+        [Header("BGM")]
+        public bool autoPlayBGM = false;
+        public BGMPlayData bgm;
     }
 }
 
