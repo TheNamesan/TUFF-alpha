@@ -43,6 +43,7 @@ namespace TUFF
             "FreeAnim", "Empty"
         };
         public Animator anim;
+        public SpriteRenderer spriteRenderer;
         public AnimationPack pack;
         public int alt = -1;
 
@@ -83,12 +84,14 @@ namespace TUFF
         public void ChangeAnimationState(OverworldCharacterController controller, CharacterStates state, bool forcePlaySameState = false)
         {
             if (controller == null) return;
+            
             if (state != controller.lastState)
             {
                 CancelAnimationWait();
             }
             string stateName = GetAnimationStateName(controller, state);
             if (lastStateName == stateName && !forcePlaySameState) { return; }
+            anim.enabled = true;
             anim.Play(stateName, -1, 0);
             //controller.lastState = state;
             lastStateName = stateName;
@@ -314,6 +317,23 @@ namespace TUFF
                 anim.Play("FreeAnim", -1, 0);
             }
             else { Debug.LogWarning("No Animator component assigned"); return; }
+        }
+        public void ChangeSprite(Sprite sprite)
+        {
+            if (overrideControl == null || clipOverrides == null) Initialize();
+            if (anim != null)
+            {
+                anim.keepAnimatorStateOnDisable = true;
+                anim.enabled = false;
+                //anim.Play("Empty", -1, 0);
+            }
+            else { Debug.LogWarning("No Animator component assigned"); }
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sprite = sprite;
+            }
+            else { Debug.LogWarning("No Sprite Renderer component assigned!"); }
+
         }
         public void RestoreState(OverworldCharacterController controller)
         {

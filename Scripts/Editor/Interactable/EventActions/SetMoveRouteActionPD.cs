@@ -29,7 +29,8 @@ namespace TUFF.TUFFEditor
             int count = -1;
             if (action.moveRoute != null && action.moveRoute.elements != null)
                 count = action.moveRoute.elements.Count;
-            return $"Set Move Route ({count})";
+            string wait = (action.waitForCompletion ? " (Wait)" : "");
+            return $"Set Move Route ({count}){wait}";
         }
     }
 }

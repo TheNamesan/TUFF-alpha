@@ -36,6 +36,7 @@ namespace TUFF
                     yield return new WaitForSeconds(duration);
                     controller.nextInput.horizontalInput = 0;
                     yield return new WaitForFixedUpdate();
+                    yield return new WaitForFixedUpdate();
                     break;
                 case MoveRouteInstruction.ChangeFacing:
                     controller.ChangeFaceDirection(facing);

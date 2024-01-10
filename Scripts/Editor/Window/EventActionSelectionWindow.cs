@@ -206,6 +206,10 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new PlayCharacterAnimationAction(), eventList, eventListPDs);
             }
+            if (GUILayout.Button(new GUIContent("Change Character Sprite", "Change the sprite for an idle Scene Character or a Follower Instance.")))
+            {
+                AddEvent(new ChangeCharacterSpriteAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Restore Character State", "Stops a Scene Character or a Follower Instance from their animation or sprite change states.")))
             {
                 AddEvent(new RestoreCharacterStateAction(), eventList, eventListPDs);

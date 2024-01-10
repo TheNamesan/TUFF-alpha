@@ -27,5 +27,9 @@ namespace TUFF
         {
             charAnim?.PlayAnimation(animationClip);
         }
+        public void ChangeSprite(Sprite sprite)
+        {
+            charAnim?.ChangeSprite(sprite);
+        }
     }
 }

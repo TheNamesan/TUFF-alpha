@@ -443,10 +443,10 @@ MonoBehaviour:
   ladderDirection: 0
   climbAction: 0
   climbDir: 0
-  ropeYA: {x: 0, y: 0}
-  ropeYB: {x: 0, y: 0}
-  ropeXA: {x: 0, y: 0}
-  ropeXB: {x: 0, y: 0}
+  ropeTop: {x: 0, y: 0}
+  ropeBottom: {x: 0, y: 0}
+  ropeLeft: {x: 0, y: 0}
+  ropeRight: {x: 0, y: 0}
   ropeCenter: {x: 0, y: 0}
   lastState: 0
   m_faceDirection: 0
@@ -525,6 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 8273364218291266601}
+  spriteRenderer: {fileID: 8273364219286828633}
   pack: {fileID: 11400000, guid: 0ce7e72b86aa90246a939bb187bd2c65, type: 2}
   alt: -1
   lastStateName: 
@@ -717,7 +718,7 @@ MonoBehaviour:
   - {x: 0.78125, y: 0, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 67202
+  m_InstanceId: 68102
   m_LocalBounds:
     m_Center: {x: 0, y: 0.78125, z: 0}
     m_Extent: {x: 0.78125, y: 0.78125, z: 0}
