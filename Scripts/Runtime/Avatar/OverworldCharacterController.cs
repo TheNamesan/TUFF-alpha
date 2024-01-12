@@ -398,12 +398,7 @@ namespace TUFF
                 }
                 if (!grounded && touchingWalkable == null /*&& normal.y > 0*/ && rb.velocity.y < 0.1f && !ignoreGroundCheck)
                 {
-                    RaycastHit2D hitW = Physics2D.Raycast(rb.position, Vector2.down, Vector2.Distance(closestContactPoint, rb.position) * 1.25f, 1 << collider.gameObject.layer);
-                    Vector2 landingPosition = (hitW ? hitW.point : point);
-                    float moveBuffer = (climbing ? Vector2.Distance(closestContactPoint, landingPosition) : Physics2D.defaultContactOffset * DCOMultiplier); //if climbing, it places the player a little higher, since it's most likely it will collide deeper into the ground
-                    float moveToY = landingPosition.y + Vector2.Distance(closestContactPoint, rb.position) + moveBuffer;
-                    if (rb.velocity.y > -1f) { rb.MovePosition(new Vector2(rb.position.x, moveToY)); }  //if velocity is too small, smooth out the positioning
-                    else rb.position = new Vector2(rb.position.x, moveToY); //else position the player instantly
+                    SnapToGround(closestContactPoint, DCOMultiplier, collider, point);
                     TouchLand(collider);
                     boxColor = Color.green;
                 }
@@ -461,6 +456,16 @@ namespace TUFF
 
             ignoreGroundCheck = false;
             ignoreFallCheck = false;
+        }
+
+        private void SnapToGround(Vector2 closestContactPoint, float DCOMultiplier, Collider2D collider, Vector2 point)
+        {
+            RaycastHit2D hitW = Physics2D.Raycast(rb.position, Vector2.down, Vector2.Distance(closestContactPoint, rb.position) * 1.25f, 1 << collider.gameObject.layer);
+            Vector2 landingPosition = (hitW ? hitW.point : point);
+            float moveBuffer = (climbing ? Vector2.Distance(closestContactPoint, landingPosition) : Physics2D.defaultContactOffset * DCOMultiplier); //if climbing, it places the player a little higher, since it's most likely it will collide deeper into the ground
+            float moveToY = landingPosition.y + Vector2.Distance(closestContactPoint, rb.position) + moveBuffer;
+            if (rb.velocity.y > -1f) { rb.MovePosition(new Vector2(rb.position.x, moveToY)); }  //if velocity is too small, smooth out the positioning
+            else rb.position = new Vector2(rb.position.x, moveToY); //else position the player instantly
         }
 
         private void AnimatorSpeed()
