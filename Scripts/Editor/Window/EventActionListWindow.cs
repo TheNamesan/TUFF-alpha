@@ -8,6 +8,26 @@ using UnityEditorInternal;
 
 namespace TUFF.TUFFEditor
 {
+    public class ActionListKey
+    {
+        public List<EventAction> eventList;
+        public List<EventActionPD> eventListDrawers;
+        public string parentPropertyPath;
+        public float height = 0;
+
+        public ReorderableList value;
+        public ActionListKey(string parentPropertyPath, List<EventAction> eventList, List<EventActionPD> eventListDrawers, ReorderableList list)
+        {
+            this.parentPropertyPath = parentPropertyPath;
+            this.eventList = eventList;
+            this.eventListDrawers = eventListDrawers;
+            value = list;
+        }
+        public bool Matches(string parentPropertyPath)
+        {
+            return this.parentPropertyPath == parentPropertyPath;
+        }
+    }
     public class EventActionListWindow : EditorWindow
     {
         public static EventActionListWindow instance;
@@ -63,7 +83,19 @@ namespace TUFF.TUFFEditor
         private const float lowerPanelMinHeight = 54f;
 
         private static ReorderableList listLayout;
-        private static ReorderableList list;
+        //private static ReorderableList list;
+        private static List<ActionListKey> listKeys = new List<ActionListKey>();
+        private static ActionListKey renderingKey = null;
+        private static ReorderableList MainList 
+        { 
+            get 
+            {
+                var key = listKeys.Find(e => e.Matches(SelectedContentProperty.propertyPath));
+                if (key == null) return null;
+                return key.value;
+            } 
+        }
+
         private static bool eventDeleted = false;
 
         private static SerializedProperty listContentProperty;
@@ -209,43 +241,59 @@ namespace TUFF.TUFFEditor
         /// <param name="contentProperty">Optional. Content Property to Update. Set to null to update the main property (SelectedContentProperty)</param>
         public static void DisplayEventListContent(Rect position, List<EventAction> eventList, List<EventActionPD> eventListPDs, string selectionPanelTitle, SerializedProperty contentProperty, string parentPropertyPath)
         {
-            if (!listParentsDictionary.ContainsKey(parentPropertyPath))
-                listParentsDictionary.Add(parentPropertyPath, eventListPDs);
+            //if (!listParentsDictionary.ContainsKey(parentPropertyPath))
+            //    listParentsDictionary.Add(parentPropertyPath, eventListPDs);
+            // Find existing list
+            var existingKey = listKeys.Find(e => e.Matches(parentPropertyPath)); // Change Match To Check for both lists!
+            if (existingKey == null) // If it doesn't have a corresponding key, Assign New Element
+            {
+                listKeys.Add(new ActionListKey(parentPropertyPath, eventList, eventListPDs, GetList(eventList)));
+                existingKey = listKeys[^1];
+                Debug.Log($"Created New Key: {existingKey.value}, {parentPropertyPath}");
+            }
 
             EditorGUI.LabelField(position, $"Event Count: {eventList.Count} || {listsDictionary.Count} || { listParentsDictionary.Count }" );
             position.y += 20f;
-            EditorGUI.LabelField(position, $"Event Editor Count: {eventListPDs.Count}");
+            EditorGUI.LabelField(position, $"Event Editor Count: {eventListPDs.Count} || keys: {listKeys.Count}");
             position.y += 20f;
 
             //prevListEventList = listEventList;
             //prevListEventListPDs = listEventListPDs;
             //prevListSelectionPanelTitle = listSelectionPanelTitle;
 
-            var prevList = list;
+            //var prevList = list;
+            var prevKey = renderingKey;
+            
+            
+
             listEventList = eventList;
             listEventListPDs = eventListPDs;
             listSelectionPanelTitle = selectionPanelTitle;
-            
-            //if (list == null) GetList(ref list, eventList);
-            if (listsDictionary.ContainsKey(parentPropertyPath))
-            {
-                list = listsDictionary[parentPropertyPath];
-            }
-            else
-            {
-                GetList(ref list, eventList);
-                listsDictionary.Add(parentPropertyPath, list);
-            }
-            var curList = list;
 
-            //UpdateListContentProperty(contentProperty);
+            renderingKey = existingKey;
+            //list = existingKey.value;
+
+            //if (list == null) GetList(ref list, eventList);
+            //if (listsDictionary.ContainsKey(parentPropertyPath))
+            //{
+            //    list = listsDictionary[parentPropertyPath];
+            //}
+            //else
+            //{
+            //    GetList(ref list, eventList);
+            //    listsDictionary.Add(parentPropertyPath, list);
+            //}
+            //var curList = list;
+            // UpdateListContentProperty(contentProperty);
             Undo.RecordObject(rootObject, "Reordered event in Event List");
             EditorGUI.BeginChangeCheck();
-            curList.DoList(position);
-            if (curList != null) { position.y += curList.GetHeight(); };
+            existingKey.value.DoList(position);
+            //if (curList != null) { position.y += existingKey.value.GetHeight(); };
+            if (existingKey.value != null) { position.y += existingKey.value.GetHeight(); };
             if (EditorGUI.EndChangeCheck())
             {
-                list = null;
+                //list = null;
+                renderingKey = null;
                 MarkDirty();
             }
             DisplayButtons(position, eventList, eventListPDs, selectionPanelTitle, contentProperty);
@@ -255,36 +303,43 @@ namespace TUFF.TUFFEditor
             //listEventListPDs = prevListEventListPDs;
             //listSelectionPanelTitle = prevListSelectionPanelTitle;
 
-            if (list == null)
+            if (renderingKey == null)//if (list == null || renderingKey == null)
             {
                 ResetList();
                 return;
             }
-            list = prevList;
+            renderingKey = prevKey;
+            //list = prevList;
         }
         public static float GetDisplayEventListContentHeight(ReorderableList list)
         {
+            //if (list == null) Debug.Log("No list!");
             float listHeight = (list != null ? list.GetHeight() : 0f);
             return 80f + listHeight; 
         }
         public static float GetDisplayEventListContentHeight()
         {
-            if (listsDictionary.ContainsKey(SelectedContentProperty.propertyPath))
-            {
-                list = listsDictionary[SelectedContentProperty.propertyPath];
-            }
-            return GetDisplayEventListContentHeight(list);
+            //if (listsDictionary.ContainsKey(SelectedContentProperty.propertyPath))
+            //{
+            //    list = listsDictionary[SelectedContentProperty.propertyPath];
+            //}
+            return GetDisplayEventListContentHeight(MainList);
         }
         public static float GetListHeight(string contentPath)
         {
-            var prevList = list;
-            if (listsDictionary.ContainsKey(contentPath))
-            {
-                list = listsDictionary[contentPath];
-            }
-            else { Debug.Log("bruh"); return 0f; }
-            float height = GetDisplayEventListContentHeight(list);
-            list = prevList;
+            //var prevList = list;
+            var prevKey = renderingKey;
+            var key = listKeys.Find(e => e.Matches(contentPath));
+            if (key == null) { Debug.Log("bruh"); return 0f; }
+            //if (listsDictionary.ContainsKey(contentPath))
+            //{
+            //    list = listsDictionary[contentPath];
+            //}
+            //else { Debug.Log("bruh"); return 0f; }
+            float height = GetDisplayEventListContentHeight(key.value);
+            //list = prevList;
+            renderingKey = prevKey;
+            
             return height;
         }
         /// <summary>
@@ -330,18 +385,7 @@ namespace TUFF.TUFFEditor
             }
         }
 
-        private static void ResetList()
-        {
-            list = null;
-            listLayout = null;
-            listEventList = null;
-            listEventListPDs = null;
-            listSelectionPanelTitle = null;
-            //prevListEventList = null;
-            //prevListEventListPDs = null;
-            //prevListSelectionPanelTitle = null;
-            mainEventListPDs = null;
-        }
+        
 
         private static void CommandDefaultButtons(ref Rect rect, List<EventAction> eventList, List<EventActionPD> eventListPDs, int i, string selectionPanelTitle, ref bool markListDirty, SerializedProperty contentProperty = null)
         {
@@ -515,34 +559,47 @@ namespace TUFF.TUFFEditor
             list.drawElementCallback = DrawListItems;
             list.elementHeightCallback = GetElementHeight;
         }
+        private static ReorderableList GetList(List<EventAction> actionListContent)
+        {
+            var list = new ReorderableList(actionListContent, typeof(EventAction), true, false, false, false);
+            list.drawElementCallback = DrawListItems;
+            list.elementHeightCallback = GetElementHeight;
+            list.onChangedCallback = (ReorderableList l) => { lowerPanelPD = null; Debug.Log("Moved"); }; // Change this so it doesn't exit the lower panel?
+            return list;
+        }
         private static float GetElementHeight(int index)
         {
             if (eventDeleted) return 0f;
-            
-            if (list != null)
+
+            var curKey = renderingKey;
+            if (curKey == null) return 0f;
+            if (curKey.value != null)//if (list != null) // If key has a ReorderableList
             {
-                var property = list.serializedProperty; //NOTE: Don't use serializedProperty to get list parentProperty (assigning it won't allow the list to move).
-                if (property != null)
-                {
-                    Debug.Log("There's properrty");
-                    if (property.arraySize <= 0 || index >= property.arraySize) { return 20f; }//list.GetHeight();
-                    var element = property.GetArrayElementAtIndex(index);
-                    if (listParentsDictionary.ContainsKey(element.propertyPath))
-                    {
-                        var prevList = list;
-                        var prevActionListPDs = listEventListPDs;
-                        list = listsDictionary[element.propertyPath];
-                        listEventListPDs = listParentsDictionary[element.propertyPath];
-                        float height = list.GetHeight();
-                        list = prevList;
-                        listEventListPDs = prevActionListPDs;
-                        return height;
-                    }
-                }
+                // Stuff for nested ReorderableLists
+                //var property = curKey.value.serializedProperty;
+                ////var property = list.serializedProperty; //NOTE: Don't use serializedProperty to get list parentProperty (assigning it won't allow the list to move).
+                //if (property != null)
+                //{
+                //    Debug.Log("There's properrty");
+                //    if (property.arraySize <= 0 || index >= property.arraySize) { return 20f; } //list.GetHeight();
+                //    var element = property.GetArrayElementAtIndex(index);
+                //    if (listParentsDictionary.ContainsKey(element.propertyPath)) // If you find a key with the corresponding parentPath (aka. current index is a conditional branch)
+                //    {
+                //        var prevList = list;
+                //        var prevActionListPDs = listEventListPDs;
+                //        list = listsDictionary[element.propertyPath];
+                //        listEventListPDs = listParentsDictionary[element.propertyPath];
+                //        float height = list.GetHeight();
+                //        list = prevList;
+                //        listEventListPDs = prevActionListPDs;
+                //        return height;
+                //    }
+                //}
             }
             //if (property == null) return 100f;
 
-            var actionListPDs = listEventListPDs;
+            //var actionListPDs = listEventListPDs;
+            var actionListPDs = renderingKey.eventListDrawers;
 
             if (index >= actionListPDs.Count) return 0f;
             if (actionListPDs.Count <= 0 || actionListPDs[index] == null) return 0f;
@@ -553,12 +610,16 @@ namespace TUFF.TUFFEditor
         private static void DrawListItems(Rect rect, int index, bool isActive, bool isFocused)
         {
             //int i = index;
-            var prevActionList = listEventList;
-            var prevActionListPDs = listEventListPDs;
-            var prevListContentProperty = listContentProperty;
-
-            var actionList = listEventList;
-            var actionListPDs = listEventListPDs;
+            //var prevActionList = listEventList;
+            //var prevActionListPDs = listEventListPDs;
+            //var prevListContentProperty = listContentProperty;
+            var curKey = renderingKey;
+            if (curKey == null) { Debug.LogWarning($"No key! Index: {index}"); return; };
+            //var actionList = listEventList;
+            //var actionListPDs = listEventListPDs;
+            //var curListContentProperty = listContentProperty;
+            var actionList = curKey.eventList;
+            var actionListPDs = curKey.eventListDrawers;
             var curListContentProperty = listContentProperty;
 
             var prevGUIColor = GUI.color;
@@ -582,9 +643,9 @@ namespace TUFF.TUFFEditor
                 actionListPDs[index].SummaryGUI(rect);
             GUI.color = prevGUIColor;
 
-            listEventList = prevActionList;
-            listEventListPDs = prevActionListPDs;
-            listContentProperty = prevListContentProperty;
+            //listEventList = prevActionList;
+            //listEventListPDs = prevActionListPDs;
+            //listContentProperty = prevListContentProperty;
         }
         private static void GetReferences()
         {
@@ -704,11 +765,14 @@ namespace TUFF.TUFFEditor
             addPanelTitle = "";
             //triggerIndex = 0;
 
-            list = null;
+            //list = null;
             listLayout = null;
             listEventList = null;
             listEventListPDs = null;
             listSelectionPanelTitle = null;
+            //mainEventListPDs = null;
+            listKeys.Clear();
+            renderingKey = null;
 
             listsDictionary.Clear();
             listParentsDictionary.Clear();
@@ -725,6 +789,20 @@ namespace TUFF.TUFFEditor
             //assetCreated = false;
 
             //referencesReset = true;
+        }
+        private static void ResetList()
+        {
+            //list = null;
+            listLayout = null;
+            listEventList = null;
+            listEventListPDs = null;
+            listSelectionPanelTitle = null;
+            //prevListEventList = null;
+            //prevListEventListPDs = null;
+            //prevListSelectionPanelTitle = null;
+            mainEventListPDs = null;
+            listKeys.Clear();
+            renderingKey = null;
         }
         public static void UpdatePDs(SerializedProperty contentProperty, List<EventAction> eventList, List<EventActionPD> eventListPDs, bool lol = false)
         {
