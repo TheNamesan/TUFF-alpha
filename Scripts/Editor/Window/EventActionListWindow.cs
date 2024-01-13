@@ -100,8 +100,6 @@ namespace TUFF.TUFFEditor
         public static bool eventDeleted = false;
 
         private static SerializedProperty listContentProperty;
-        private static List<EventAction> listEventList;
-        private static List<EventActionPD> listEventListPDs;
         private static string listSelectionPanelTitle;
 
 
@@ -250,17 +248,9 @@ namespace TUFF.TUFFEditor
             EditorGUI.LabelField(position, $"Event Editor Count: {eventListPDs.Count} || keys: {listKeys.Count}");
             position.y += 20f;
 
-            //prevListEventList = listEventList;
-            //prevListEventListPDs = listEventListPDs;
-            //prevListSelectionPanelTitle = listSelectionPanelTitle;
-
             //var prevList = list;
             var prevKey = renderingKey;
             
-            
-
-            listEventList = eventList;
-            listEventListPDs = eventListPDs;
             listSelectionPanelTitle = selectionPanelTitle;
 
             renderingKey = existingKey;
@@ -306,16 +296,11 @@ namespace TUFF.TUFFEditor
         }
         public static float GetDisplayEventListContentHeight(ReorderableList list)
         {
-            //if (list == null) Debug.Log("No list!");
             float listHeight = (list != null ? list.GetHeight() : 0f);
             return 80f + listHeight; 
         }
         public static float GetDisplayEventListContentHeight()
         {
-            //if (listsDictionary.ContainsKey(SelectedContentProperty.propertyPath))
-            //{
-            //    list = listsDictionary[SelectedContentProperty.propertyPath];
-            //}
             return GetDisplayEventListContentHeight(MainList);
         }
         public static float GetListHeight(string contentPath, List<EventAction> eventList)
@@ -323,7 +308,7 @@ namespace TUFF.TUFFEditor
             //var prevList = list;
             var prevKey = renderingKey;
             var key = listKeys.Find(e => e.Matches(contentPath, eventList));
-            if (key == null) { Debug.Log("bruh"); return 0f; }
+            if (key == null) { return 0f; }
             //if (listsDictionary.ContainsKey(contentPath))
             //{
             //    list = listsDictionary[contentPath];
@@ -348,12 +333,6 @@ namespace TUFF.TUFFEditor
             GUILayout.Label($"Event Count: {eventList.Count}");
             GUILayout.Label($"Event Editor Count: {eventListPDs.Count}");
 
-            //prevListEventList = listEventList;
-            //prevListEventListPDs = listEventListPDs;
-            //prevListSelectionPanelTitle = listSelectionPanelTitle;
-
-            listEventList = eventList;
-            listEventListPDs = eventListPDs;
             listSelectionPanelTitle = selectionPanelTitle;
 
             Undo.RecordObject(rootObject, "Reordered event in Event List");
@@ -557,7 +536,10 @@ namespace TUFF.TUFFEditor
             var list = new ReorderableList(actionListContent, typeof(EventAction), true, false, false, false);
             list.drawElementCallback = DrawListItems;
             list.elementHeightCallback = GetElementHeight;
-            list.onChangedCallback = (ReorderableList l) => { lowerPanelPD = null; Debug.Log("Moved"); }; // Change this so it doesn't exit the lower panel?
+            list.onChangedCallback = (ReorderableList l) => { 
+                lowerPanelPD = null; 
+                //UpdatePDs(); 
+                Debug.Log("Moved"); }; // Change this so it doesn't exit the lower panel?
             return list;
         }
         private static float GetElementHeight(int index)
@@ -786,8 +768,6 @@ namespace TUFF.TUFFEditor
         {
             //list = null;
             listLayout = null;
-            listEventList = null;
-            listEventListPDs = null;
             listSelectionPanelTitle = null;
 
             mainEventListPDs = null;
@@ -806,7 +786,8 @@ namespace TUFF.TUFFEditor
                 if (lol) Debug.Log(serializedObject.targetObject.name + ": " + contentProperty.propertyPath);
                 if (lol) Debug.Log("BEFORE: " + contentProperty.arraySize);
                 serializedObject.Update();
-                if (lol) Debug.Log("AFTER: " + contentProperty.arraySize);
+                if (contentProperty == null) { Debug.Log("Object disposed."); return; }
+                else if (lol) Debug.Log("AFTER: " + contentProperty.arraySize);
 
                 for (int i = 0; i < eventList.Count; i++)
                 {

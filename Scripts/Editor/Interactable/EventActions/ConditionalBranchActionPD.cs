@@ -11,8 +11,8 @@ namespace TUFF.TUFFEditor
     {
         private ReorderableList branchesList;
         private SerializedProperty branches;
-        private List<EventActionPD> eventListEditorsList;
-        private List<EventActionPD> test = new List<EventActionPD>(); // CHANGE, ONLY WORKS WITH 1 BRANCH
+        private List<EventActionPD> curDrawers = new();
+        private List<List<EventActionPD>> m_branchesDrawers = new List<List<EventActionPD>>(); // Class where drawers will be stored for each branch
         private static bool queueReset = false;
         private void GetList()
         {
@@ -21,6 +21,10 @@ namespace TUFF.TUFFEditor
             branchesList.drawElementCallback = DrawListItems;
             branchesList.drawHeaderCallback = DrawHeader;
             branchesList.elementHeightCallback = GetElementHeight;
+            branchesList.onChangedCallback = (ReorderableList l) => {
+                Debug.Log("Moved in branch");
+                EventActionListWindow.ForceResetList();
+            };
         }
         public override void InspectorGUIContent()
         {
@@ -43,7 +47,9 @@ namespace TUFF.TUFFEditor
             rect.height = 20f;
             SerializedProperty prop = branchesList.serializedProperty.GetArrayElementAtIndex(index);
             var condition = prop.FindPropertyRelative("condition");
-            EditorGUI.PropertyField(rect, condition);
+            var actionList = prop.FindPropertyRelative("actionList");
+            var content = actionList.FindPropertyRelative("content");
+            EditorGUI.PropertyField(rect, condition, new GUIContent($"Condition | Event Count: {content.arraySize}"));
             /*if(condition.boolValue)
             {
                 AddLine(ref rect);
@@ -75,35 +81,36 @@ namespace TUFF.TUFFEditor
             var conditionalBranchAction = targetObject as ConditionalBranchAction;
             if (conditionalBranchAction == null) { Debug.LogWarning("Object is not Conditional Branch (Summary)"); return; }
             branches = targetProperty.FindPropertyRelative("branches");
-            if (eventListEditorsList == null || eventListEditorsList.Count != conditionalBranchAction.branches.Count || queueReset)
+            //if (curDrawers == null || curDrawers.Count != conditionalBranchAction.branches.Count || queueReset)
+            //{
+            //    ResetEventEditorsList(conditionalBranchAction);
+            //    if (queueReset) queueReset = false;
+            //}
+            if (m_branchesDrawers == null || m_branchesDrawers.Count != conditionalBranchAction.branches.Count || queueReset)
             {
                 ResetEventEditorsList(conditionalBranchAction);
                 if (queueReset) queueReset = false;
             }
-            
+
             EditorGUI.LabelField(position, "Conditional");
             position.y += 20f;
 
             GUILayout.BeginVertical();
             for (int i = 0; i < branches.arraySize; i++)
             {
-                SerializedProperty elementProp = branches.GetArrayElementAtIndex(i);
-                
-                var actionListContentProp = elementProp.FindPropertyRelative("actionList.content");
-
-                
-                ActionList list = conditionalBranchAction.branches[i].actionList;
-
-                if (i >= branches.arraySize)
+                if (i >= conditionalBranchAction.branches.Count)
                 {
-                    Debug.LogWarning($"Index outside bounds: {i}/{branches.arraySize}");
+                    Debug.Log($"{i}/{conditionalBranchAction.branches.Count}");
                     continue;
                 }
-                if (eventListEditorsList[i] == null)
+                SerializedProperty elementProp = branches.GetArrayElementAtIndex(i);
+                var actionListContentProp = elementProp.FindPropertyRelative("actionList.content");
+                ActionList list = conditionalBranchAction.branches[i].actionList;
+
+                if (m_branchesDrawers[i] == null || m_branchesDrawers[i].Count != list.content.Count)
                 {
-                    eventListEditorsList[i] = new EventActionPD();
-                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, test);
-                    //GetEditorsFromEventList(list, eventListEditorsList[i]);
+                    m_branchesDrawers[i] = new List<EventActionPD>();
+                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_branchesDrawers[i]);
                 }
                 //EditorGUILayout.BeginVertical("box");
                 EditorGUI.LabelField(position, $"Branch #{i}: if =conditional= is {conditionalBranchAction.branches[i].condition}");
@@ -111,7 +118,7 @@ namespace TUFF.TUFFEditor
                 position.x += 10;
 
                 position.width -= 10f;
-                EventActionListWindow.DisplayEventListContent(position, list.content, test, $"{conditionalBranchAction.eventName} Branch #{i}", actionListContentProp, targetProperty.propertyPath);
+                EventActionListWindow.DisplayEventListContent(position, list.content, m_branchesDrawers[i], $"{conditionalBranchAction.eventName} Branch #{i}", actionListContentProp, targetProperty.propertyPath);
                 float height = EventActionListWindow.GetListHeight(targetProperty.propertyPath, list.content);
                 position.y += height;
                 //position.y += 200f;//EventActionListWindow.GetDisplayEventListContentHeight();
@@ -151,12 +158,16 @@ namespace TUFF.TUFFEditor
         }
         private void ResetEventEditorsList(ConditionalBranchAction action)
         {
-            eventListEditorsList = new List<EventActionPD>();
+            //curDrawers = new List<EventActionPD>();
+            //for (int i = 0; i < action.branches.Count; i++)
+            //{
+            //    curDrawers.Add(null);
+            //}
+            m_branchesDrawers.Clear();
             for (int i = 0; i < action.branches.Count; i++)
             {
-                eventListEditorsList.Add(null);
+                m_branchesDrawers.Add(new List<EventActionPD>(action.branches[i].actionList.content.Count));
             }
         }
     }
-
 }
