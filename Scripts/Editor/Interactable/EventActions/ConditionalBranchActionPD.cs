@@ -33,7 +33,6 @@ namespace TUFF.TUFFEditor
                 GetList();
             }
             var eventCommand = targetObject as ConditionalBranchAction;
-            EditorGUILayout.LabelField("WIP. Do not use.");
             EditorGUI.BeginChangeCheck();
             branchesList.DoLayoutList();
             
@@ -49,12 +48,7 @@ namespace TUFF.TUFFEditor
             var condition = prop.FindPropertyRelative("condition");
             var actionList = prop.FindPropertyRelative("actionList");
             var content = actionList.FindPropertyRelative("content");
-            EditorGUI.PropertyField(rect, condition, new GUIContent($"Condition | Event Count: {content.arraySize}"));
-            /*if(condition.boolValue)
-            {
-                AddLine(ref rect);
-                EditorGUI.PropertyField(rect, prop.FindPropertyRelative("condition"));
-            }*/
+            EditorGUI.PropertyField(rect, prop, new GUIContent($"Condition | Event Count: {content.arraySize}"));
         }
         float GetElementHeight(int index)
         {
@@ -113,7 +107,8 @@ namespace TUFF.TUFFEditor
                     EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_branchesDrawers[i]);
                 }
                 //EditorGUILayout.BeginVertical("box");
-                EditorGUI.LabelField(position, $"Branch #{i}: if =conditional= is {conditionalBranchAction.branches[i].condition}");
+                string condition = BranchActionContentPD.GetConditionText(conditionalBranchAction.branches[i]);
+                EditorGUI.LabelField(position, $"Branch #{i}: {condition}");
                 position.y += 20f;
                 position.x += 10;
 

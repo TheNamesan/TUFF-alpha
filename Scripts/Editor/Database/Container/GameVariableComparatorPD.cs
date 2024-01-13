@@ -30,7 +30,6 @@ namespace TUFF.TUFFEditor
 
             var variableIndex = property.FindPropertyRelative("targetVariableIndex");
             var variablesData = GameVariableList.GetList();
-            Debug.Log("Length: " + variablesData.Length);
             GUIContent[] options = new GUIContent[variablesData.Length];
             int[] values = new int[variablesData.Length];
             for (int i = 0; i < variablesData.Length; i++)

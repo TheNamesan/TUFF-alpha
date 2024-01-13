@@ -24,7 +24,7 @@ namespace TUFF
             int index = -1;
             for (int i = 0; i < branches.Count; i++)
             {
-                if (branches[i].VerifyCondition())
+                if (branches[i].ValidateCondition())
                 {
                     index = i;
                     break;

@@ -341,7 +341,7 @@ namespace TUFF
         public bool ValidateGameVariable()
         {
             if (PlayerData.instance == null) return false;
-            if (!PlayerData.instance.IsValidGameVariableIndex(targetVariableIndex)) return false;
+            if (!PlayerData.instance.IsValidGameVariableIndex(targetVariableIndex)) { Debug.LogWarning("Invalid Variable Index"); return false; }
             var variable = PlayerData.instance.gameVariables[targetVariableIndex];
             object obj = null;
             switch (targetVariableValueType)

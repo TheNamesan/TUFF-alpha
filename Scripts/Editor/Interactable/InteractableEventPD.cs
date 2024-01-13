@@ -174,7 +174,7 @@ namespace TUFF.TUFFEditor
         }
     }
 
-    [CustomPropertyDrawer(typeof(InteractableEventConditionElement))]
+    [CustomPropertyDrawer(typeof( InteractableEventConditionElement))]
     public class InteractableEventConditionElementPD : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -202,7 +202,6 @@ namespace TUFF.TUFFEditor
             if (type == InteractableEventConditionType.SelfSwitch)
                 DrawSwitch(position, orgWidth, property);
             else if (type == InteractableEventConditionType.GameVariable)
-                
                 DrawGameVariable(position, orgWidth, property);
             else if (type == InteractableEventConditionType.ItemInInventory)
                 DrawItem(position, orgWidth, property);

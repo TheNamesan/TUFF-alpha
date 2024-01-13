@@ -85,6 +85,10 @@ namespace TUFF
         HasState = 5
         //Variable = 6
     }
+    public enum BranchConditionType
+    {
+        GameVariable = 0
+    }
     public enum SpanType
     {
         OncePerBattle = 0,
