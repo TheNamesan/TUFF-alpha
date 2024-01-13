@@ -72,11 +72,12 @@ namespace TUFF.TUFFEditor
         }
         public override void SummaryGUI(Rect position)
         {
-            var eventAction = targetObject as ConditionalBranchAction;
+            var conditionalBranchAction = targetObject as ConditionalBranchAction;
+            if (conditionalBranchAction == null) { Debug.LogWarning("Object is not Conditional Branch (Summary)"); return; }
             branches = targetProperty.FindPropertyRelative("branches");
-            if (eventListEditorsList == null || queueReset)
+            if (eventListEditorsList == null || eventListEditorsList.Count != conditionalBranchAction.branches.Count || queueReset)
             {
-                ResetEventEditorsList(eventAction);
+                ResetEventEditorsList(conditionalBranchAction);
                 if (queueReset) queueReset = false;
             }
             
@@ -91,7 +92,13 @@ namespace TUFF.TUFFEditor
                 var actionListContentProp = elementProp.FindPropertyRelative("actionList.content");
 
                 
-                ActionList list = eventAction.branches[i].actionList;
+                ActionList list = conditionalBranchAction.branches[i].actionList;
+
+                if (i >= branches.arraySize)
+                {
+                    Debug.LogWarning($"Index outside bounds: {i}/{branches.arraySize}");
+                    continue;
+                }
                 if (eventListEditorsList[i] == null)
                 {
                     eventListEditorsList[i] = new EventActionPD();
@@ -99,13 +106,13 @@ namespace TUFF.TUFFEditor
                     //GetEditorsFromEventList(list, eventListEditorsList[i]);
                 }
                 //EditorGUILayout.BeginVertical("box");
-                EditorGUI.LabelField(position, $"Branch #{i}: if =conditional= is {eventAction.branches[i].condition}");
+                EditorGUI.LabelField(position, $"Branch #{i}: if =conditional= is {conditionalBranchAction.branches[i].condition}");
                 position.y += 20f;
                 position.x += 10;
 
                 position.width -= 10f;
-                EventActionListWindow.DisplayEventListContent(position, list.content, test, $"{eventAction.eventName} Branch #{i}", actionListContentProp, targetProperty.propertyPath);
-                float height = EventActionListWindow.GetListHeight(targetProperty.propertyPath);
+                EventActionListWindow.DisplayEventListContent(position, list.content, test, $"{conditionalBranchAction.eventName} Branch #{i}", actionListContentProp, targetProperty.propertyPath);
+                float height = EventActionListWindow.GetListHeight(targetProperty.propertyPath, list.content);
                 position.y += height;
                 //position.y += 200f;//EventActionListWindow.GetDisplayEventListContentHeight();
 
@@ -117,15 +124,26 @@ namespace TUFF.TUFFEditor
         }
         public override float GetSummaryHeight()
         {
+            if (EventActionListWindow.eventDeleted) { Debug.LogWarning("Event Deleted!"); return 20f; };
+            var conditionalBranchAction = targetObject as ConditionalBranchAction;
+            if (conditionalBranchAction == null) { Debug.LogWarning("Object is not Conditional Branch"); return 20f; }
+            
             float height = 0;
             branches = targetProperty.FindPropertyRelative("branches");
             if (branches != null)
             {
                 for (int i = 0; i < branches.arraySize; i++)
                 {
+                    if (conditionalBranchAction == null) continue;
+                    if (conditionalBranchAction.branches == null) continue;
+                    if (conditionalBranchAction.branches.Count <= 0) continue;
+                    if (conditionalBranchAction.branches[i] == null) continue;
+                    ActionList list = conditionalBranchAction.branches[i].actionList;
+                    if (list == null) continue;
+
                     //height += EditorGUI.GetPropertyHeight(element);
                     height += 20f;
-                    height += EventActionListWindow.GetListHeight(targetProperty.propertyPath);
+                    height += EventActionListWindow.GetListHeight(targetProperty.propertyPath, list.content);
                     //height += EventActionListWindow.GetDisplayEventListContentHeight();
                 }
             }
