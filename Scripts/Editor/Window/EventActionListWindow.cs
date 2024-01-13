@@ -83,8 +83,13 @@ namespace TUFF.TUFFEditor
         private const float upperPanelMinHeight = 54f;
         private const float lowerPanelMinHeight = 54f;
 
+        public static bool contract = false;
+        //public static bool contract { get { return m_contract; } 
+        //    set { ResetList(); m_contract = value;  } }
+        //public static bool m_contract = false;
+        
+
         private static ReorderableList listLayout;
-        //private static ReorderableList list;
         private static List<ActionListKey> listKeys = new List<ActionListKey>();
         private static ActionListKey renderingKey = null;
         private static ReorderableList MainList 
@@ -232,8 +237,11 @@ namespace TUFF.TUFFEditor
         /// <param name="contentProperty">Optional. Content Property to Update. Set to null to update the main property (SelectedContentProperty)</param>
         public static void DisplayEventListContent(Rect position, List<EventAction> eventList, List<EventActionPD> eventListPDs, string selectionPanelTitle, SerializedProperty contentProperty, string parentPropertyPath)
         {
-            //if (!listParentsDictionary.ContainsKey(parentPropertyPath))
-            //    listParentsDictionary.Add(parentPropertyPath, eventListPDs);
+
+            // TODO: Add a "abortDraw" variable to cancel this and all other methods.
+
+            if (eventList == null) { Debug.Log("Event List is null!"); return; }
+            if (eventListPDs == null) { Debug.Log("Event List PDs is null!"); return; }
             // Find existing list
             var existingKey = listKeys.Find(e => e.Matches(parentPropertyPath, eventList)); // Change Match To Check for both lists!
             if (existingKey == null) // If it doesn't have a corresponding key, Assign New Element
@@ -257,16 +265,6 @@ namespace TUFF.TUFFEditor
             //list = existingKey.value;
 
             //if (list == null) GetList(ref list, eventList);
-            //if (listsDictionary.ContainsKey(parentPropertyPath))
-            //{
-            //    list = listsDictionary[parentPropertyPath];
-            //}
-            //else
-            //{
-            //    GetList(ref list, eventList);
-            //    listsDictionary.Add(parentPropertyPath, list);
-            //}
-            //var curList = list;
             // UpdateListContentProperty(contentProperty);
             Undo.RecordObject(rootObject, "Reordered event in Event List");
             EditorGUI.BeginChangeCheck();
@@ -282,8 +280,6 @@ namespace TUFF.TUFFEditor
             DisplayButtons(position, eventList, eventListPDs, selectionPanelTitle, contentProperty);
             position.y += 40f;
 
-            //listEventList = prevListEventList;
-            //listEventListPDs = prevListEventListPDs;
             //listSelectionPanelTitle = prevListSelectionPanelTitle;
 
             if (renderingKey == null)//if (list == null || renderingKey == null)
@@ -309,11 +305,7 @@ namespace TUFF.TUFFEditor
             var prevKey = renderingKey;
             var key = listKeys.Find(e => e.Matches(contentPath, eventList));
             if (key == null) { return 0f; }
-            //if (listsDictionary.ContainsKey(contentPath))
-            //{
-            //    list = listsDictionary[contentPath];
-            //}
-            //else { Debug.Log("bruh"); return 0f; }
+
             float height = GetDisplayEventListContentHeight(key.value);
             //list = prevList;
             renderingKey = prevKey;
@@ -464,6 +456,12 @@ namespace TUFF.TUFFEditor
         private static void ShowTriggersLabel()
         {
             GUILayout.BeginHorizontal("box");
+            EditorGUI.BeginChangeCheck();
+            contract = EditorGUILayout.Toggle(new GUIContent("Contract"), contract);
+            if (EditorGUI.EndChangeCheck())
+            {
+                ResetList();
+            }
             GUILayout.FlexibleSpace();
             GUILayout.Label($"{rootName} Events", EditorStyles.boldLabel);
             GUILayout.FlexibleSpace();
@@ -573,12 +571,12 @@ namespace TUFF.TUFFEditor
             }
             //if (property == null) return 100f;
 
-            //var actionListPDs = listEventListPDs;
             var actionListPDs = renderingKey.eventListDrawers;
 
             if (index >= actionListPDs.Count) return 0f;
             if (actionListPDs.Count <= 0 || actionListPDs[index] == null) return 0f;
-            float value = 20f + actionListPDs[index].GetSummaryHeight();
+            float elementHeight = (!contract ? actionListPDs[index].GetSummaryHeight() : 0f); // Change this to contract per element
+            float value = 20f + elementHeight;
             //listEventListPDs = prevActionListPDs;
             return value;
         }
@@ -588,9 +586,7 @@ namespace TUFF.TUFFEditor
 
             var curKey = renderingKey;
             if (curKey == null) { Debug.LogWarning($"No key! Index: {index}"); return; };
-            //var actionList = listEventList;
-            //var actionListPDs = listEventListPDs;
-            //var curListContentProperty = listContentProperty;
+
             var actionList = curKey.eventList;
             var actionListPDs = curKey.eventListDrawers;
             var curListContentProperty = listContentProperty;
@@ -613,12 +609,13 @@ namespace TUFF.TUFFEditor
                 eventDeleted = true;
                 return;
             }
-            if (actionListPDs.Count > 0 && index < actionListPDs.Count && actionListPDs[index] != null) 
-                actionListPDs[index].SummaryGUI(rect);
+            if (!contract) // Change this to contract per element
+            {
+                if (actionListPDs.Count > 0 && index < actionListPDs.Count && actionListPDs[index] != null)
+                    actionListPDs[index].SummaryGUI(rect);
+            }
             GUI.color = prevGUIColor;
 
-            //listEventList = prevActionList;
-            //listEventListPDs = prevActionListPDs;
             //listContentProperty = prevListContentProperty;
         }
         private static void GetReferences()
