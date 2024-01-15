@@ -179,6 +179,12 @@ namespace TUFF
         Learn = 0,
         Forget = 1
     }
+    public enum GameVariableAssignType
+    {
+        Constant = 0,
+        GameVariable = 1,
+        Random = 2
+    }
     public enum PartyScope
     {
         EntireParty = 0,
