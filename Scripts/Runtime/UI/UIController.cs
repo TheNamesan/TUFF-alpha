@@ -26,6 +26,7 @@ namespace TUFF
         [SerializeField]
         int DisplaySlots;
         [SerializeField] protected PauseMenuHUD pauseMenu;
+        [SerializeField] protected ChoicesMenu choicesMenu;
         [SerializeField] protected ShopMenu shopMenu;
         [SerializeField] protected RectTransform loadingIcon;
         public DialogueManager textbox;
@@ -207,6 +208,10 @@ namespace TUFF
         public void OpenShop(ShopData shopData, EventAction actionCallback = null)
         {
             shopMenu.OpenShop(shopData, actionCallback);
+        }
+        public void ShowChoices(EventAction callback, List<string> options)
+        {
+            choicesMenu.DisplayChoices(callback, options);
         }
         public void InvokePauseMenu()
         {
