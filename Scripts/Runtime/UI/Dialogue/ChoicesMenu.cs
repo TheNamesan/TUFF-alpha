@@ -91,6 +91,11 @@ namespace TUFF
         public void DisplayChoices(EventAction callback, List<string> options)
         {
             Initialize();
+            StartCoroutine(InitialValuesCoroutine(callback, options));
+        }
+        protected IEnumerator InitialValuesCoroutine(EventAction callback, List<string> options)
+        {
+            while (m_inUse) yield return null;
             InitialValues(callback, options);
         }
         protected void UpdateOnState(BoxTransitionState state)
@@ -147,8 +152,10 @@ namespace TUFF
         private IEnumerator EndChoices(int index)
         {
             ShowContent(false);
+            CloseTextbox();
             if (uiMenu.IsOpen) uiMenu.CloseMenu();
             m_inUse = false;
+
             yield return new WaitForEndOfFrame(); // Little hack so it doesn't automatically skip text when this ends, fix later?
             if (actionCallback is ShowChoicesAction showChoices)
             {
@@ -156,6 +163,15 @@ namespace TUFF
             }
             else if (actionCallback != null) actionCallback.isFinished = true;
             yield break;
+        }
+
+        private static void CloseTextbox()
+        {
+            // If open textbox exists.
+            if (DialogueManager.openBoxes.Count > 0 && DialogueManager.openBoxes[0])
+            {
+                DialogueManager.openBoxes[0].CloseTextbox();
+            }
         }
     }
 }

@@ -22,7 +22,6 @@ namespace TUFF
         public BoxTransitionHandler transition;
         public AdjustToPreferredTextSize textSizeAdjuster;
         public AdjustToOtherRect adjustToOtherRect;
-        public RectTransform rectTransform;
         public RectTransform continuePrompt;
         
         private LayoutGroup rootLayout;
@@ -54,6 +53,10 @@ namespace TUFF
         Vector3 canvasUpperRightCorner;
         Vector3 canvasBottomRightCorner;
 
+        private RectTransform rect { get => transform as RectTransform; }
+        private RectTransform parentRect { get => transform.parent as RectTransform; }
+
+        public static List<DialogueManager> openBoxes = new(); // tmp // Change this to be a brief period of buffer time before a dialogue is called? (For things like SFXs)
         private static readonly Vector2 DEFAULT_OFFSET = new Vector2(0, 1f);
 
         private void Awake()
@@ -71,8 +74,6 @@ namespace TUFF
         }
         private IEnumerator InitialValuesCoroutine()
         {
-            if (rectTransform == null)
-                rectTransform = GetComponent<RectTransform>();
             if (uiMenu == null)
                 uiMenu = GetComponent<UIMenu>();
             if (rootLayout == null)
@@ -80,7 +81,7 @@ namespace TUFF
 
             BattleManager.instance.hud.ShowWindowsDynamic(false);
             UIController.instance.SetMenu(uiMenu);
-            LISAUtility.SetPivot(rectTransform, new Vector2(rectTransform.pivot.x, 0f));
+            LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0f));
             cam = Camera.main;
             parentRT = transform.parent as RectTransform;
             currentSentence = 0;
@@ -101,6 +102,7 @@ namespace TUFF
             if (!m_continuedDialogue) transition?.Appear();
             SetPosition();
             SetVoicebank();
+            openBoxes.Add(this);
             yield break;
         }
         private void SetPosition()
@@ -109,30 +111,30 @@ namespace TUFF
             if (dialogue.origin != null) originPos = dialogue.origin.position;
             if (dialogue.textboxType == TextboxType.Normal)
             {
-                LISAUtility.SetPivot(rectTransform, new Vector2(rectTransform.pivot.x, 0f));
+                LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0f));
                 Vector2 uiOffset = new Vector2(parentRT.rect.width * 0.5f, parentRT.rect.height * 0.5f);
                 Vector2 viewportPosition = cam.WorldToViewportPoint(originPos + (Vector3)dialogue.positionOffset + (Vector3)DEFAULT_OFFSET);
                 Vector2 proportionalPosition = new Vector2(viewportPosition.x * parentRT.rect.width, viewportPosition.y * parentRT.rect.height);
-                rectTransform.localPosition = proportionalPosition - uiOffset;
-                if (dialogue.origin == null) rectTransform.localPosition = dialogue.positionOffset * 100f;
+                rect.localPosition = proportionalPosition - uiOffset;
+                if (dialogue.origin == null) rect.localPosition = dialogue.positionOffset * 100f;
                 //AdjustOutOfBounds(); // needs fixing lol
-                LISAUtility.SetPivot(rectTransform, new Vector2(rectTransform.pivot.x, 0.5f));
+                LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0.5f));
             }
             else if (dialogue.textboxType == TextboxType.Fixed)
             {
                 if (dialogue.fixedTextboxPosition == FixedTextboxPosition.Bottom)
                 {
-                    rectTransform.pivot = new Vector2(0.5f, 0);
-                    rectTransform.anchorMin = new Vector2(0.5f, 0);
-                    rectTransform.anchorMax = new Vector2(0.5f, 0);
-                    rectTransform.localPosition = new Vector2(0, -parentRT.rect.height * 0.5f);
+                    rect.pivot = new Vector2(0.5f, 0);
+                    rect.anchorMin = new Vector2(0.5f, 0);
+                    rect.anchorMax = new Vector2(0.5f, 0);
+                    rect.localPosition = new Vector2(0, -parentRT.rect.height * 0.5f);
                 }
                 else if (dialogue.fixedTextboxPosition == FixedTextboxPosition.Top)
                 {
-                    rectTransform.pivot = new Vector2(0.5f, 1);
-                    rectTransform.anchorMin = new Vector2(0.5f, 1);
-                    rectTransform.anchorMax = new Vector2(0.5f, 1);
-                    rectTransform.localPosition = new Vector2(0, parentRT.rect.height * 0.5f);
+                    rect.pivot = new Vector2(0.5f, 1);
+                    rect.anchorMin = new Vector2(0.5f, 1);
+                    rect.anchorMax = new Vector2(0.5f, 1);
+                    rect.localPosition = new Vector2(0, parentRT.rect.height * 0.5f);
                 }
                 //ForceRebuild();
             }
@@ -140,11 +142,11 @@ namespace TUFF
 
         private void AdjustOutOfBounds()
         {
-            float preferredWidth = LayoutUtility.GetPreferredWidth(rectTransform);
-            float preferredHeight = LayoutUtility.GetPreferredHeight(rectTransform);
+            float preferredWidth = LayoutUtility.GetPreferredWidth(rect);
+            float preferredHeight = LayoutUtility.GetPreferredHeight(rect);
 
             Vector3[] rectCorners = new Vector3[4];
-            rectTransform.GetWorldCorners(rectCorners);
+            rect.GetWorldCorners(rectCorners);
             bottomLeftCorner = rectCorners[0];
             upperLeftCorner = rectCorners[1];
             upperRightCorner = rectCorners[2];
@@ -164,22 +166,22 @@ namespace TUFF
 
             if (bottomRightCorner.x > canvasBottomRightCorner.x)
             {
-                rectTransform.position += Vector3.left * Mathf.Abs(canvasBottomRightCorner.x - bottomRightCorner.x);
+                rect.position += Vector3.left * Mathf.Abs(canvasBottomRightCorner.x - bottomRightCorner.x);
                 //ForceRebuild();
             }
             if (bottomLeftCorner.x < canvasBottomLeftCorner.x)
             {
-                rectTransform.position += Vector3.right * Mathf.Abs(canvasBottomLeftCorner.x - bottomLeftCorner.x);
+                rect.position += Vector3.right * Mathf.Abs(canvasBottomLeftCorner.x - bottomLeftCorner.x);
                 //ForceRebuild();
             }
             if (upperLeftCorner.y > canvasUpperLeftCorner.y)
             {
-                rectTransform.position += Vector3.down * Mathf.Abs(canvasUpperLeftCorner.y - upperLeftCorner.y);
+                rect.position += Vector3.down * Mathf.Abs(canvasUpperLeftCorner.y - upperLeftCorner.y);
                 //ForceRebuild();
             }
             if (bottomLeftCorner.y < canvasBottomLeftCorner.y)
             {
-                rectTransform.position += Vector3.up * Mathf.Abs(canvasBottomLeftCorner.y - bottomLeftCorner.y);
+                rect.position += Vector3.up * Mathf.Abs(canvasBottomLeftCorner.y - bottomLeftCorner.y);
                 //ForceRebuild();
             }
         }
@@ -305,9 +307,17 @@ namespace TUFF
 
         public void DisplayNextSentence()
         {
-            if (currentSentence == sentences.Count)
+            if (currentSentence >= sentences.Count)
             {
-                if (textboxInitiated) StartCoroutine(EndDialogue());
+                if (textboxInitiated)
+                {
+                    if (!ChoicesIsNext()) CloseTextbox(); // Change this to buffer
+                    else {
+                        if (actionCallback != null) actionCallback.isFinished = true;
+                        textboxInitiated = false;
+                        Debug.Log("Choices is next!"); 
+                    }
+                }
                 return;
             }
             DisplayContinuePrompt(false);
@@ -315,7 +325,7 @@ namespace TUFF
             autoContinue = false;
             var savedTags = new List<TUFFTextParser.TagData>();
             var text = TUFFTextParser.ParseText(sentences[currentSentence], savedTags);
-            if (savedTags.Exists(e => e.type == TUFFTextParser.TextTagType.AutoContinue))
+            if (savedTags.Exists(e => e.type == TUFFTextParser.TextTagType.AutoContinue) || (currentSentence >= sentences.Count - 1 && ChoicesIsNext()))
             {
                 autoContinue = true;
                 Debug.Log("AUTOCONTINUE: " + autoContinue);
@@ -334,8 +344,11 @@ namespace TUFF
                 continuePrompt.gameObject.SetActive(display);
             }
         }
-
-        public IEnumerator EndDialogue()
+        public void CloseTextbox()
+        {
+            StartCoroutine(EndDialogue());
+        }
+        protected IEnumerator EndDialogue()
         {
             textboxInitiated = false;
             m_continuedDialogue = false;
@@ -345,7 +358,7 @@ namespace TUFF
             if (actionCallback != null) actionCallback.isFinished = true;
             if (transition != null)
             {
-                if (DialogueIsNext())
+                if (DialogueIsNext()) // Change this to buffer
                 {
                     m_continuedDialogue = true;
                 }
@@ -360,16 +373,24 @@ namespace TUFF
                     }
                 }
             }
+            openBoxes.RemoveAt(openBoxes.IndexOf(this));
             inUse = false;
             gameObject.SetActive(false);
             //Destroy(gameObject);
         }
-        private bool DialogueIsNext()
+        private bool DialogueIsNext() // Change this to buffer
         {
             if (actionCallback == null) return false;
             int index = actionCallback.parent.GetActionIndex(actionCallback);
             if (index < 0 || index >= actionCallback.parent.content.Count - 1) return false;
             return actionCallback.parent.content[index + 1] is ShowDialogueAction;
+        }
+        private bool ChoicesIsNext() // Change this to buffer
+        {
+            if (actionCallback == null) return false;
+            int index = actionCallback.parent.GetActionIndex(actionCallback);
+            if (index < 0 || index >= actionCallback.parent.content.Count - 1) return false;
+            return actionCallback.parent.content[index + 1] is ShowChoicesAction;
         }
     }
 }
