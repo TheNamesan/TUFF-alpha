@@ -53,7 +53,7 @@ namespace TUFF
         Vector3 canvasUpperRightCorner;
         Vector3 canvasBottomRightCorner;
 
-        private RectTransform rect { get => transform as RectTransform; }
+        public RectTransform rect { get => transform as RectTransform; }
         private RectTransform parentRect { get => transform.parent as RectTransform; }
 
         public static List<DialogueManager> openBoxes = new(); // tmp // Change this to be a brief period of buffer time before a dialogue is called? (For things like SFXs)

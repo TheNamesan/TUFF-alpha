@@ -20,18 +20,23 @@ namespace TUFF
             Adjust();
         }
 
-        void Update()
+        void LateUpdate()
         {
             Adjust();
         }
         public void Adjust()
         {
             if (originRect == null || destinationRect == null) return;
-            //float sizeX = Mathf.Max(minWidth, originRect.sizeDelta.x) + padding.x;
-            //float sizeY = Mathf.Max(minHeight, originRect.sizeDelta.y) + padding.y;
             float sizeX = Mathf.Max(minWidth, originRect.sizeDelta.x + padding.x * 2) + offset.x;
             float sizeY = Mathf.Max(minHeight, originRect.sizeDelta.y + padding.y * 2) + offset.y;
             destinationRect.sizeDelta = new Vector2(sizeX, sizeY);
+        }
+        public Vector2 GetSizeWithoutOffset()
+        {
+            if (originRect == null || destinationRect == null) return Vector2.zero;
+            float sizeX = Mathf.Max(minWidth, originRect.sizeDelta.x + padding.x * 2);
+            float sizeY = Mathf.Max(minHeight, originRect.sizeDelta.y + padding.y * 2);
+            return new Vector2(sizeX, sizeY);
         }
     }
 }

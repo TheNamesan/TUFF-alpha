@@ -21,7 +21,7 @@ namespace TUFF
         private bool m_inUse = false;
         public bool InUse { get => m_inUse; }
 
-        private RectTransform rect { get => transform as RectTransform; }
+        public RectTransform rect { get => transform as RectTransform; }
         private RectTransform parentRect { get => transform.parent as RectTransform; }
         private void Awake()
         {
@@ -47,7 +47,7 @@ namespace TUFF
                 uiMenu.transitionHandler.onTransitionChange.AddListener(UpdateOnState);
             initialized = true;
         }
-        private void InitialValues(EventAction callback, List<string> options)
+        private IEnumerator InitialValues(EventAction callback, List<string> options)
         {
             m_inUse = true;
             actionCallback = callback;
@@ -55,17 +55,34 @@ namespace TUFF
             if (choices == null || choices.Count <= 0)
             {
                 EndChoices(-1);
-                return;
+                yield break;
             }
             UpdateElements();
-            SetPosition();
+            
             ShowContent(false);
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+            SetPosition();
+            //yield return new WaitForEndOfFrame();
             uiMenu?.OpenMenu();
         }
         private void SetPosition()
         {
             LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0.5f));
-            rect.localPosition = new Vector2(0, 0); //Tmp
+            Vector2 position = new Vector2(0, 0);
+            if (DialogueManager.openBoxes.Count > 0 && DialogueManager.openBoxes[0])
+            {
+                var relativeBox = DialogueManager.openBoxes[0];
+                var offsetX = (relativeBox.rect.sizeDelta.x - rect.sizeDelta.x) / 2f;
+                if (relativeBox.dialogue.textboxType == TextboxType.Fixed) offsetX /= 2f;
+                float middleAdjustment = ((relativeBox.rect.anchoredPosition.y < 0f) ? 1 : (-1));
+                var offsetY = (rect.sizeDelta.y + relativeBox.rect.sizeDelta.y) / 2f;
+                offsetY *= middleAdjustment;
+
+                position = relativeBox.rect.anchoredPosition + new Vector2(offsetX, offsetY);
+            }
+
+            rect.anchoredPosition = position; //Tmp
         }
         private void UpdateElements()
         {
@@ -79,7 +96,13 @@ namespace TUFF
                 UIButton button = elements[i];
                 button.text.text = TUFFTextParser.ParseText(choices[i]);
                 button.gameObject.SetActive(true);
+                //if (button.TryGetComponent(out AdjustToPreferredTextSize textAdjust))
+                //{
+                //    Debug.Log(textAdjust);
+                //    textAdjust.Adjust();
+                //}
             }
+            //if (adjustRect) adjustRect.Adjust();
             SetupUIMenu();
         }
         private void ShowContent(bool show)
@@ -96,7 +119,7 @@ namespace TUFF
         protected IEnumerator InitialValuesCoroutine(EventAction callback, List<string> options)
         {
             while (m_inUse) yield return null;
-            InitialValues(callback, options);
+            yield return InitialValues(callback, options);
         }
         protected void UpdateOnState(BoxTransitionState state)
         {
