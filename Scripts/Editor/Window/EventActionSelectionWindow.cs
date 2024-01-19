@@ -84,6 +84,10 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new ShowDialogueAction(), eventList, eventListPDs);
             }
+            if (GUILayout.Button(new GUIContent("Show Choices", "Displays a list of text choices.")))
+            {
+                AddEvent(new ShowChoicesAction(), eventList, eventListPDs);
+            }
             EditorGUILayout.EndVertical();
         }
         private static void GameProgressionOptions()

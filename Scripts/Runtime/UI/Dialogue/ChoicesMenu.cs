@@ -10,11 +10,19 @@ namespace TUFF
         // TODO: Implementation for adding new elements
         public UIMenu uiMenu;
         public RectTransform content;
+        public CanvasGroup contentCanvasGroup;
         public List<UIButton> elements = new();
+
         [System.NonSerialized]
         public EventAction actionCallback = null;
         protected bool initialized = false;
         protected List<string> choices = new();
+
+        private bool m_inUse = false;
+        public bool InUse { get => m_inUse; }
+
+        private RectTransform rect { get => transform as RectTransform; }
+        private RectTransform parentRect { get => transform.parent as RectTransform; }
         private void Awake()
         {
             Initialize();
@@ -22,6 +30,7 @@ namespace TUFF
         private void Initialize()
         {
             if (initialized) return;
+            VerifyMenuArrays(0);
             int index = 0;
             foreach (Transform child in content) // Add existing GameObjects to list
             {
@@ -32,18 +41,32 @@ namespace TUFF
                 }
                 index++;
             }
-            HideAll();
+            ToggleAll(false);
             SetupUIMenu();
+            if (uiMenu.transitionHandler)
+                uiMenu.transitionHandler.onTransitionChange.AddListener(UpdateOnState);
             initialized = true;
         }
         private void InitialValues(EventAction callback, List<string> options)
         {
+            m_inUse = true;
             actionCallback = callback;
             choices = options;
+            if (choices == null || choices.Count <= 0)
+            {
+                EndChoices();
+                return;
+            }
             UpdateElements();
+            SetPosition();
+            ShowContent(false);
             uiMenu?.OpenMenu();
         }
-
+        private void SetPosition()
+        {
+            LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0.5f));
+            rect.localPosition = new Vector2(0, 0); //Tmp
+        }
         private void UpdateElements()
         {
             for (int i = 0; i < elements.Count; i++)
@@ -59,17 +82,26 @@ namespace TUFF
             }
             SetupUIMenu();
         }
+        private void ShowContent(bool show)
+        {
+            if (!contentCanvasGroup) return;
+            contentCanvasGroup.alpha = (show ? 1 : 0);
+        }
 
         public void DisplayChoices(EventAction callback, List<string> options)
         {
             Initialize();
             InitialValues(callback, options);
         }
-        protected void HideAll()
+        protected void UpdateOnState(BoxTransitionState state)
         {
-            for (int i = 0; i < elements.Count; i++) // Hide leftover elements
+            if (state == BoxTransitionState.Visible) ShowContent(true);
+        }
+        protected void ToggleAll(bool enabled)
+        {
+            for (int i = 0; i < elements.Count; i++)
             {
-                elements[i].gameObject.SetActive(false);
+                elements[i].gameObject.SetActive(enabled);
             }
         }
         private void VerifyMenuArrays(int rows)
@@ -81,9 +113,10 @@ namespace TUFF
             }
             if (rows >= uiMenu.UIElementContainers.Length) // If row is out of row count
             {
-                var newArray = new UIElementContainer[rows];
+                var newArray = new UIElementContainer[rows + 1];
                 System.Array.Copy(uiMenu.UIElementContainers, newArray, uiMenu.UIElementContainers.Length);
                 uiMenu.UIElementContainers = newArray;
+                Debug.Log("Resize: " + uiMenu.UIElementContainers.Length);
             }
             if (uiMenu.UIElementContainers[0] == null) // Check Index 0
                 uiMenu.UIElementContainers[0] = new UIElementContainer();
@@ -106,9 +139,17 @@ namespace TUFF
             uiMenu.UIElementContainers[index].UIElements.Add(element);
             element.onSelect.AddListener(() => PickOption(index));
         }
-        protected void PickOption(int index)
+        private void PickOption(int index)
         {
             Debug.Log($"Selected: {index}");
+            EndChoices();
+        }
+        private void EndChoices()
+        {
+            if (actionCallback != null) actionCallback.isFinished = true; // tmp
+            m_inUse = false;
+            ShowContent(false);
+            if (uiMenu.IsOpen) uiMenu.CloseMenu();
         }
     }
 }

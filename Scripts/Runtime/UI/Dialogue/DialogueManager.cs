@@ -82,7 +82,7 @@ namespace TUFF
             UIController.instance.SetMenu(uiMenu);
             LISAUtility.SetPivot(rectTransform, new Vector2(rectTransform.pivot.x, 0f));
             cam = Camera.main;
-            parentRT = transform.parent.GetComponent<RectTransform>();
+            parentRT = transform.parent as RectTransform;
             currentSentence = 0;
             text.enabled = true;
             skipTime = 0;

@@ -32,6 +32,7 @@ namespace TUFF
         public Vector2 originalSize = new Vector2();
         public UnityEvent onAppear = new UnityEvent(); // Needs functionality
         public UnityEvent onDissapear = new UnityEvent(); // Needs functionality
+        public UnityEvent<BoxTransitionState> onTransitionChange = new();
         private float inDuration = 0.1f;
         private float outDuration = 0.1f;
         private bool m_gotSize = false;
@@ -70,16 +71,17 @@ namespace TUFF
             {
                 if (canvasGroup) canvasGroup.alpha = fadeEndValue;
                 m_state = completeState;
+                onTransitionChange.Invoke(completeState);
             }
             else if (transitionType == BoxTransitionType.Fade || transitionType == BoxTransitionType.StretchAndFade)
             {
                 if (canvasGroup)
-                    fadeTween = canvasGroup.DOFade(fadeStartValue, duration).From(fadeEndValue).OnComplete(() => m_state = completeState);
+                    fadeTween = canvasGroup.DOFade(fadeStartValue, duration).From(fadeEndValue).OnComplete(() => { m_state = completeState; onTransitionChange.Invoke(completeState); });
             }
             if (transitionType == BoxTransitionType.StretchAndFade)
             {
                 if (adjustToOtherRect)
-                    stretchTween = DOTween.To(value => adjustToOtherRect.offset.y = value, -stretchEnd, -stretchStart, duration).OnComplete(() => m_state = completeState);
+                    stretchTween = DOTween.To(value => adjustToOtherRect.offset.y = value, -stretchEnd, -stretchStart, duration).OnComplete(() => { m_state = completeState; });
                 else 
                     stretchTween = rectTransform.DOSizeDelta(new Vector2(rectTransform.sizeDelta.x, stretchEnd), duration).From(new Vector2(rectTransform.sizeDelta.x, stretchStart));
             }
