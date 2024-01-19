@@ -36,7 +36,7 @@ namespace TUFF
             {
                 if (addBranchWhenNoConditionsApply)
                 {
-                    GameManager.instance.StartCoroutine(TriggerEvents(elseActionList));
+                    CommonEventManager.instance.TriggerEventActionBranch(this, elseActionList);
                 }
                 else
                 {
@@ -44,17 +44,10 @@ namespace TUFF
                 }
                 return;
             }
-            GameManager.instance.StartCoroutine(TriggerEvents(branches[index].actionList));
+            CommonEventManager.instance.TriggerEventActionBranch(this, branches[index].actionList);
         }
 
-        public IEnumerator TriggerEvents(ActionList actionList)
-        {
-            if (actionList == null) { Debug.LogWarning("ActionList is null!"); isFinished = false; yield break; }
-            actionList.index = 0;
-            yield return GameManager.instance.StartCoroutine(actionList.PlayActions());
-            actionList.index = 0;
-            isFinished = true;
-        }
+        
     }
 }
 

@@ -44,5 +44,18 @@ namespace TUFF
             }
             m_isRunning = false;
         }
+        public void TriggerEventActionBranch(EventAction parentEventAction, ActionList actionList)
+        {
+            StartCoroutine(TriggerEventActionBranchCoroutine(parentEventAction, actionList));
+        }
+        private IEnumerator TriggerEventActionBranchCoroutine(EventAction eventAction, ActionList actionList)
+        {
+            if (eventAction == null) yield break;
+            if (actionList == null) { Debug.LogWarning("ActionList is null!"); eventAction.isFinished = false; yield break; }
+            actionList.index = 0;
+            yield return GameManager.instance.StartCoroutine(actionList.PlayActions());
+            actionList.index = 0;
+            eventAction.isFinished = true;
+        }
     }
 }

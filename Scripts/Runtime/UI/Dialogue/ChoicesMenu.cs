@@ -54,7 +54,7 @@ namespace TUFF
             choices = options;
             if (choices == null || choices.Count <= 0)
             {
-                EndChoices();
+                EndChoices(-1);
                 return;
             }
             UpdateElements();
@@ -142,14 +142,20 @@ namespace TUFF
         private void PickOption(int index)
         {
             Debug.Log($"Selected: {index}");
-            EndChoices();
+            StartCoroutine(EndChoices(index));
         }
-        private void EndChoices()
+        private IEnumerator EndChoices(int index)
         {
-            if (actionCallback != null) actionCallback.isFinished = true; // tmp
-            m_inUse = false;
             ShowContent(false);
             if (uiMenu.IsOpen) uiMenu.CloseMenu();
+            m_inUse = false;
+            yield return new WaitForEndOfFrame(); // Little hack so it doesn't automatically skip text when this ends, fix later?
+            if (actionCallback is ShowChoicesAction showChoices)
+            {
+                showChoices.PickOption(index);
+            }
+            else if (actionCallback != null) actionCallback.isFinished = true;
+            yield break;
         }
     }
 }

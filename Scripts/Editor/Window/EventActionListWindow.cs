@@ -863,6 +863,21 @@ namespace TUFF.TUFFEditor
         {
             ResetReferences();
         }
+        public static Rect DrawBranch(Rect position, string parentPropertyPath, List<EventActionPD> drawer, string labelText, string selectionPanelTitle, SerializedProperty actionListContentProp, ActionList list)
+        {
+            EditorGUI.LabelField(position, labelText, EditorStyles.boldLabel);
+            position.y += 20f;
+            position.x += 10;
+
+            position.width -= 10f;
+            DisplayEventListContent(position, list.content, drawer, selectionPanelTitle, actionListContentProp, parentPropertyPath);
+            float height = GetListHeight(parentPropertyPath, list.content);
+            position.y += height;
+
+            position.x -= 10;
+            position.width += 10f;
+            return position;
+        }
     }
 }
 

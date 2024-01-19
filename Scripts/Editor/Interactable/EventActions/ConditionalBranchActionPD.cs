@@ -45,9 +45,7 @@ namespace TUFF.TUFFEditor
         {
             rect.height = 20f;
             SerializedProperty prop = branchesList.serializedProperty.GetArrayElementAtIndex(index);
-            var condition = prop.FindPropertyRelative("condition");
-            var actionList = prop.FindPropertyRelative("actionList");
-            var content = actionList.FindPropertyRelative("content");
+            var content = prop.FindPropertyRelative("actionList.content");
             EditorGUI.PropertyField(rect, prop, new GUIContent($"Condition | Event Count: {content.arraySize}"));
         }
         float GetElementHeight(int index)
@@ -100,7 +98,7 @@ namespace TUFF.TUFFEditor
                 }
                 //EditorGUILayout.BeginVertical("box");
 
-                position = DrawBranch(position, m_branchesDrawers[i], labelText, selectionPanelTitle, actionListContentProp, list);
+                position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_branchesDrawers[i], labelText, selectionPanelTitle, actionListContentProp, list);
             }
             if (conditionalBranchAction.addBranchWhenNoConditionsApply)
             {
@@ -113,26 +111,12 @@ namespace TUFF.TUFFEditor
                     m_elseDrawer = new List<EventActionPD>();
                     EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_elseDrawer); // Important!
                 }
-                position = DrawBranch(position, m_elseDrawer, labelText, selectionPanelTitle, actionListContentProp, list);
+                position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_elseDrawer, labelText, selectionPanelTitle, actionListContentProp, list);
             }
             GUILayout.EndVertical();
         }
 
-        private Rect DrawBranch(Rect position, List<EventActionPD> drawer, string labelText, string selectionPanelTitle, SerializedProperty actionListContentProp, ActionList list)
-        {
-            EditorGUI.LabelField(position, labelText, EditorStyles.boldLabel);
-            position.y += 20f;
-            position.x += 10;
-
-            position.width -= 10f;
-            EventActionListWindow.DisplayEventListContent(position, list.content, drawer, selectionPanelTitle, actionListContentProp, targetProperty.propertyPath);
-            float height = EventActionListWindow.GetListHeight(targetProperty.propertyPath, list.content);
-            position.y += height;
-
-            position.x -= 10;
-            position.width += 10f;
-            return position;
-        }
+        
 
         public override float GetSummaryHeight()
         {
