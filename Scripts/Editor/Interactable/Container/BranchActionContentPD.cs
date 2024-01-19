@@ -46,14 +46,18 @@ namespace TUFF.TUFFEditor
             if (branchContent == null) return text;
             var conditions = branchContent.conditionList;
             text += $"({conditions.Count}) ";
-            if (conditions.Count > 0)
+            for (int i = 0; i < conditions.Count; i++)
             {
-                var element = conditions[0];
+                if (i > 0) text += " AND ";
+                var element = conditions[i];
+                if (element == null) { text += "null"; continue; }
+                var not = element.not;
+                if (not) text += "(Not) ";
                 switch (element.conditionType)
                 {
                     case BranchConditionType.GameVariable:
                         var comparator = element.variableComparator;
-                        text += GetVariableText(comparator); 
+                        text += GetVariableText(comparator);
                         break;
                 }
             }
@@ -71,7 +75,7 @@ namespace TUFF.TUFFEditor
                 case GameVariableValueType.NumberValue:
                     text += $"Number Value is {comparator.variableNumber}"; break;
                 case GameVariableValueType.StringValue:
-                    text += $"String Value is {comparator.variableString}"; break;
+                    text += $"String Value is '{comparator.variableString}'"; break;
                 case GameVariableValueType.VectorValue:
                     text += $"Vector Value is {comparator.variableVector}"; break;
             }

@@ -11,8 +11,8 @@ namespace TUFF.TUFFEditor
     {
         private ReorderableList branchesList;
         private SerializedProperty branches;
-        private List<EventActionPD> curDrawers = new();
         private List<List<EventActionPD>> m_branchesDrawers = new List<List<EventActionPD>>(); // Class where drawers will be stored for each branch
+        private List<EventActionPD> m_elseDrawer = new List<EventActionPD>();
         private static bool queueReset = false;
         private void GetList()
         {
@@ -32,10 +32,10 @@ namespace TUFF.TUFFEditor
             {
                 GetList();
             }
-            var eventCommand = targetObject as ConditionalBranchAction;
+            var eventAction = targetObject as ConditionalBranchAction;
+            EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("addBranchWhenNoConditionsApply"));
             EditorGUI.BeginChangeCheck();
             branchesList.DoLayoutList();
-            
             if (EditorGUI.EndChangeCheck())
             {
                 queueReset = true;
@@ -56,15 +56,7 @@ namespace TUFF.TUFFEditor
             if (target.Count == 0) return 0f;
             var element = branchesList.serializedProperty.GetArrayElementAtIndex(index);
             var elementHeight = EditorGUI.GetPropertyHeight(element);
-            /*if (target[index].condition)
-            {
-                elementHeight += EditorGUI.GetPropertyHeight(element); //same as EditorGUIUtility.singleLineHeight
-            }*/
             return elementHeight + EditorGUIUtility.standardVerticalSpacing;
-        }
-        private void AddLine(ref Rect position)
-        {
-            position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
         }
         void DrawHeader(Rect rect)
         {
@@ -75,12 +67,8 @@ namespace TUFF.TUFFEditor
             var conditionalBranchAction = targetObject as ConditionalBranchAction;
             if (conditionalBranchAction == null) { Debug.LogWarning("Object is not Conditional Branch (Summary)"); return; }
             branches = targetProperty.FindPropertyRelative("branches");
-            //if (curDrawers == null || curDrawers.Count != conditionalBranchAction.branches.Count || queueReset)
-            //{
-            //    ResetEventEditorsList(conditionalBranchAction);
-            //    if (queueReset) queueReset = false;
-            //}
-            if (m_branchesDrawers == null || m_branchesDrawers.Count != conditionalBranchAction.branches.Count || queueReset)
+
+            if (m_branchesDrawers == null || m_branchesDrawers.Count != conditionalBranchAction.branches.Count || m_elseDrawer == null || queueReset)
             {
                 ResetEventEditorsList(conditionalBranchAction);
                 if (queueReset) queueReset = false;
@@ -97,33 +85,55 @@ namespace TUFF.TUFFEditor
                     Debug.Log($"{i}/{conditionalBranchAction.branches.Count}");
                     continue;
                 }
-                SerializedProperty elementProp = branches.GetArrayElementAtIndex(i);
-                var actionListContentProp = elementProp.FindPropertyRelative("actionList.content");
+                // ================================================
+                string condition = BranchActionContentPD.GetConditionText(conditionalBranchAction.branches[i]);
+                string labelText = $"=== Branch #{i}: {condition}";
+                string selectionPanelTitle = $"{conditionalBranchAction.eventName} Branch #{i}";
+
+                SerializedProperty actionListContentProp = branches.GetArrayElementAtIndex(i).FindPropertyRelative("actionList.content");
                 ActionList list = conditionalBranchAction.branches[i].actionList;
 
                 if (m_branchesDrawers[i] == null || m_branchesDrawers[i].Count != list.content.Count)
                 {
                     m_branchesDrawers[i] = new List<EventActionPD>();
-                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_branchesDrawers[i]);
+                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_branchesDrawers[i]); // Important!
                 }
                 //EditorGUILayout.BeginVertical("box");
-                string condition = BranchActionContentPD.GetConditionText(conditionalBranchAction.branches[i]);
-                EditorGUI.LabelField(position, $"Branch #{i}: {condition}");
-                position.y += 20f;
-                position.x += 10;
 
-                position.width -= 10f;
-                EventActionListWindow.DisplayEventListContent(position, list.content, m_branchesDrawers[i], $"{conditionalBranchAction.eventName} Branch #{i}", actionListContentProp, targetProperty.propertyPath);
-                float height = EventActionListWindow.GetListHeight(targetProperty.propertyPath, list.content);
-                position.y += height;
-                //position.y += 200f;//EventActionListWindow.GetDisplayEventListContentHeight();
-
-                position.x -= 10;
-                position.width += 10f;
-                //EditorGUILayout.EndVertical();
+                position = DrawBranch(position, m_branchesDrawers[i], labelText, selectionPanelTitle, actionListContentProp, list);
+            }
+            if (conditionalBranchAction.addBranchWhenNoConditionsApply)
+            {
+                string labelText = $"=== Else";
+                string selectionPanelTitle = $"{conditionalBranchAction.eventName} Else Branch";
+                SerializedProperty actionListContentProp = targetProperty.FindPropertyRelative("elseActionList.content");
+                ActionList list = conditionalBranchAction.elseActionList;
+                if (m_elseDrawer == null || m_elseDrawer.Count != list.content.Count)
+                {
+                    m_elseDrawer = new List<EventActionPD>();
+                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_elseDrawer); // Important!
+                }
+                position = DrawBranch(position, m_elseDrawer, labelText, selectionPanelTitle, actionListContentProp, list);
             }
             GUILayout.EndVertical();
         }
+
+        private Rect DrawBranch(Rect position, List<EventActionPD> drawer, string labelText, string selectionPanelTitle, SerializedProperty actionListContentProp, ActionList list)
+        {
+            EditorGUI.LabelField(position, labelText, EditorStyles.boldLabel);
+            position.y += 20f;
+            position.x += 10;
+
+            position.width -= 10f;
+            EventActionListWindow.DisplayEventListContent(position, list.content, drawer, selectionPanelTitle, actionListContentProp, targetProperty.propertyPath);
+            float height = EventActionListWindow.GetListHeight(targetProperty.propertyPath, list.content);
+            position.y += height;
+
+            position.x -= 10;
+            position.width += 10f;
+            return position;
+        }
+
         public override float GetSummaryHeight()
         {
             if (EventActionListWindow.eventDeleted) { Debug.LogWarning("Event Deleted!"); return 20f; };
@@ -132,37 +142,36 @@ namespace TUFF.TUFFEditor
             
             float height = 0;
             branches = targetProperty.FindPropertyRelative("branches");
+            
             if (branches != null)
             {
                 for (int i = 0; i < branches.arraySize; i++)
                 {
-                    if (conditionalBranchAction == null) continue;
                     if (conditionalBranchAction.branches == null) continue;
                     if (conditionalBranchAction.branches.Count <= 0) continue;
                     if (conditionalBranchAction.branches[i] == null) continue;
                     ActionList list = conditionalBranchAction.branches[i].actionList;
                     if (list == null) continue;
 
-                    //height += EditorGUI.GetPropertyHeight(element);
                     height += 20f;
                     height += EventActionListWindow.GetListHeight(targetProperty.propertyPath, list.content);
-                    //height += EventActionListWindow.GetDisplayEventListContentHeight();
                 }
+            }
+            if (conditionalBranchAction.addBranchWhenNoConditionsApply)
+            {
+                height += 20f;
+                height += EventActionListWindow.GetListHeight(targetProperty.propertyPath, conditionalBranchAction.elseActionList.content);
             }
             return 20f + height;
         }
         private void ResetEventEditorsList(ConditionalBranchAction action)
         {
-            //curDrawers = new List<EventActionPD>();
-            //for (int i = 0; i < action.branches.Count; i++)
-            //{
-            //    curDrawers.Add(null);
-            //}
             m_branchesDrawers.Clear();
             for (int i = 0; i < action.branches.Count; i++)
             {
                 m_branchesDrawers.Add(new List<EventActionPD>(action.branches[i].actionList.content.Count));
             }
+            m_elseDrawer = new List<EventActionPD>(action.elseActionList.content.Count);
         }
     }
 }

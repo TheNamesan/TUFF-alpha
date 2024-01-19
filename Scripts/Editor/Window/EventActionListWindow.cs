@@ -299,12 +299,12 @@ namespace TUFF.TUFFEditor
         {
             return GetDisplayEventListContentHeight(MainList);
         }
-        public static float GetListHeight(string contentPath, List<EventAction> eventList)
+        public static float GetListHeight(string parentPropertyPath, List<EventAction> eventList)
         {
             //var prevList = list;
             var prevKey = renderingKey;
-            var key = listKeys.Find(e => e.Matches(contentPath, eventList));
-            if (key == null) { return 0f; }
+            var key = listKeys.Find(e => e.Matches(parentPropertyPath, eventList));
+            if (key == null) { /*Debug.LogWarning("No Key found!");*/ return 0f; }
 
             float height = GetDisplayEventListContentHeight(key.value);
             //list = prevList;

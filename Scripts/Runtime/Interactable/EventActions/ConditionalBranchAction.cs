@@ -8,6 +8,8 @@ namespace TUFF
     public class ConditionalBranchAction : EventAction
     {
         public List<BranchActionContent> branches = new List<BranchActionContent>();
+        public ActionList elseActionList = new();
+        public bool addBranchWhenNoConditionsApply = false;
         public ConditionalBranchAction()
         {
             eventName = "Conditional Branch";
@@ -32,15 +34,22 @@ namespace TUFF
             }
             if (index < 0)
             {
-                isFinished = true;
+                if (addBranchWhenNoConditionsApply)
+                {
+                    GameManager.instance.StartCoroutine(TriggerEvents(elseActionList));
+                }
+                else
+                {
+                    isFinished = true;
+                }
                 return;
             }
-            GameManager.instance.StartCoroutine(TriggerEvents(index));
+            GameManager.instance.StartCoroutine(TriggerEvents(branches[index].actionList));
         }
 
-        public IEnumerator TriggerEvents(int index)
+        public IEnumerator TriggerEvents(ActionList actionList)
         {
-            ActionList actionList = branches[index].actionList;
+            if (actionList == null) { Debug.LogWarning("ActionList is null!"); isFinished = false; yield break; }
             actionList.index = 0;
             yield return GameManager.instance.StartCoroutine(actionList.PlayActions());
             actionList.index = 0;
