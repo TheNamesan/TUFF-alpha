@@ -28,7 +28,6 @@ namespace TUFF
         public Tween stretchTween;
         public CanvasGroup canvasGroup;
         public AdjustToOtherRect adjustToOtherRect;
-        [HideInInspector]
         public Vector2 originalSize = new Vector2();
         public UnityEvent onAppear = new UnityEvent(); // Needs functionality
         public UnityEvent onDissapear = new UnityEvent(); // Needs functionality
@@ -38,7 +37,6 @@ namespace TUFF
         private bool m_gotSize = false;
         private RectTransform rectTransform { get { return transform as RectTransform; } }
         
-        // Start is called before the first frame update
         private void Awake()
         {
             if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
@@ -81,7 +79,11 @@ namespace TUFF
             if (transitionType == BoxTransitionType.StretchAndFade)
             {
                 if (adjustToOtherRect)
-                    stretchTween = DOTween.To(value => adjustToOtherRect.offset.y = value, -stretchEnd, -stretchStart, duration).OnComplete(() => { m_state = completeState; });
+                    stretchTween = DOTween.To(value => adjustToOtherRect.offset.y = value, -stretchEnd, -stretchStart, duration).OnComplete(() => { 
+                        m_state = completeState; 
+                        if (m_state == BoxTransitionState.Visible) originalSize = rectTransform.sizeDelta;
+                        if (m_state == BoxTransitionState.Hidden) adjustToOtherRect.offset.y = 0;
+                    });
                 else 
                     stretchTween = rectTransform.DOSizeDelta(new Vector2(rectTransform.sizeDelta.x, stretchEnd), duration).From(new Vector2(rectTransform.sizeDelta.x, stretchStart));
             }

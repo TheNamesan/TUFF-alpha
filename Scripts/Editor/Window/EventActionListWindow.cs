@@ -83,6 +83,7 @@ namespace TUFF.TUFFEditor
         private const float upperPanelMinHeight = 54f;
         private const float lowerPanelMinHeight = 54f;
 
+        private static EventAction copiedElement = null;
         public static bool contract = false;
         //public static bool contract { get { return m_contract; } 
         //    set { ResetList(); m_contract = value;  } }
@@ -278,7 +279,7 @@ namespace TUFF.TUFFEditor
                 MarkDirty();
             }
             DisplayButtons(position, eventList, eventListPDs, selectionPanelTitle, contentProperty);
-            position.y += 40f;
+            position.y += 60f;
 
             //listSelectionPanelTitle = prevListSelectionPanelTitle;
 
@@ -293,7 +294,7 @@ namespace TUFF.TUFFEditor
         public static float GetDisplayEventListContentHeight(ReorderableList list)
         {
             float listHeight = (list != null ? list.GetHeight() : 0f);
-            return 80f + listHeight; 
+            return 100f + listHeight; 
         }
         public static float GetDisplayEventListContentHeight()
         {
@@ -369,8 +370,17 @@ namespace TUFF.TUFFEditor
                 lowerPanelTargetIdx = i;
                 OpenWindowOfElement(eventListPDs[i], i);
             }
-            int buttons = 3;
+            int buttons = 4;
             float buttonWidth = orgWidth * (0.4f / buttons);
+            rect.x += width;
+            width = buttonWidth;
+            rect.width = width;
+            GUIContent copy = new GUIContent("Copy", "Copy this element in a buffer."); //Change Button
+            if (GUI.Button(rect, copy))
+            {
+                copiedElement = eventList[i];
+                Debug.Log($"Copied {eventList[i].eventName}");
+            }
             rect.x += width;
             width = buttonWidth;
             rect.width = width;
@@ -406,6 +416,17 @@ namespace TUFF.TUFFEditor
         }
         public static void DisplayButtons(Rect position, List<EventAction> eventList, List<EventActionPD> eventListPDs, string title, SerializedProperty contentProperty = null)
         {
+            GUIContent pasteFromClipboard = new GUIContent("Paste Copied Event", "Pastes the copied event as a new element.");
+            if (GUI.Button(position, pasteFromClipboard))
+            {
+                if (copiedElement == null) Debug.LogWarning("No copied element!");
+                else
+                {
+                    AddEvent(copiedElement, eventList, eventListPDs);
+                }
+                //DisplaySelectionPanel(eventList, eventListPDs, title, contentProperty: contentProperty);
+            }
+            position.y += 20f;
             GUIContent add = new GUIContent("+", "Add an event action.");
             if (GUI.Button(position, add))
             {

@@ -42,7 +42,7 @@ namespace TUFF
                 }
                 index++;
             }
-            ToggleAll(false);
+            ShowContent(false);
             SetupUIMenu();
             if (uiMenu)
                 uiMenu.onCancelMenu.AddListener(CancelMenu);
@@ -66,6 +66,7 @@ namespace TUFF
             ShowContent(false);
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
             SetPosition();
             //yield return new WaitForEndOfFrame();
             uiMenu?.OpenMenu();
@@ -77,16 +78,21 @@ namespace TUFF
             if (DialogueManager.openBoxes.Count > 0 && DialogueManager.openBoxes[0])
             {
                 var relativeBox = DialogueManager.openBoxes[0];
+                Debug.Log("RelativeBoxPos: " + relativeBox.rect.anchoredPosition);
+                Debug.Log("RelativeBoxSize: " + relativeBox.rect.sizeDelta);
+                Debug.Log("SelfPos: " + rect.anchoredPosition);
+                Debug.Log("SelfSize: " + rect.sizeDelta);
+                //if (uiMenu.transitionHandler) uiMenu.transitionHandler.originalSize = rect.sizeDelta;
                 var offsetX = (relativeBox.rect.sizeDelta.x - rect.sizeDelta.x) / 2f;
                 if (relativeBox.dialogue.textboxType == TextboxType.Fixed) offsetX /= 2f;
                 float middleAdjustment = ((relativeBox.rect.anchoredPosition.y < 0f) ? 1 : (-1));
-                var offsetY = (rect.sizeDelta.y + relativeBox.rect.sizeDelta.y) / 2f;
-                offsetY *= middleAdjustment;
+                var offsetY = (rect.sizeDelta.y / 2f + relativeBox.rect.sizeDelta.y / 2f) * middleAdjustment;
+                //offsetY *= middleAdjustment;
 
                 position = relativeBox.rect.anchoredPosition + new Vector2(offsetX, offsetY);
             }
 
-            rect.anchoredPosition = position; //Tmp
+            rect.anchoredPosition = position;
         }
         private void UpdateElements()
         {

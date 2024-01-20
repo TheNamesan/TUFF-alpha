@@ -6,10 +6,11 @@ namespace TUFF
 {
     public static class TUFFTextParser 
     {
+        private const int MAX_ITERATIONS = 2500;
         public enum TextTagType
         {
-            LocalizedText = 0,
-            LocalizedDialogueText = 1,
+            LocalizedDialogueText = 0,
+            LocalizedText = 1,
             MagsCount = 2,
             AutoContinue = 3
         }
@@ -24,7 +25,7 @@ namespace TUFF
             public int index;
         }
         public static string[] tags = {
-            "<l:", "<ld:", "<mags:>", "<skip:>"
+            "<ld:", "<l:", "<mags:>", "<skip:>"
         };
         public static string ParseText(string text) => ParseText(text, null);
         public static string ParseText(string text, List<TagData> savedTags)
@@ -35,11 +36,14 @@ namespace TUFF
 
             int from = 0;
             int to = 0;
+            int iterations = -1;
             while (from >= 0 && from <= parse.Length)
             {
-                from = parse.IndexOf('<', from);
+                iterations++;
+                if (iterations >= MAX_ITERATIONS) return "ERROR";
+                from = parse.IndexOf('<', from); // Find first index of '<'
                 if (from < 0) break; // If found no tags, exit
-                to = parse.IndexOf('>', from);
+                to = parse.IndexOf('>', from); // Find first index of '>'
                 if (to < 0) break; // If found no tag end, exit
 
                 int length = to - from + 1;
@@ -52,6 +56,7 @@ namespace TUFF
                     if (substring.StartsWith(tags[i]))
                     {
                         var tagType = (TextTagType)i;
+                        //Debug.Log(tagType);
                         var tagFound = new TagData(tagType, from);
                         changedString = ApplyTagBehaviour(tagType, substring, ref parse);
                         if (savedTags != null) savedTags.Add(tagFound);
@@ -68,6 +73,16 @@ namespace TUFF
         {
             switch (tagType)
             {
+                // <ld:Key> Localized Dialogue Text
+                case TextTagType.LocalizedDialogueText:
+                    if (substring.Length > 5)
+                    {
+                        string key = substring.Substring(4, substring.Length - 5);
+                        string localizedText = LISAUtility.GetLocalizedDialogueText(key);
+                        parse = parse.Replace(substring, localizedText);
+                        return true;
+                    }
+                    return false;
                 // <l:Table.Key> Localized Text
                 case TextTagType.LocalizedText:
                     string localizationTag = substring.Substring(3, substring.Length - 4);
@@ -78,17 +93,9 @@ namespace TUFF
                         string key = localizationTag.Substring(separationIdx + 1);
                         string localizedText = LISAUtility.GetLocalizedText(table, key);
                         parse = parse.Replace(substring, localizedText);
+                        return true;
                     }
-                    return true;
-                // <ld:Key> Localized Dialogue Text
-                case TextTagType.LocalizedDialogueText:
-                    if (substring.Length > 5)
-                    {
-                        string key = substring.Substring(4, substring.Length - 5);
-                        string localizedText = LISAUtility.GetLocalizedDialogueText(key);
-                        parse = parse.Replace(substring, localizedText);
-                    }
-                    return true;
+                    return false;
                 // <mags:> Mags Count
                 case TextTagType.MagsCount:
                     string magsCount = "(mags count)";

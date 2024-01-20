@@ -44271,7 +44271,7 @@ MonoBehaviour:
   rememberHighlight: 0
   closeMenuWithCancel: 0
   closeMenuWithSkip: 0
-  keepMenuActiveOnClose: 0
+  keepMenuActiveOnClose: 1
   controlThisMenuOnStart: 0
   onCloseMenuMenusToOpen: []
   onOpenMenu:

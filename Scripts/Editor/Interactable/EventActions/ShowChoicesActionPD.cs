@@ -33,7 +33,7 @@ namespace TUFF.TUFFEditor
             SerializedProperty prop = branchesList.serializedProperty.GetArrayElementAtIndex(index);
             SerializedProperty choiceText = prop.FindPropertyRelative("choice");
             EditorGUI.PropertyField(rect, choiceText, 
-                new GUIContent($"{showChoicesAction.choices[index].ParsedChoiceText()} | Event Count: {showChoicesAction.choices.Count}"));
+                new GUIContent($"{showChoicesAction.choices[index].ParsedChoiceText()} | Event Count: {showChoicesAction.choices[index].actionList.content.Count}"));
         }
         float GetElementHeight(int index)
         {
