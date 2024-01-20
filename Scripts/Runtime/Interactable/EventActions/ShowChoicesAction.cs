@@ -4,10 +4,20 @@ using UnityEngine;
 
 namespace TUFF
 {
+    public enum ChoicesCancelBehaviour
+    {
+        Disallow = 0,
+        Branch = 1,
+        ChooseIndex = 2
+    }
     [System.Serializable]
     public class ShowChoicesAction : EventAction
     {
+        [Tooltip("Determines which action to trigger when the choices menu is canceled.")]
+        public ChoicesCancelBehaviour cancelBehaviour = ChoicesCancelBehaviour.Disallow;
+        public int cancelChoiceIndex = 0;
         public List<ShowChoicesBranch> choices = new();
+        public ActionList cancelActionList = new();
 
         public ShowChoicesAction()
         {
@@ -26,7 +36,8 @@ namespace TUFF
             {
                 texts.Add(choices[i].choice);
             }
-            UIController.instance.ShowChoices(this, texts);
+            bool closeWithCancel = !(cancelBehaviour == ChoicesCancelBehaviour.Disallow);
+            UIController.instance.ShowChoices(this, texts, closeWithCancel, CancelOption);
         }
         public void PickOption(int index)
         {
@@ -38,6 +49,18 @@ namespace TUFF
             else {
                 Debug.LogWarning($"Index {index} is out of bounds!");
                 isFinished = true;
+            }
+        }
+        public void CancelOption()
+        {
+            if (cancelBehaviour == ChoicesCancelBehaviour.ChooseIndex)
+            {
+                PickOption(cancelChoiceIndex);
+            }
+            else if (cancelBehaviour == ChoicesCancelBehaviour.Branch)
+            {
+                Debug.Log("Branch here");
+                CommonEventManager.instance.TriggerEventActionBranch(this, cancelActionList);
             }
         }
     }

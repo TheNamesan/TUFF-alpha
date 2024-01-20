@@ -127,12 +127,10 @@ namespace TUFF.TUFFEditor
             float height = 0;
             branches = targetProperty.FindPropertyRelative("branches");
             
-            if (branches != null)
+            if (branches != null && conditionalBranchAction.branches != null && conditionalBranchAction.branches.Count > 0)
             {
                 for (int i = 0; i < branches.arraySize; i++)
                 {
-                    if (conditionalBranchAction.branches == null) continue;
-                    if (conditionalBranchAction.branches.Count <= 0) continue;
                     if (conditionalBranchAction.branches[i] == null) continue;
                     ActionList list = conditionalBranchAction.branches[i].actionList;
                     if (list == null) continue;

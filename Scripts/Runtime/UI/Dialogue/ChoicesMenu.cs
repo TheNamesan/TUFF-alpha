@@ -17,6 +17,7 @@ namespace TUFF
         public EventAction actionCallback = null;
         protected bool initialized = false;
         protected List<string> choices = new();
+        protected System.Action onCancelMenu = null;
 
         private bool m_inUse = false;
         public bool InUse { get => m_inUse; }
@@ -43,11 +44,13 @@ namespace TUFF
             }
             ToggleAll(false);
             SetupUIMenu();
+            if (uiMenu)
+                uiMenu.onCancelMenu.AddListener(CancelMenu);
             if (uiMenu.transitionHandler)
                 uiMenu.transitionHandler.onTransitionChange.AddListener(UpdateOnState);
             initialized = true;
         }
-        private IEnumerator InitialValues(EventAction callback, List<string> options)
+        private IEnumerator InitialValues(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
         {
             m_inUse = true;
             actionCallback = callback;
@@ -57,8 +60,9 @@ namespace TUFF
                 EndChoices(-1);
                 yield break;
             }
+            onCancelMenu = onMenuCancel;
+            uiMenu.closeMenuWithCancel = closeWithCancel;
             UpdateElements();
-            
             ShowContent(false);
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
@@ -111,15 +115,15 @@ namespace TUFF
             contentCanvasGroup.alpha = (show ? 1 : 0);
         }
 
-        public void DisplayChoices(EventAction callback, List<string> options)
+        public void DisplayChoices(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
         {
             Initialize();
-            StartCoroutine(InitialValuesCoroutine(callback, options));
+            StartCoroutine(InitialValuesCoroutine(callback, options, closeWithCancel, onMenuCancel));
         }
-        protected IEnumerator InitialValuesCoroutine(EventAction callback, List<string> options)
+        protected IEnumerator InitialValuesCoroutine(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
         {
             while (m_inUse) yield return null;
-            yield return InitialValues(callback, options);
+            yield return InitialValues(callback, options, closeWithCancel, onMenuCancel);
         }
         protected void UpdateOnState(BoxTransitionState state)
         {
@@ -172,19 +176,34 @@ namespace TUFF
             Debug.Log($"Selected: {index}");
             StartCoroutine(EndChoices(index));
         }
+        private void CancelMenu()
+        {
+            Debug.Log("Menu Canceled");
+            StartCoroutine(EndCancelChoices());
+        }
+        private IEnumerator EndCancelChoices()
+        {
+            ShowContent(false);
+            CloseTextbox();
+
+            yield return new WaitForEndOfFrame(); // Little hack so it doesn't automatically skip text when this ends, fix later?
+            onCancelMenu?.Invoke();
+            m_inUse = false;
+            yield break;
+        }
         private IEnumerator EndChoices(int index)
         {
             ShowContent(false);
             CloseTextbox();
             if (uiMenu.IsOpen) uiMenu.CloseMenu();
-            m_inUse = false;
-
+            
             yield return new WaitForEndOfFrame(); // Little hack so it doesn't automatically skip text when this ends, fix later?
             if (actionCallback is ShowChoicesAction showChoices)
             {
                 showChoices.PickOption(index);
             }
             else if (actionCallback != null) actionCallback.isFinished = true;
+            m_inUse = false;
             yield break;
         }
 

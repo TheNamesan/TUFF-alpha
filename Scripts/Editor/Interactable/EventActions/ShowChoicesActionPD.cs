@@ -12,6 +12,7 @@ namespace TUFF.TUFFEditor
         private ReorderableList branchesList;
         private SerializedProperty branches;
         private List<List<EventActionPD>> m_branchesDrawers = new List<List<EventActionPD>>(); // Class where drawers will be stored for each branch
+        private List<EventActionPD> m_cancelDrawer = new List<EventActionPD>();
         private static bool queueReset = false;
         private void GetList()
         {
@@ -44,6 +45,12 @@ namespace TUFF.TUFFEditor
         }
         public override void InspectorGUIContent()
         {
+            var cancelBehaviour = targetProperty.FindPropertyRelative("cancelBehaviour");
+            EditorGUILayout.PropertyField(cancelBehaviour);
+            if ((ChoicesCancelBehaviour)cancelBehaviour.enumValueIndex == ChoicesCancelBehaviour.ChooseIndex)
+            {
+                EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("cancelChoiceIndex"));
+            }
             if (branchesList == null)
             {
                 GetList();
@@ -62,7 +69,7 @@ namespace TUFF.TUFFEditor
             if (showChoicesAction == null) { Debug.LogWarning("Object is not Show Choices (Summary)"); return; }
             branches = targetProperty.FindPropertyRelative("choices");
 
-            if (m_branchesDrawers == null || m_branchesDrawers.Count != showChoicesAction.choices.Count || queueReset)
+            if (m_branchesDrawers == null || m_branchesDrawers.Count != showChoicesAction.choices.Count || m_cancelDrawer == null || queueReset)
             {
                 ResetEventEditorsList(showChoicesAction);
                 if (queueReset) queueReset = false;
@@ -79,8 +86,8 @@ namespace TUFF.TUFFEditor
                     continue;
                 }
                 // ================================================
-                string labelText = $"=== When {showChoicesAction.choices[i].ParsedChoiceText()}: ";
-                string selectionPanelTitle = $"{showChoicesAction.eventName} When {showChoicesAction.choices[i].ParsedChoiceText()}";
+                string labelText = $"=== When {showChoicesAction.choices[i].ParsedChoiceText()}";
+                string selectionPanelTitle = $"{showChoicesAction.eventName} When '{showChoicesAction.choices[i].ParsedChoiceText()}'";
 
                 SerializedProperty actionListContentProp = branches.GetArrayElementAtIndex(i).FindPropertyRelative("actionList.content");
                 ActionList list = showChoicesAction.choices[i].actionList;
@@ -93,7 +100,19 @@ namespace TUFF.TUFFEditor
 
                 position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_branchesDrawers[i], labelText, selectionPanelTitle, actionListContentProp, list);
             }
-
+            if (showChoicesAction.cancelBehaviour == ChoicesCancelBehaviour.Branch)
+            {
+                string labelText = $"=== When Cancel";
+                string selectionPanelTitle = $"{showChoicesAction.eventName} When Cancel";
+                SerializedProperty actionListContentProp = targetProperty.FindPropertyRelative("cancelActionList.content");
+                ActionList list = showChoicesAction.cancelActionList;
+                if (m_cancelDrawer == null || m_cancelDrawer.Count != list.content.Count)
+                {
+                    m_cancelDrawer = new List<EventActionPD>();
+                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_cancelDrawer); // Important!
+                }
+                position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_cancelDrawer, labelText, selectionPanelTitle, actionListContentProp, list);
+            }
         }
         public override float GetSummaryHeight()
         {
@@ -116,6 +135,11 @@ namespace TUFF.TUFFEditor
                     height += EventActionListWindow.GetListHeight(targetProperty.propertyPath, list.content);
                 }
             }
+            if (showChoicesAction.cancelBehaviour == ChoicesCancelBehaviour.Branch)
+            {
+                height += 20f;
+                height += EventActionListWindow.GetListHeight(targetProperty.propertyPath, showChoicesAction.cancelActionList.content);
+            }
             return 20f + height;
         }
         private void ResetEventEditorsList(ShowChoicesAction action)
@@ -125,6 +149,7 @@ namespace TUFF.TUFFEditor
             {
                 m_branchesDrawers.Add(new List<EventActionPD>(action.choices[i].actionList.content.Count));
             }
+            m_cancelDrawer = new List<EventActionPD>(action.cancelActionList.content.Count);
         }
     }
 }

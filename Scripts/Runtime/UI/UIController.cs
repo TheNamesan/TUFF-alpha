@@ -209,9 +209,9 @@ namespace TUFF
         {
             shopMenu.OpenShop(shopData, actionCallback);
         }
-        public void ShowChoices(EventAction callback, List<string> options)
+        public void ShowChoices(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
         {
-            choicesMenu.DisplayChoices(callback, options);
+            choicesMenu.DisplayChoices(callback, options, closeWithCancel, onMenuCancel);
         }
         public void InvokePauseMenu()
         {
