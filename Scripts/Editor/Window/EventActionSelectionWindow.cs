@@ -64,6 +64,10 @@ namespace TUFF.TUFFEditor
             //{
             //    AddEvent(new EventAction(), eventList, eventListPDs);
             //}
+            if (GUILayout.Button(new GUIContent("Change Magazines", "Changes the amount of magazines the player's carrying.")))
+            {
+                AddEvent(new ChangeMagazinesAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Change Inventory", "Changes the amount of Items, Key Items, Weapons or Armors in the player's inventory.")))
             {
                 AddEvent(new ChangeInventoryAction(), eventList, eventListPDs);

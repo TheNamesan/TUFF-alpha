@@ -39,6 +39,13 @@ namespace TUFF
         {
             return instance.m_gameVariableData;
         }
+        public static string GetVariableName(int index)
+        {
+            string name = "null";
+            if (instance != null && index >= 0 && index < GetListLength())
+                name = instance.m_gameVariableData[index].name;
+            return name;
+        }
 
     }
     [System.Serializable]

@@ -22,7 +22,7 @@ namespace TUFF
         public ChangeInventoryAction()
         {
             eventName = "Change Inventory";
-            eventColor = new Color(1f, 0.8f, 0.25f, 1f);
+            eventColor = EventGUIColors.party;
         }
         public override void Invoke()
         {

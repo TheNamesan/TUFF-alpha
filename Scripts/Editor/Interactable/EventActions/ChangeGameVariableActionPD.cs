@@ -10,16 +10,18 @@ namespace TUFF.TUFFEditor
     {
         public override void InspectorGUIContent()
         {
+
             var variableIndex = targetProperty.FindPropertyRelative("variableIndex");
-            var variablesData = GameVariableList.GetList();
-            string[] options = new string[variablesData.Length];
-            int[] values = new int[variablesData.Length];
-            for (int i = 0; i < variablesData.Length; i++)
-            {
-                options[i] = variablesData[i].name;
-                values[i] = i;
-            }
-            variableIndex.intValue = EditorGUILayout.IntPopup(variableIndex.displayName, variableIndex.intValue, options, values);
+            LISAEditorUtility.DrawVariableListLayout(variableIndex, new GUIContent(variableIndex.displayName));
+            //var variablesData = GameVariableList.GetList();
+            //string[] options = new string[variablesData.Length];
+            //int[] values = new int[variablesData.Length];
+            //for (int i = 0; i < variablesData.Length; i++)
+            //{
+            //    options[i] = variablesData[i].name;
+            //    values[i] = i;
+            //}
+            //variableIndex.intValue = EditorGUILayout.IntPopup(variableIndex.displayName, variableIndex.intValue, options, values);
             var valueType = targetProperty.FindPropertyRelative("valueType");
             EditorGUILayout.PropertyField(valueType);
             var assignType = targetProperty.FindPropertyRelative("assignType");
@@ -34,11 +36,8 @@ namespace TUFF.TUFFEditor
         private string GetSummaryText()
         {
             var action = targetObject as ChangeGameVariableAction;
-            var list = GameVariableList.GetList();
-            string name = "null";
             int variableIndex = action.variableIndex;
-            if (variableIndex >= 0 && variableIndex < list.Length)
-                name = list[variableIndex].name;
+            string name = GameVariableList.GetVariableName(variableIndex);
             var valueType = action.valueType;
             string value = ChangeGameVariableAction.GetValue(action).ToString();
             var assignType = action.assignType;

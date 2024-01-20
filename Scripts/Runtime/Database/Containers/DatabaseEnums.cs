@@ -179,6 +179,11 @@ namespace TUFF
         Learn = 0,
         Forget = 1
     }
+    public enum NumberOperandType
+    {
+        FromConstant = 0,
+        FromGameVariableNumber = 1
+    }
     public enum GameVariableAssignType
     {
         Constant = 0,

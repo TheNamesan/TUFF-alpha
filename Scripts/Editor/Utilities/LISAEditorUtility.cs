@@ -275,6 +275,30 @@ namespace TUFF.TUFFEditor
             EditorGUI.indentLevel--;
             EditorGUILayout.EndVertical();
         }
+        public static void DrawVariableListLayout(SerializedProperty indexProp, GUIContent label)
+        {
+            var variablesData = GameVariableList.GetList();
+            GUIContent[] options = new GUIContent[variablesData.Length];
+            int[] values = new int[variablesData.Length];
+            for (int i = 0; i < variablesData.Length; i++)
+            {
+                options[i] = new GUIContent(variablesData[i].name);
+                values[i] = i;
+            }
+            indexProp.intValue = EditorGUILayout.IntPopup(label, indexProp.intValue, options, values);
+        }
+        public static void DrawVariableList(Rect position, SerializedProperty indexProp, GUIContent label)
+        {
+            var variablesData = GameVariableList.GetList();
+            GUIContent[] options = new GUIContent[variablesData.Length];
+            int[] values = new int[variablesData.Length];
+            for (int i = 0; i < variablesData.Length; i++)
+            {
+                options[i] = new GUIContent(variablesData[i].name);
+                values[i] = i;
+            }
+            indexProp.intValue = EditorGUI.IntPopup(position, label, indexProp.intValue, options, values);
+        }
     }
 }
 #endif

@@ -330,6 +330,26 @@ namespace TUFF
     }
 
     [System.Serializable]
+    public struct NumberOperand
+    {
+        public NumberOperandType operandType;
+        [Tooltip("Assign a constant value.")]
+        public float constant;
+        public int variableIndex;
+
+        public float GetNumber()
+        {
+            float value = 0;
+            if (operandType == NumberOperandType.FromConstant) value = constant;
+            else {
+                if (!PlayerData.instance.IsValidGameVariableIndex(variableIndex)) { Debug.LogWarning("Invalid Variable Index"); return value; }
+                value = PlayerData.instance.gameVariables[variableIndex].numberValue;
+            }
+            return value;
+        }
+    }
+
+    [System.Serializable]
     public struct GameVariableComparator
     {
         public int targetVariableIndex;

@@ -157,6 +157,11 @@ namespace TUFF
             this.mags += mags;
             if (this.mags < 0) this.mags = 0;
         }
+        public void SetMags(int mags)
+        {
+            this.mags = mags;
+            if (this.mags < 0) this.mags = 0;
+        }
         public void AddToInventory(InventoryItem invItem, int amount)
         {
             if (invItem is Item) AddToInventory(invItem as Item, amount);
