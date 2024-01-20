@@ -6,6 +6,12 @@ namespace TUFF
 {
     public class CommonEventManager : MonoBehaviour
     {
+        // Interactable Events
+        public static IEnumerator eventsCoroutine;
+        public static bool interactableEventPlaying { get => m_interactableEventPlaying; }
+        private static bool m_interactableEventPlaying = false;
+
+        // Common Events
         [SerializeField] private List<CommonEvent> queuedEvents = new List<CommonEvent>();
         public bool isRunning { get => m_isRunning; }
         private bool m_isRunning = false;
@@ -22,6 +28,42 @@ namespace TUFF
 
         }
         #endregion
+
+        
+
+        public void TriggerInteractableEvent(InteractableEvent interactableEvent)
+        {
+            if (m_interactableEventPlaying) return;
+            if (eventsCoroutine != null) StopEvents();
+            eventsCoroutine = TriggerEventsCoroutine(interactableEvent);
+            instance.StartCoroutine(eventsCoroutine);
+        }
+        public static void StopEvents()
+        {
+            if (eventsCoroutine != null) instance.StopCoroutine(eventsCoroutine);
+            m_interactableEventPlaying = false;
+            eventsCoroutine = null;
+        }
+        protected static IEnumerator TriggerEventsCoroutine(InteractableEvent interactableEvent)
+        {
+            ActionList actionList = interactableEvent.actionList;
+            m_interactableEventPlaying = true;
+            // This is probably an ugly way of forcing input disabling if a menu is closed for example.
+            // Find a better alternative
+            yield return actionList.PlayActions(() =>
+            {
+                if (!GameManager.disablePlayerInput)
+                {
+                    GameManager.instance.DisablePlayerInput(true);
+                    Debug.Log("Stop Control");
+                }
+            });
+            InteractableObject.UpdateAll();
+            yield return new WaitForSeconds(.025f);
+            GameManager.instance.DisablePlayerInput(false);
+            Debug.Log("Regain Control");
+            m_interactableEventPlaying = false;
+        }
 
         public void QueueCommonEvent(CommonEvent commonEvent)
         {
@@ -44,6 +86,8 @@ namespace TUFF
             }
             m_isRunning = false;
         }
+        
+
         public void TriggerEventActionBranch(EventAction parentEventAction, ActionList actionList)
         {
             StartCoroutine(TriggerEventActionBranchCoroutine(parentEventAction, actionList));

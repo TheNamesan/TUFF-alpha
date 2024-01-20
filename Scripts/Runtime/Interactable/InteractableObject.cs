@@ -76,6 +76,16 @@ namespace TUFF
             if (triggerEvents[m_index].triggerType == TriggerType.PlayOnStart)
                 StartCoroutine(PlayOnStart());
         }
+        public void Update()
+        {
+            Autorun();
+        }
+        private void Autorun()
+        {
+            if (!HasValidActions()) return;
+            if (triggerEvents[m_index].triggerType == TriggerType.Autorun)
+                TriggerInteractable();
+        }
         public IEnumerator PlayOnStart()
         {
             if (!HasValidActions()) yield break;
@@ -118,7 +128,7 @@ namespace TUFF
                 Debug.LogWarning("Index is out of range");
                 return false;
             }
-            InteractableEvent.TriggerEvents(triggerEvents[m_index]);
+            CommonEventManager.instance.TriggerInteractableEvent(triggerEvents[m_index]);
             return true;
         }
         public TriggerType GetCurrentIndexType()

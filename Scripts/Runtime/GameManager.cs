@@ -235,7 +235,7 @@ namespace TUFF
             gameOver = true;
             Debug.Log("Game Over");
             ChangeTimeScale(0f);
-            InteractableEvent.StopEvents();
+            CommonEventManager.StopEvents();
             UIController.instance.SetMenu(null);
             AudioManager.instance.StopAmbience();
             AudioManager.instance.PlayGameOverMusic();

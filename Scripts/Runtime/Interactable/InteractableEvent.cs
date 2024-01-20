@@ -13,7 +13,8 @@ namespace TUFF
         ActionFaceDown = 3,
         PlayOnStart = 4,
         PlayOnAwake = 5,
-        None = 6
+        None = 6,
+        Autorun = 7
     }
 
     [System.Serializable]
@@ -50,44 +51,7 @@ namespace TUFF
         public InteractableEventList eventList = new InteractableEventList();
         public ActionList actionList = new ActionList();
 
-        public static IEnumerator eventsCoroutine;
-        public static bool eventsPlaying = false;
-
-        public static void TriggerEvents(InteractableEvent interactableEvent)
-        {
-            //if (eventsPlaying) return;
-            if (eventsCoroutine != null) GameManager.instance.StopCoroutine(eventsCoroutine);
-            eventsPlaying = false;
-            eventsCoroutine = TriggerEventsCoroutine(interactableEvent);
-            GameManager.instance.StartCoroutine(eventsCoroutine);
-        }
-        public static void StopEvents()
-        {
-            if (eventsCoroutine != null) GameManager.instance.StopCoroutine(eventsCoroutine);
-            eventsPlaying = false;
-            eventsCoroutine = null;
-        }
-        protected static IEnumerator TriggerEventsCoroutine(InteractableEvent interactableEvent)
-        {
-            ActionList actionList = interactableEvent.actionList;
-            eventsPlaying = true;
-            // This is probably an ugly way of forcing input disabling if a menu is closed for example.
-            // Find a better alternative
-            yield return actionList.PlayActions(() =>
-            {
-                if (!GameManager.disablePlayerInput)
-                {
-                    GameManager.instance.DisablePlayerInput(true);
-                    Debug.Log("Stop Control");
-                }
-            });
-            InteractableObject.UpdateAll();
-            //interactableEvent.interactableObject?.LoadIndexData();
-            yield return new WaitForSeconds(.025f);
-            GameManager.instance.DisablePlayerInput(false);
-            Debug.Log("Regain Control");
-            eventsPlaying = false;
-        }
+        
         public void LoadComponentData()
         {
             if (spriteRef != null)
@@ -140,12 +104,6 @@ namespace TUFF
         public int targetSwitch = 0;
         // Game Variable
         public GameVariableComparator variableComparator;
-        //public int targetVariableIndex = 0;
-        //public GameVariableValueType targetVariableValueType = GameVariableValueType.BoolValue;
-        //public bool variableBool = false;
-        //public float variableNumber = 0;
-        //public string variableString = "";
-        //public Vector2 variableVector = new Vector2();
         // Item
         public InventoryItem targetItem = null;
         // Party
@@ -167,24 +125,5 @@ namespace TUFF
             if (not) valid = !valid;
             return valid;
         }
-        //private bool ValidateGameVariable()
-        //{
-        //    if (PlayerData.instance == null) return false;
-        //    if (!PlayerData.instance.IsValidGameVariableIndex(targetVariableIndex)) return false;
-        //    var variable = PlayerData.instance.gameVariables[targetVariableIndex];
-        //    object obj = null;
-        //    switch (targetVariableValueType)
-        //    {
-        //        case GameVariableValueType.BoolValue:
-        //            obj = variableBool; break;
-        //        case GameVariableValueType.NumberValue:
-        //            obj = variableNumber; break;
-        //        case GameVariableValueType.StringValue:
-        //            obj = variableString; break;
-        //        case GameVariableValueType.VectorValue:
-        //            obj = variableVector; break;
-        //    }
-        //    return variable.EqualsValue(obj);
-        //}
     }
 }
