@@ -21,6 +21,7 @@ namespace TUFF.TUFFEditor
             branchesList.drawElementCallback = DrawListItems;
             branchesList.drawHeaderCallback = DrawHeader;
             branchesList.elementHeightCallback = GetElementHeight;
+            branchesList.onAddCallback = OnAddCallback;
             branchesList.onChangedCallback = (ReorderableList l) => {
                 Debug.Log("Moved in branch");
                 EventActionListWindow.ForceResetList();
@@ -42,6 +43,16 @@ namespace TUFF.TUFFEditor
         void DrawHeader(Rect rect)
         {
             EditorGUI.LabelField(rect, "Choices");
+        }
+        private void OnAddCallback(ReorderableList rl)
+        {
+            var index = rl.serializedProperty.arraySize;
+            rl.serializedProperty.arraySize++;
+            rl.index = index;
+            var element = rl.serializedProperty.GetArrayElementAtIndex(index);
+            Debug.Log(index);
+            var actionList = element.FindPropertyRelative("actionList");
+            actionList.FindPropertyRelative("content").arraySize = 0;
         }
         public override void InspectorGUIContent()
         {
