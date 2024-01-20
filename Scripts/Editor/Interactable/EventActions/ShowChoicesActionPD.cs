@@ -80,6 +80,7 @@ namespace TUFF.TUFFEditor
 
             for (int i = 0; i < branches.arraySize; i++)
             {
+                if (EventActionListWindow.eventDeleted) { Debug.LogWarning("Event Deleted!"); return; };
                 if (i >= showChoicesAction.choices.Count)
                 {
                     Debug.Log($"{i}/{showChoicesAction.choices.Count}");
@@ -99,6 +100,7 @@ namespace TUFF.TUFFEditor
                 }
 
                 position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_branchesDrawers[i], labelText, selectionPanelTitle, actionListContentProp, list);
+                if (EventActionListWindow.eventDeleted) { Debug.LogWarning("Event Deleted!"); return; };
             }
             if (showChoicesAction.cancelBehaviour == ChoicesCancelBehaviour.Branch)
             {

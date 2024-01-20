@@ -106,6 +106,7 @@ namespace TUFF.TUFFEditor
         public static bool eventDeleted = false;
 
         private static SerializedProperty listContentProperty;
+        private static SerializedProperty listAddContentProperty;
         private static string listSelectionPanelTitle;
 
 
@@ -148,19 +149,26 @@ namespace TUFF.TUFFEditor
         }
         private void OnGUI()
         {
-            GetReferences();
-            if (eventList == null)
+            try
             {
-                GUILayout.Label("Event List is missing.", EditorStyles.boldLabel);
-                return;
+                GetReferences();
+                if (eventList == null)
+                {
+                    GUILayout.Label("Event List is missing.", EditorStyles.boldLabel);
+                    return;
+                }
+                ShowTriggerButtons();
+                var labelWidth = EditorGUIUtility.labelWidth;
+                EditorGUIUtility.labelWidth = Mathf.Clamp(position.width * 0.4f, 140f, Mathf.Infinity);
+                UpperPanelGUI(position);
+                UpdateScrollView(position);
+                LowerPanelGUI(position, panelEventListTarget, panelEventListEditorsTarget);
+                EditorGUIUtility.labelWidth = labelWidth;
             }
-            ShowTriggerButtons();
-            var labelWidth = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = Mathf.Clamp(position.width * 0.4f, 140f, Mathf.Infinity);
-            UpperPanelGUI(position);
-            UpdateScrollView(position);
-            LowerPanelGUI(position, panelEventListTarget, panelEventListEditorsTarget);
-            EditorGUIUtility.labelWidth = labelWidth;
+            catch
+            {
+                Debug.LogWarning("Whoops");
+            }
         }
         private static void UpperPanelGUI(Rect position)
         {
@@ -190,7 +198,10 @@ namespace TUFF.TUFFEditor
         private static void LowerPanelGUI(Rect position, List<EventAction> eventList, List<EventActionPD> eventListPDs)
         {
             downScrollPos = GUILayout.BeginScrollView(downScrollPos, GUILayout.Height(position.height - scrollViewHeight));
-            if (eventDeleted) DisplaySelectionPanel(eventList, mainEventListPDs, rootName, contentProperty: listContentProperty);
+
+            if (eventDeleted) {
+                DisplaySelectionPanel(eventList, mainEventListPDs, rootName, contentProperty: listContentProperty);
+            }
             EditorGUILayout.BeginVertical();
 
             GUILayout.Label($"Lower Panel: {lowerPanelTargetIdx}");
@@ -201,7 +212,7 @@ namespace TUFF.TUFFEditor
             }
             else
             {
-                EventActionSelectionWindow.ShowPanelContent(eventList, eventListPDs, addPanelTitle);
+                EventActionSelectionWindow.ShowPanelContent(eventList, eventListPDs, addPanelTitle + $" (Target: {listAddContentProperty.propertyPath})");
             }
 
             EditorGUILayout.EndVertical();
@@ -266,7 +277,7 @@ namespace TUFF.TUFFEditor
             //list = existingKey.value;
 
             //if (list == null) GetList(ref list, eventList);
-            // UpdateListContentProperty(contentProperty);
+            UpdateListContentProperty(contentProperty);
             Undo.RecordObject(rootObject, "Reordered event in Event List");
             EditorGUI.BeginChangeCheck();
             existingKey.value.DoList(position);
@@ -396,7 +407,8 @@ namespace TUFF.TUFFEditor
             if (GUI.Button(rect, duplicate))
             {
                 replaceTarget = -1;
-                UpdateListContentProperty(contentProperty);
+                listAddContentProperty = contentProperty;
+                //UpdateListContentProperty(contentProperty);
                 AddEvent(LISAUtility.Copy(eventList[i]) as EventAction, eventList, eventListPDs, i + 1);
                 DisplaySelectionPanel(eventList, mainEventListPDs, selectionPanelTitle, contentProperty: contentProperty);
                 markListDirty = true;
@@ -407,6 +419,7 @@ namespace TUFF.TUFFEditor
             GUIContent remove = new GUIContent("Remove", "Remove this event action."); //Remove Button
             if (GUI.Button(rect, remove))
             {
+                Debug.Log($"Content Property: {contentProperty.propertyPath}");
                 RemoveEvent(i, eventList, eventListPDs, contentProperty);
                 markListDirty = true;
             }
@@ -422,7 +435,8 @@ namespace TUFF.TUFFEditor
                 if (copiedElement == null) Debug.LogWarning("No copied element!");
                 else
                 {
-                    AddEvent(copiedElement, eventList, eventListPDs);
+                    listAddContentProperty = contentProperty;
+                    AddEvent(LISAUtility.Copy(copiedElement) as EventAction, eventList, eventListPDs);
                 }
                 //DisplaySelectionPanel(eventList, eventListPDs, title, contentProperty: contentProperty);
             }
@@ -438,9 +452,12 @@ namespace TUFF.TUFFEditor
             {
                 if (eventList.Count > 0)
                 {
+                    Debug.Log("Content Property: " + contentProperty.propertyPath);
+                    Debug.Log("List:" + listContentProperty.propertyPath);
                     int removeIdx = eventList.Count - 1;
                     RemoveEvent(removeIdx, eventList, eventListPDs, contentProperty);
                     DisplaySelectionPanel(eventList, eventListPDs, title);
+                    eventDeleted = true;
                 }
             }
             position.y += 20f;
@@ -529,7 +546,10 @@ namespace TUFF.TUFFEditor
             replaceTarget = replaceIdx;
             addPanelTitle = targetTitle;
             if (replaceIdx >= 0) addPanelTitle = $"{targetTitle} Replace Event {replaceIdx}";
-            UpdateListContentProperty(contentProperty);
+            if (contentProperty == null) listAddContentProperty = SelectedContentProperty;
+            else listAddContentProperty = contentProperty;
+
+            //UpdateListContentProperty(contentProperty);
         }
 
         private static void UpdateListContentProperty(SerializedProperty contentProperty)
@@ -636,7 +656,7 @@ namespace TUFF.TUFFEditor
                     actionListPDs[index].SummaryGUI(rect);
             }
             GUI.color = prevGUIColor;
-
+            UpdateListContentProperty(curListContentProperty);
             //listContentProperty = prevListContentProperty;
         }
         private static void GetReferences()
@@ -794,25 +814,36 @@ namespace TUFF.TUFFEditor
         }
         public static void UpdatePDs(SerializedProperty contentProperty, List<EventAction> eventList, List<EventActionPD> eventListPDs, bool lol = false)
         {
-            if (eventList != null)
+            try
             {
-                var serializedObject = contentProperty.serializedObject;
-                //serializedObject.Update();
-                if (eventListPDs == null) eventListPDs = new List<EventActionPD>();
-                else eventListPDs.Clear();
-
-                if (lol) Debug.Log(serializedObject.targetObject.name + ": " + contentProperty.propertyPath);
-                if (lol) Debug.Log("BEFORE: " + contentProperty.arraySize);
-                serializedObject.Update();
-                if (contentProperty == null) { Debug.Log("Object disposed."); return; }
-                else if (lol) Debug.Log("AFTER: " + contentProperty.arraySize);
-
-                for (int i = 0; i < eventList.Count; i++)
+                if (eventList != null)
                 {
-                    EventActionPD pd = CreatePD(contentProperty.GetArrayElementAtIndex(i));
-                    eventListPDs.Add(pd);
+                    var serializedObject = contentProperty.serializedObject;
+                    //serializedObject.Update();
+                    if (eventListPDs == null) eventListPDs = new List<EventActionPD>();
+                    else eventListPDs.Clear();
+
+                    if (lol) Debug.Log(serializedObject.targetObject.name + ": " + contentProperty.propertyPath);
+                    if (lol) Debug.Log("BEFORE: " + contentProperty.arraySize);
+                    serializedObject.Update();
+                    if (contentProperty == null) { Debug.Log("Object disposed."); return; }
+                    else if (lol) Debug.Log("AFTER: " + contentProperty.arraySize);
+
+                    for (int i = 0; i < eventList.Count; i++)
+                    {
+                        if (i >= contentProperty.arraySize) { 
+                            Debug.LogWarning($"Skipping: {contentProperty.propertyPath} {i}/{contentProperty.arraySize}"); 
+                            
+                        }
+                        EventActionPD pd = CreatePD(contentProperty.GetArrayElementAtIndex(i));
+                        eventListPDs.Add(pd);
+                    }
+                    serializedObject.Update();
                 }
-                serializedObject.Update();
+            }
+            catch
+            {
+                Debug.Log("WTF");
             }
         }
 
@@ -837,7 +868,7 @@ namespace TUFF.TUFFEditor
         public static void AddEvent(EventAction eventAction, List<EventAction> eventList, List<EventActionPD> eventListPDs, int insertAt = -1)
         {
             if (eventAction == null) return;
-            Debug.Log(listContentProperty.propertyPath);
+            Debug.Log(listAddContentProperty.propertyPath);
             Undo.RecordObject(rootObject, "Added event in Event List");
             eventAction.OnInstantiate();
             if (replaceTarget >= 0)
@@ -852,9 +883,9 @@ namespace TUFF.TUFFEditor
             else eventList.Add(eventAction);
 
             ResetList();
-            UpdatePDs(listContentProperty, eventList, eventListPDs, true);
+            UpdatePDs(listAddContentProperty, eventList, eventListPDs, true);
 
-            var pd = CreatePD(listContentProperty.GetArrayElementAtIndex(eventList.Count - 1));
+            var pd = CreatePD(listAddContentProperty.GetArrayElementAtIndex(eventList.Count - 1));
             pd.OnEditorInstantiate();
 
             MarkDirty();

@@ -30,7 +30,6 @@ namespace TUFF
         #endregion
 
         
-
         public void TriggerInteractableEvent(InteractableEvent interactableEvent)
         {
             if (m_interactableEventPlaying) return;
