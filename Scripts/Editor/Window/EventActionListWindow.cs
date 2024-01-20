@@ -84,6 +84,7 @@ namespace TUFF.TUFFEditor
         private const float lowerPanelMinHeight = 54f;
 
         private static EventAction copiedElement = null;
+        private static List<EventAction> copiedList = null;
         public static bool contract = false;
         //public static bool contract { get { return m_contract; } 
         //    set { ResetList(); m_contract = value;  } }
@@ -260,12 +261,13 @@ namespace TUFF.TUFFEditor
             {
                 listKeys.Add(new ActionListKey(parentPropertyPath, eventList, eventListPDs, GetList(eventList)));
                 existingKey = listKeys[^1];
-                Debug.Log($"Created New Key: {existingKey.value}, {parentPropertyPath}");
+                //Debug.Log($"Created New Key: {existingKey.value}, {parentPropertyPath}");
             }
 
-            EditorGUI.LabelField(position, $"Event Count: {eventList.Count}" );
+            EditorGUI.LabelField(position, $"Event Count: {eventList.Count} || Event Editor Count: {eventListPDs.Count} || keys: {listKeys.Count}" );
             position.y += 20f;
-            EditorGUI.LabelField(position, $"Event Editor Count: {eventListPDs.Count} || keys: {listKeys.Count}");
+            DisplayListManagementButtons(position, eventList, selectionPanelTitle);
+            //EditorGUI.LabelField(position, $"Event Editor Count: {eventListPDs.Count} || keys: {listKeys.Count}");
             position.y += 20f;
 
             //var prevList = list;
@@ -282,6 +284,7 @@ namespace TUFF.TUFFEditor
             EditorGUI.BeginChangeCheck();
             existingKey.value.DoList(position);
             //if (curList != null) { position.y += existingKey.value.GetHeight(); };
+            if (eventDeleted) return;
             if (existingKey.value != null) { position.y += existingKey.value.GetHeight(); };
             if (EditorGUI.EndChangeCheck())
             {
@@ -323,6 +326,54 @@ namespace TUFF.TUFFEditor
             renderingKey = prevKey;
             
             return height;
+        }
+        private static void DisplayListManagementButtons(Rect position, List<EventAction> eventList, string selectionPanelTitle)
+        {
+            int buttons = 3;
+            float orgWidth = position.width;
+            float orgX = position.x;
+            float width = orgWidth / buttons;
+            position.width = width;
+            var copyList = new GUIContent("Copy Event List");
+            if (GUI.Button(position, copyList))
+            {
+                Debug.Log(eventList.Count);
+                copiedList = new List<EventAction>(eventList);
+                Debug.Log($"Copied {selectionPanelTitle} List. Count: {copiedList.Count}");
+            }
+            position.x += width;
+            var pasteList = new GUIContent("Paste Event List");
+            if (GUI.Button(position, pasteList))
+            {
+                if (copiedList == null) Debug.LogWarning("No copied element!");
+                else
+                {
+                    Undo.RecordObject(rootObject, "Copied List to Event List");
+                    for (int i = 0; i < copiedList.Count; i++)
+                    {
+                        eventList.Add(LISAUtility.Copy(copiedList[i]) as EventAction);
+                    }
+                    ResetList();
+                    Debug.Log($"Pasted: {copiedList.Count}");
+                    eventDeleted = true;
+                    MarkDirty();
+                    return;
+                }
+            }
+            position.x += width;
+            var clearList = new GUIContent("Clear Event List");
+            if (GUI.Button(position, clearList))
+            {
+                Undo.RecordObject(rootObject, "Cleared Event List");
+                eventList.Clear();
+                ResetList();
+                Debug.Log($"Cleared list");
+                eventDeleted = true;
+                MarkDirty();
+                return;
+            }
+            position.x = orgX;
+            position.width = orgWidth;
         }
         /// <summary>
         /// Draws the Action List in EditorGUILayout mode.
@@ -429,8 +480,8 @@ namespace TUFF.TUFFEditor
         }
         public static void DisplayButtons(Rect position, List<EventAction> eventList, List<EventActionPD> eventListPDs, string title, SerializedProperty contentProperty = null)
         {
-            GUIContent pasteFromClipboard = new GUIContent("Paste Copied Event", "Pastes the copied event as a new element.");
-            if (GUI.Button(position, pasteFromClipboard))
+            GUIContent paste = new GUIContent("Paste Copied Event", "Pastes the copied event as a new element.");
+            if (GUI.Button(position, paste))
             {
                 if (copiedElement == null) Debug.LogWarning("No copied element!");
                 else
