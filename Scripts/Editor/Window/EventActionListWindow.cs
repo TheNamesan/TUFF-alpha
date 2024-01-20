@@ -389,8 +389,8 @@ namespace TUFF.TUFFEditor
             GUIContent copy = new GUIContent("Copy", "Copy this element in a buffer."); //Change Button
             if (GUI.Button(rect, copy))
             {
-                copiedElement = eventList[i];
-                Debug.Log($"Copied {eventList[i].eventName}");
+                copiedElement = LISAUtility.Copy(eventList[i]) as EventAction;
+                Debug.Log($"Copied {copiedElement.eventName}");
             }
             rect.x += width;
             width = buttonWidth;
