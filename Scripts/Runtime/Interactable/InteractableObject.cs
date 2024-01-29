@@ -89,20 +89,7 @@ namespace TUFF
         public IEnumerator PlayOnStart()
         {
             if (!HasValidActions()) yield break;
-            //if (triggerEvents.Length <= 0)
-            //{
-            //    yield break;
-            //}
-            //if (currentSwitch < 0)
-            //{
-            //    yield break;
-            //}
-            //if (currentSwitch >= triggerEvents.Length)
-            //{
-            //    yield break;
-            //}
-            //yield return new WaitForSeconds(0.01f);
-            TriggerInteractable();
+            TriggerInteractable(true);
         }
         private void UpdatePlayerDataID()
         {
@@ -112,7 +99,7 @@ namespace TUFF
         /// 
         /// </summary>
         /// <returns>If Interactable was triggered successfully.</returns>
-        public bool TriggerInteractable()
+        public bool TriggerInteractable(bool queue = false)
         {
             if (triggerEvents.Length <= 0) {
                 Debug.Log("Trigger Events List is empty");
@@ -128,7 +115,7 @@ namespace TUFF
                 Debug.LogWarning("Index is out of range");
                 return false;
             }
-            CommonEventManager.instance.TriggerInteractableEvent(triggerEvents[m_index]);
+            CommonEventManager.instance.TriggerInteractableEvent(triggerEvents[m_index], queue);
             return true;
         }
         public TriggerType GetCurrentIndexType()

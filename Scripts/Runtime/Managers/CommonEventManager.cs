@@ -7,6 +7,7 @@ namespace TUFF
     public class CommonEventManager : MonoBehaviour
     {
         // Interactable Events
+        [SerializeField] private List<InteractableEvent> m_queuedInteractableEvents = new();
         public static IEnumerator eventsCoroutine;
         public static bool interactableEventPlaying { get => m_interactableEventPlaying; }
         private static bool m_interactableEventPlaying = false;
@@ -30,9 +31,15 @@ namespace TUFF
         #endregion
 
         
-        public void TriggerInteractableEvent(InteractableEvent interactableEvent)
+        public void TriggerInteractableEvent(InteractableEvent interactableEvent, bool queue = false)
         {
-            if (m_interactableEventPlaying) return;
+            if (m_interactableEventPlaying)
+            {
+                if (queue)
+                    m_queuedInteractableEvents.Add(interactableEvent);
+                //else Debug.LogWarning($"Tried to play: {interactableEvent.interactableObject} with {interactableEvent.eventList.content.Count} Events");
+                return; 
+            }
             if (eventsCoroutine != null) StopEvents();
             eventsCoroutine = TriggerEventsCoroutine(interactableEvent);
             instance.StartCoroutine(eventsCoroutine);
@@ -43,7 +50,7 @@ namespace TUFF
             m_interactableEventPlaying = false;
             eventsCoroutine = null;
         }
-        protected static IEnumerator TriggerEventsCoroutine(InteractableEvent interactableEvent)
+        protected IEnumerator TriggerEventsCoroutine(InteractableEvent interactableEvent)
         {
             ActionList actionList = interactableEvent.actionList;
             m_interactableEventPlaying = true;
@@ -62,6 +69,12 @@ namespace TUFF
             GameManager.instance.DisablePlayerInput(false);
             Debug.Log("Regain Control");
             m_interactableEventPlaying = false;
+            if (m_queuedInteractableEvents.Count > 0)
+            {
+                var evt = m_queuedInteractableEvents[0];
+                m_queuedInteractableEvents.RemoveAt(0);
+                TriggerInteractableEvent(evt);
+            }    
         }
 
         public void QueueCommonEvent(CommonEvent commonEvent)
