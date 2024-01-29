@@ -141,6 +141,10 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new RecoverAllAction(), eventList, eventListPDs);
             }
+            if (GUILayout.Button(new GUIContent("Change EXP", "Changes a Unit's EXP value.")))
+            {
+                AddEvent(new ChangeEXPAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Change Skills", "Changes the Unit's learned skills.")))
             {
                 AddEvent(new ChangeSkillsAction(), eventList, eventListPDs);

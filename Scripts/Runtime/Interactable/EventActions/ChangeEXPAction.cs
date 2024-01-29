@@ -4,49 +4,46 @@ using UnityEngine;
 
 namespace TUFF
 {
-    [System.Serializable]
-    public class ChangeHPAction : EventAction
+    public class ChangeEXPAction : EventAction
     {
         [Tooltip("Specifies the Unit's HP to change.")]
         public PartyScope scope = PartyScope.EntireParty;
-        [Tooltip("Reference to the Unit.")]
+        [Tooltip("Unit to add EXP to.")]
         public Unit unit;
         public AddSetOperationType operation = AddSetOperationType.Add;
 
         [Header("Operand")]
-        [Tooltip("Constant HP value to change.")]
-        public int constant = 0;
-        public ChangeHPAction()
+        [Tooltip("Amount of EXP to change.")]
+        public NumberOperand operand = new();
+
+        public ChangeEXPAction()
         {
-            eventName = "Change HP";
+            eventName = "Change EXP";
             eventColor = EventGUIColors.unit;
         }
         public override void Invoke()
         {
+            int value = (int)operand.GetNumber();
             if (scope == PartyScope.EntireParty)
             {
-                var playerParty = PlayerData.instance.GetAllPartyMembers();
-                for (int i = 0; i < playerParty.Count; i++)
-                {
-                    CalculateValue(playerParty[i]);
-                }
+                PlayerData.instance.AddEXPToParty(value);
             }
             else if (scope == PartyScope.OnePartyMember)
             {
                 if (unit == null) { isFinished = true; return; }
                 var member = PlayerData.instance.GetPartyMember(unit);
-                CalculateValue(member);
+                CalculateValue(member, value);
             }
             isFinished = true;
         }
-
-        private void CalculateValue(PartyMember member)
+        private void CalculateValue(PartyMember member, int value)
         {
+            if (member == null) return;
+            
             if (operation == AddSetOperationType.Add)
-                member.RecoverHP(constant, false, true);
-            else if (operation == AddSetOperationType.Set)
-                member.SetHP(constant);
+                member.AddEXP(value);
+            if (operation == AddSetOperationType.Set)
+                member.SetEXP(value);
         }
     }
 }
-

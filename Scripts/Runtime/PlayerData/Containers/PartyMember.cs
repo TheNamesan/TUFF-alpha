@@ -81,6 +81,12 @@ namespace TUFF
             var skills = m_job?.GetSkillsToLearnAtLevel(level, 1);
             foreach (Skill skl in skills) LearnSkill(skl);
         }
+        public void SetEXP(int expSet)
+        {
+            expSet = Mathf.Max(0, expSet);
+            int expDifference = expSet - exp;
+            AddEXP(expDifference);
+        }
         public void Equip(IEquipable equipable, EquipmentSlotType slot)
         {
             PlayerData.instance.EquipToUser(this, equipable, slot);
