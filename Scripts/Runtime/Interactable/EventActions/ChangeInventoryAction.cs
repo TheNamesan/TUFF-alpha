@@ -17,8 +17,8 @@ namespace TUFF
         [Tooltip("Reference to the item to drop.")]
         public Armor armor = null;
         [Header("Operand")]
-        [Tooltip("Constant amount of items to change.")]
-        public int constant = 0;
+        [Tooltip("Amount of items to change.")]
+        public NumberOperand operand = new();
         public ChangeInventoryAction()
         {
             eventName = "Change Inventory";
@@ -26,10 +26,11 @@ namespace TUFF
         }
         public override void Invoke()
         {
-            if (dropType == DropType.Item) GameManager.instance.playerData.AddToInventory(item, constant);
-            else if (dropType == DropType.KeyItem) GameManager.instance.playerData.AddToInventory(keyItem, constant);
-            else if (dropType == DropType.Weapon) GameManager.instance.playerData.AddToInventory(weapon, constant);
-            else if (dropType == DropType.Armor) GameManager.instance.playerData.AddToInventory(armor, constant);
+            int value = (int)operand.GetNumber();
+            if (dropType == DropType.Item) GameManager.instance.playerData.AddToInventory(item, value);
+            else if (dropType == DropType.KeyItem) GameManager.instance.playerData.AddToInventory(keyItem, value);
+            else if (dropType == DropType.Weapon) GameManager.instance.playerData.AddToInventory(weapon, value);
+            else if (dropType == DropType.Armor) GameManager.instance.playerData.AddToInventory(armor, value);
             isFinished = true;
         }
     }

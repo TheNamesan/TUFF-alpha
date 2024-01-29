@@ -22,10 +22,18 @@ namespace TUFF.TUFFEditor
             if (dropType.enumValueIndex == (int)DropType.Armor)
                 EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("armor"));
 
-            EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("constant"));
+            var operand = targetProperty.FindPropertyRelative("operand");
+            EditorGUILayout.PropertyField(operand);
         }
         public override void SummaryGUI(Rect position)
         {
+            //var action = targetObject as ChangeInventoryAction;
+            //if (action.constant != 0)
+            //{
+            //    action.operand.constant = action.constant;
+            //    action.constant = 0;
+            //    Debug.Log($"Ported value of {action.operand.constant}");
+            //}
             EditorGUI.LabelField(position, GetSummaryText());
         }
         private string GetSummaryText()
@@ -40,8 +48,22 @@ namespace TUFF.TUFFEditor
             if (invItem == null) drop = "null";
             else drop = invItem.GetName();
 
-            int amount = action.constant;
-            return $"{drop} ({action.dropType}) {(amount >= 0 ? $"+{amount}" : amount)}";
+            int amount = 0;
+            string amountText = "";
+            if (action.operand.operandType == NumberOperandType.FromConstant)
+            {
+                amount = (int)action.operand.constant;
+                //if (operationType == AddSetOperationType.Add)
+                amountText = $"{(amount >= 0 ? $"+{amount}" : amount)}";
+                //else if (operationType == AddSetOperationType.Set)
+                //    amountText = $"= {amount}";
+            }
+            else
+            {
+                amountText = $"assigned from '{GameVariableList.GetVariableName(action.operand.variableIndex)}'";
+            }
+
+            return $"{drop} ({action.dropType}) {amountText}";
         }
     }
 }
