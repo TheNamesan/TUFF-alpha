@@ -63,6 +63,19 @@ namespace TUFF
         {
             return level;
         }
+        public void SetLevel(int newLevel)
+        {
+            newLevel = Mathf.Min(newLevel, 100); // Cap Max, Replace with level cap
+            newLevel = Mathf.Max(0, newLevel); // Cap Min
+            level = newLevel;
+            exp = job.LevelToStat(level, LevelToStatType.EXP);
+            var skills = m_job?.GetSkillsToLearnAtLevel(level, 1);
+            foreach (Skill skl in skills) LearnSkill(skl);
+        }
+        public void AddLevel(int levelAdd)
+        {
+            SetLevel(level + levelAdd);
+        }
         public void AddEXP(int expAdd)
         {
             prevExp = exp;
@@ -71,7 +84,7 @@ namespace TUFF
             float levelProgress = 1f;
             while (levelProgress >= 1f)
             {
-                if (level == 100) break; //Replace with level cap
+                if (level == 100) break; // Replace with level cap
                 levelProgress = GetNextLevelProgress(level, job, exp);
                 if (levelProgress >= 1f) { 
                     level++;

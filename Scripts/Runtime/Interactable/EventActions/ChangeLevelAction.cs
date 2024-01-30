@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace TUFF
-{ 
+{
     [System.Serializable]
-    public class ChangeEXPAction : EventAction
+    public class ChangeLevelAction : EventAction
     {
-        [Tooltip("Specifies the Unit's EXP to change.")]
+        [Tooltip("Specifies the Unit's Level to change.")]
         public PartyScope scope = PartyScope.EntireParty;
-        [Tooltip("Unit to add EXP to.")]
+        [Tooltip("Unit to add level to.")]
         public Unit unit;
         public AddSetOperationType operation = AddSetOperationType.Add;
 
         [Header("Operand")]
-        [Tooltip("Amount of EXP to change.")]
+        [Tooltip("Amount of level to change.")]
         public NumberOperand operand = new();
 
-        public ChangeEXPAction()
+        public ChangeLevelAction()
         {
-            eventName = "Change EXP";
+            eventName = "Change Level";
             eventColor = EventGUIColors.unit;
         }
         public override void Invoke()
@@ -44,11 +44,10 @@ namespace TUFF
         private void CalculateValue(PartyMember member, int value)
         {
             if (member == null) return;
-            
             if (operation == AddSetOperationType.Add)
-                member.AddEXP(value);
+                member.AddLevel(value);
             if (operation == AddSetOperationType.Set)
-                member.SetEXP(value);
+                member.SetLevel(value);
         }
     }
 }

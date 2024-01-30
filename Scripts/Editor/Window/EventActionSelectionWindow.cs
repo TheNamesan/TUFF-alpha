@@ -145,6 +145,10 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new ChangeEXPAction(), eventList, eventListPDs);
             }
+            if (GUILayout.Button(new GUIContent("Change Level", "Changes a Unit's Level value.")))
+            {
+                AddEvent(new ChangeLevelAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Change Skills", "Changes the Unit's learned skills.")))
             {
                 AddEvent(new ChangeSkillsAction(), eventList, eventListPDs);
