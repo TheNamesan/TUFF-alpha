@@ -61,6 +61,7 @@ MonoBehaviour:
       armors: 
     mags: 0
     battleData:
+      m_disableUP: 0
       UP: 0
     sceneData:
       loadedSceneName: 
@@ -69,6 +70,7 @@ MonoBehaviour:
       playerFacing: 0
       disableRun: 0
       disableRopeJump: 0
+    gameVariables: []
     persistentInteractableIDs: 
   configData:
     refreshRate: 60
@@ -82,6 +84,9 @@ MonoBehaviour:
     lost: 0
   gameCanvasPrefab: {fileID: 2184341498768048309, guid: f4aa33790ccdc504fa6700569f716078, type: 3}
   inputManager: {fileID: 7939331256122164455}
+  databaseLoader: {fileID: 6860913584222981572}
+  sceneLoaderManager: {fileID: 4822072614236169726}
+  commonEventManager: {fileID: 3489761920394769168}
   DPI: 0
   DUI: 0
   DPAM: 0
@@ -157,6 +162,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0935979241bd22247817e9d7968c9090, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_queuedInteractableEvents: []
+  queuedEvents: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &2198059312199205374
 MonoBehaviour:
   m_ObjectHideFlags: 0

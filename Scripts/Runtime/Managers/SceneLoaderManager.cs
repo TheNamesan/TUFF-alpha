@@ -71,33 +71,38 @@ namespace TUFF
         {
             get
             {
-                if (m_instance == null)
-                {
-                    if (GameManager.instance == null) return null;
-                    AssignInstance(GameManager.instance.GetComponentInChildren<SceneLoaderManager>());
-                }
-                return m_instance;
+                if (!GameManager.instance) return null;
+                return GameManager.instance.sceneLoaderManager;
+                //if (m_instance == null)
+                //{
+                //    if (GameManager.instance == null) return null;
+                //    AssignInstance(GameManager.instance.GetComponentInChildren<SceneLoaderManager>());
+                //}
+                //return m_instance;
             }
         }
-        protected static SceneLoaderManager m_instance;
+        //protected static SceneLoaderManager m_instance;
 
         private void Awake()
         {
-            if (m_instance != null)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                AssignInstance(this);
-            }
+            //if (m_instance != null)
+            //{
+            //    if (m_instance != this) Destroy(gameObject);
+            //}
+            //else
+            //{
+            //    AssignInstance(this);
+            //}
+            UpdateCurrentScene(SceneManager.GetActiveScene());
+            AddToLoadedScenes(currentScene);
+            UpdateNodes(currentScene);
         }
         public static void AssignInstance(SceneLoaderManager target)
         {
             if (target == null) return;
-            m_instance = target;
-            DontDestroyOnLoad(m_instance.gameObject);
-            m_instance.UpdateCurrentScene(SceneManager.GetActiveScene());
+            //m_instance = target;
+            //DontDestroyOnLoad(m_instance.gameObject);
+            //m_instance.UpdateCurrentScene(SceneManager.GetActiveScene());
             AddToLoadedScenes(currentScene);
             UpdateNodes(currentScene);
         }

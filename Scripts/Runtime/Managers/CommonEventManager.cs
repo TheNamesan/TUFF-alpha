@@ -17,15 +17,19 @@ namespace TUFF
         public bool isRunning { get => m_isRunning; }
         private bool m_isRunning = false;
         #region Singleton
-        public static CommonEventManager instance;
+        public static CommonEventManager instance { get 
+            {
+                if (!GameManager.instance) return null;
+                return GameManager.instance.commonEventManager;
+            }}
         private void Awake()
         {
-            if (instance != null) Destroy(gameObject);
-            else
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
+            //if (instance != null) Destroy(gameObject);
+            //else
+            //{
+            //    instance = this;
+            //    DontDestroyOnLoad(gameObject);
+            //}
 
         }
         #endregion

@@ -14,6 +14,10 @@ namespace TUFF
         [Header("References")]
         public GameObject gameCanvasPrefab;
         public InputManager inputManager;
+        public DatabaseLoader databaseLoader;
+        public SceneLoaderManager sceneLoaderManager;
+        public CommonEventManager commonEventManager;
+        
 
         private static bool m_disablePlayerInput = false;
         public static bool disablePlayerInput
@@ -44,7 +48,7 @@ namespace TUFF
         {
             if (instance != null)
             {
-                Destroy(gameObject);
+                if (instance != this) Destroy(gameObject);
             }
             else
             {
