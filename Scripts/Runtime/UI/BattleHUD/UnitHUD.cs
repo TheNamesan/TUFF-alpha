@@ -17,7 +17,7 @@ namespace TUFF
         [SerializeField] BarHandler TPBar;
         [SerializeField] ActiveStatesHUD activeStatesHUD;
         [SerializeField] Image commandIcon;
-        public PartyMember memberRef;
+        [System.NonSerialized] public PartyMember memberRef;
 
         public void InitializeUnitHUD()
         {
@@ -29,6 +29,7 @@ namespace TUFF
         }
         public virtual void UpdateInfo(PartyMember member, bool displayMaxValues = false)
         {
+            if (member == null) return;
             memberRef = member;
             UpdateName(member.GetName(), member.isKOd);
             UpdateGraphic(member.GetGraphic(), member.isKOd);
