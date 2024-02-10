@@ -21,7 +21,8 @@ namespace TUFF
             {
                 if (!GameManager.instance) return null;
                 return GameManager.instance.commonEventManager;
-            }}
+            }
+        }
         private void Awake()
         {
             //if (instance != null) Destroy(gameObject);
