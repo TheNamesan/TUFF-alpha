@@ -13909,26 +13909,6 @@ MonoBehaviour:
   targetRateElement: {fileID: 2172855052183883853}
   selectedEquipment: {fileID: 0}
   selectedSlot: 0
-  selectedMember:
-    HP: 0
-    prevHP: 0
-    SP: 0
-    TP: 0
-    isKOd: 0
-    states: []
-    imageReference: {fileID: 0}
-    m_job: {fileID: 0}
-    prevExp: 0
-    exp: 0
-    prevLevel: 1
-    level: 1
-    primaryWeapon: {fileID: 0}
-    secondaryWeapon: {fileID: 0}
-    head: {fileID: 0}
-    body: {fileID: 0}
-    primaryAccessory: {fileID: 0}
-    secondaryAccessory: {fileID: 0}
-    learnedSkills: 
 --- !u!114 &6842782342183967303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36134,26 +36114,6 @@ MonoBehaviour:
   primaryAccessoryInfo: {fileID: 8426556747880073412}
   secondaryAccessoryInfo: {fileID: 5169227198281465400}
   uiMenu: {fileID: 4353833955260257167}
-  memberRef:
-    HP: 0
-    prevHP: 0
-    SP: 0
-    TP: 0
-    isKOd: 0
-    states: []
-    imageReference: {fileID: 0}
-    m_job: {fileID: 0}
-    prevExp: 0
-    exp: 0
-    prevLevel: 1
-    level: 1
-    primaryWeapon: {fileID: 0}
-    secondaryWeapon: {fileID: 0}
-    head: {fileID: 0}
-    body: {fileID: 0}
-    primaryAccessory: {fileID: 0}
-    secondaryAccessory: {fileID: 0}
-    learnedSkills: 
 --- !u!1001 &5493299378920419306
 PrefabInstance:
   m_ObjectHideFlags: 0
