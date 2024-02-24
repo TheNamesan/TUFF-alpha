@@ -348,9 +348,11 @@ namespace TUFF
             Vector2 closestContactPoint = col.ClosestPoint((Vector2)col.bounds.center + Vector2.down * col.bounds.size);
             Vector2 boxCenter = closestContactPoint;
             float DCOMultiplier = 0.1f;
-            collisionBoxSize = new Vector2(col.bounds.size.x, Physics2D.defaultContactOffset * DCOMultiplier);
+            collisionBoxSize = new Vector2(col.bounds.size.x, Physics2D.defaultContactOffset);
+            //collisionBoxSize = new Vector2(col.bounds.size.x, Physics2D.defaultContactOffset * DCOMultiplier);
             Vector2 boxExtents = collisionBoxSize * 0.5f;
-            collisionBoxDistance = (rb.velocity.y > -10 ? collisionBoxSize.y * 10f : collisionBoxSize.y * 200f) /*+ (WasOnSlope() ? 0.3f : 0f)*/; //Has a higher distance check if velocity is higher (mainly when falling or jumping down)
+            collisionBoxDistance = Physics2D.defaultContactOffset;
+            //collisionBoxDistance = (rb.velocity.y > -10 ? collisionBoxSize.y * 10f : collisionBoxSize.y * 200f) /*+ (WasOnSlope() ? 0.3f : 0f)*/; //Has a higher distance check if velocity is higher (mainly when falling or jumping down)
             RaycastHit2D collision = Physics2D.BoxCast(closestContactPoint, collisionBoxSize, 0f, Vector2.down, collisionBoxDistance, walkableLayers);
             Vector2 nextOrigin = closestContactPoint;
             RaycastHit2D nextCollision = Physics2D.BoxCast(nextOrigin, collisionBoxSize, 0f, Vector2.down, 0.15f/*(IsOnSlope() ? 0.5f : 0.15f)*/, walkableLayers);
