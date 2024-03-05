@@ -21,6 +21,10 @@ namespace TUFF
         {
             StartCoroutine(Continue());
         }
+        public void OptionsButton()
+        {
+            UIController.instance.OpenOptionsMenu();
+        }
 
         protected IEnumerator NewGame()
         {
