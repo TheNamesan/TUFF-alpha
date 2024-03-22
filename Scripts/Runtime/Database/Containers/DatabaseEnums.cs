@@ -87,7 +87,21 @@ namespace TUFF
     }
     public enum BranchConditionType
     {
-        GameVariable = 0
+        GameVariable = 0,
+        InteractableSwitch = 1,
+        Timer = 2,
+        Unit = 3
+    }
+    public enum UnitStatusConditionType
+    {
+        IsInParty = 0,
+        IsInActiveParty = 1,
+        IsNamed = 2,
+        HasJob = 3,
+        KnowsSkill = 4,
+        HasWeaponEquipped = 5,
+        HasArmorEquipped = 6,
+        IsStateInflicted = 7
     }
     public enum SpanType
     {

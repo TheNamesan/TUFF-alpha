@@ -32,6 +32,10 @@ namespace TUFF
         public BranchConditionType conditionType;
 
         public GameVariableComparator variableComparator;
+        public InteractableObject targetInteractable;
+        public int targetSwitch;
+
+        public UnitStatusComparator unitComparator;
         public bool ValidateCondition()
         {
             bool valid = false;
@@ -39,8 +43,16 @@ namespace TUFF
             {
                 case BranchConditionType.GameVariable:
                     valid = variableComparator.ValidateGameVariable(); break;
-                default:
+                case BranchConditionType.InteractableSwitch:
+                    if (!targetInteractable) valid = true;
+                    else valid = targetInteractable.currentSwitch == targetSwitch;
                     break;
+                case BranchConditionType.Timer:
+                    break;
+                case BranchConditionType.Unit:
+                    valid = unitComparator.ValidateUnit(); break;//ValidateUnit(targetUnit, unitCondition);
+                default: break;
+
             }
             if (not) valid = !valid;
             return valid;

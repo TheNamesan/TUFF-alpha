@@ -378,4 +378,42 @@ namespace TUFF
             return variable.EqualsValue(obj);
         }
     }
+    [System.Serializable]
+    public struct UnitStatusComparator
+    {
+        public Unit targetUnit;
+        public UnitStatusConditionType unitCondition;
+        public string targetName;
+        public Job targetJob;
+        public Skill targetSkill;
+        public Weapon targetWeapon;
+        public Armor targetArmor;
+        public State targetState;
+        public bool ValidateUnit()
+        {
+            if (PlayerData.instance == null) return false;
+            if (!targetUnit) return true;
+            PartyMember member = PlayerData.instance.GetPartyMember(targetUnit);
+            switch (unitCondition)
+            {
+                case UnitStatusConditionType.IsInParty:
+                    return PlayerData.instance.IsInParty(targetUnit);
+                case UnitStatusConditionType.IsInActiveParty:
+                    return PlayerData.instance.IsInActiveParty(targetUnit);
+                case UnitStatusConditionType.IsNamed:
+                    return targetName == member.GetName();
+                case UnitStatusConditionType.HasJob:
+                    return targetJob == member.GetJob();
+                case UnitStatusConditionType.KnowsSkill:
+                    return member.KnowsSkill(targetSkill);
+                case UnitStatusConditionType.HasWeaponEquipped:
+                    return member.HasWeaponEquipped(targetWeapon);
+                case UnitStatusConditionType.HasArmorEquipped:
+                    return member.HasArmorEquipped(targetArmor);
+                case UnitStatusConditionType.IsStateInflicted:
+                    return member.HasState(targetState);
+                default: return false;
+            }
+        }
+    }
 }

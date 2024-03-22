@@ -285,7 +285,7 @@ namespace TUFF.TUFFEditor
             existingKey.value.DoList(position);
             //if (curList != null) { position.y += existingKey.value.GetHeight(); };
             if (eventDeleted) return;
-            if (existingKey.value != null) { position.y += existingKey.value.GetHeight(); };
+            if (existingKey.value != null) { position.y += existingKey.value.GetHeight() - 10f; };
             if (EditorGUI.EndChangeCheck())
             {
                 //list = null;
@@ -293,7 +293,7 @@ namespace TUFF.TUFFEditor
                 MarkDirty();
             }
             DisplayButtons(position, eventList, eventListPDs, selectionPanelTitle, contentProperty);
-            position.y += 60f;
+            position.y += 20f;
 
             //listSelectionPanelTitle = prevListSelectionPanelTitle;
 
@@ -308,7 +308,7 @@ namespace TUFF.TUFFEditor
         public static float GetDisplayEventListContentHeight(ReorderableList list)
         {
             float listHeight = (list != null ? list.GetHeight() : 0f);
-            return 100f + listHeight; 
+            return 60f + 10f + listHeight; 
         }
         public static float GetDisplayEventListContentHeight()
         {
@@ -480,25 +480,16 @@ namespace TUFF.TUFFEditor
         }
         public static void DisplayButtons(Rect position, List<EventAction> eventList, List<EventActionPD> eventListPDs, string title, SerializedProperty contentProperty = null)
         {
-            GUIContent paste = new GUIContent("Paste Copied Event", "Pastes the copied event as a new element.");
-            if (GUI.Button(position, paste))
-            {
-                if (copiedElement == null) Debug.LogWarning("No copied element!");
-                else
-                {
-                    listAddContentProperty = contentProperty;
-                    AddEvent(LISAUtility.Copy(copiedElement) as EventAction, eventList, eventListPDs);
-                }
-                //DisplaySelectionPanel(eventList, eventListPDs, title, contentProperty: contentProperty);
-            }
-            position.y += 20f;
+            float orgWidth = position.width;
+            position.width *= 0.02f;
             GUIContent add = new GUIContent("+", "Add an event action.");
             if (GUI.Button(position, add))
             {
                 DisplaySelectionPanel(eventList, eventListPDs, title, contentProperty: contentProperty);
             }
             GUIContent remove = new GUIContent("-", "Remove an event action.");
-            position.y += 20f;
+            //position.y += 20f;
+            position.x += position.width;//position.y += 20f;
             if (GUI.Button(position, remove))
             {
                 if (eventList.Count > 0)
@@ -511,7 +502,19 @@ namespace TUFF.TUFFEditor
                     eventDeleted = true;
                 }
             }
-            position.y += 20f;
+            position.x += position.width;//position.y += 20f;
+            position.width = orgWidth * 0.075F;
+            GUIContent paste = new GUIContent("Paste Copied Event", "Pastes the copied event as a new element.");
+            if (GUI.Button(position, paste))
+            {
+                if (copiedElement == null) Debug.LogWarning("No copied element!");
+                else
+                {
+                    listAddContentProperty = contentProperty;
+                    AddEvent(LISAUtility.Copy(copiedElement) as EventAction, eventList, eventListPDs);
+                }
+                //DisplaySelectionPanel(eventList, eventListPDs, title, contentProperty: contentProperty);
+            }
         }
         private static void DisplayButtonsLayout(Rect position, List<EventAction> eventList, List<EventActionPD> eventListPDs, string title, SerializedProperty contentProperty = null)
         {

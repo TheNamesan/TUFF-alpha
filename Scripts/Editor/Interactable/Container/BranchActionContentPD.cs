@@ -57,8 +57,14 @@ namespace TUFF.TUFFEditor
                 {
                     case BranchConditionType.GameVariable:
                         var comparator = element.variableComparator;
-                        text += GetVariableText(comparator);
-                        break;
+                        text += GetVariableText(comparator); break;
+                    case BranchConditionType.InteractableSwitch:
+                        text += GetInteractableSwitchText(element.targetInteractable, element.targetSwitch); break;
+                    case BranchConditionType.Timer:
+                        text += "Timer"; break;
+                    case BranchConditionType.Unit:
+                        text += GetUnitText(element.unitComparator); break;
+
                 }
             }
             return text;
@@ -81,6 +87,49 @@ namespace TUFF.TUFFEditor
             }
             return text;
         }
+        private static string GetInteractableSwitchText(InteractableObject target, int targetSwitch)
+        {
+            string text = "";
+            string name = "null";
+            if (target) name = target.gameObject.name;
+            text = $"{name} Switch is {targetSwitch}"; 
+            return text;
+        }
+        private static string GetUnitText(UnitStatusComparator comparator)
+        {
+            string text = "";
+            string name = "null";
+            Unit unit = comparator.targetUnit;
+            var condition = comparator.unitCondition;
+            if (unit) name = unit.GetName();
+            string conditionText = "";
+            switch (condition)
+            {
+                case UnitStatusConditionType.IsInParty:
+                    conditionText = "is in Party"; break;
+                case UnitStatusConditionType.IsInActiveParty:
+                    conditionText = "is in Active Party"; break;
+                case UnitStatusConditionType.IsNamed:
+                    conditionText = $"is named '{comparator.targetName}'"; break;
+                case UnitStatusConditionType.HasJob:
+                    string jobName = (comparator.targetJob ? comparator.targetJob.GetName() : "null");
+                    conditionText = $"has '{jobName}' job"; break;
+                case UnitStatusConditionType.KnowsSkill:
+                    string skillName = (comparator.targetSkill ? comparator.targetSkill.GetName() : "null");
+                    conditionText = $"has learned '{skillName}'"; break;
+                case UnitStatusConditionType.HasWeaponEquipped:
+                    string weaponName = (comparator.targetWeapon ? comparator.targetWeapon.GetName() : "null");
+                    conditionText = $"has '{weaponName}' equipped"; break;
+                case UnitStatusConditionType.HasArmorEquipped:
+                    string armorName = (comparator.targetArmor ? comparator.targetArmor.GetName() : "null");
+                    conditionText = $"has '{armorName}' equipped"; break;
+                case UnitStatusConditionType.IsStateInflicted:
+                    string stateName = (comparator.targetState ? comparator.targetState.GetName() : "null");
+                    conditionText = $"is '{stateName}' inflicted"; break;
+            }
+            text = $"{name} {conditionText}";
+            return text;
+        }
     }
     [CustomPropertyDrawer(typeof(BranchActionContentElement))]
     public class BranchActionContentElementPD : PropertyDrawer
@@ -94,7 +143,13 @@ namespace TUFF.TUFFEditor
                 var element = LISAEditorUtility.GetTargetObjectOfProperty(property) as BranchActionContentElement;
                 if (element.conditionType == BranchConditionType.GameVariable)
                     lines += 2;
-                    //lines += 3;
+                if (element.conditionType == BranchConditionType.InteractableSwitch)
+                    lines += 1;
+                if (element.conditionType == BranchConditionType.Timer)
+                    lines += 1;
+                if (element.conditionType == BranchConditionType.Unit)
+                    lines += 1;
+                //lines += 3;
             }
             return (20f * lines);
         }
@@ -122,6 +177,12 @@ namespace TUFF.TUFFEditor
                 var type = (BranchConditionType)conditionType.enumValueIndex;
                 if (type == BranchConditionType.GameVariable)
                     DrawGameVariable(position, orgWidth, property);
+                if (type == BranchConditionType.InteractableSwitch)
+                    DrawInteractable(position, orgWidth, property);
+                if (type == BranchConditionType.Timer)
+                    ;
+                if (type == BranchConditionType.Unit)
+                    DrawUnit(position, orgWidth, property);
 
                 position.width += 15f;
                 position.x -= 15f;
@@ -133,8 +194,26 @@ namespace TUFF.TUFFEditor
         {
             //position.x += position.width + 2;
             position.width = orgWidth - 2;
-            position.height = 100;
             EditorGUI.PropertyField(position, property.FindPropertyRelative("variableComparator"), new GUIContent(""));
+            position.width = orgWidth;
+        }
+        private void DrawInteractable(Rect position, float orgWidth, SerializedProperty property)
+        {
+            position.width = orgWidth * 0.5f - 8;
+            position.height = 20;
+            float orgLabel = EditorGUIUtility.labelWidth;
+            EditorGUI.PropertyField(position, property.FindPropertyRelative("targetInteractable"));
+
+            position.x += position.width + 2;
+            EditorGUIUtility.labelWidth = 70;
+            EditorGUI.PropertyField(position, property.FindPropertyRelative("targetSwitch"), new GUIContent("switch is"));
+            EditorGUIUtility.labelWidth = orgLabel;
+            position.width = orgWidth;
+        }
+        private void DrawUnit(Rect position, float orgWidth, SerializedProperty property)
+        {
+            position.width = orgWidth - 2;
+            EditorGUI.PropertyField(position, property.FindPropertyRelative("unitComparator"), new GUIContent(""));
             position.width = orgWidth;
         }
     }

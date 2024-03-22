@@ -15,9 +15,15 @@ namespace TUFF
         [HideInInspector] public ParticleSystem stepEffect;
         [HideInInspector] public Dictionary<TerrainPropertiesData, ParticleSystem> stepEffects = new Dictionary<TerrainPropertiesData, ParticleSystem>();
 
+        //private PlatformEffector2D platformEffector2D;
         private void Awake()
         {
-            if (tilemap == null) tilemap = GetComponent<Tilemap>();  
+            if (tilemap == null) tilemap = GetComponent<Tilemap>();
+            //if (!platformEffector2D) platformEffector2D = GetComponent<PlatformEffector2D>();
+        }
+        private void FixedUpdate()
+        {
+            //if (platformEffector2D) platformEffector2D.surfaceArc = 180;
         }
         void Start()
         {

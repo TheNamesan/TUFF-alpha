@@ -303,7 +303,7 @@ namespace TUFF
         /// An active Party Member is a Unit that can participate in battle.
         /// </summary>
         /// <param name="index"></param>
-        /// <returns></returns>
+        /// <returns>Returns the active party member on the specified slot.</returns>
         public PartyMember GetActivePartyMember(int index)
         {
             if (index >= activePartyMaxSize) return party[partyOrder[activePartyMaxSize - 1]];
@@ -316,6 +316,26 @@ namespace TUFF
             int activePartySize = GameManager.instance.playerData.GetActivePartySize();
             int randomIdx = Random.Range(0, activePartySize);
             return GameManager.instance.playerData.GetActivePartyMember(randomIdx);
+        }
+        /// <summary>
+        /// An active Party Member is a Unit that can participate in battle.
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <returns>Returns the slot index of the specified Unit. 
+        /// Returns -1 if the Unit is not in the active party.</returns>
+        public int GetActivePartyMemberIndex(Unit unit)
+        {
+            int activePartySize = GameManager.instance.playerData.GetActivePartySize();
+            for (int i = 0; i < activePartySize; i++)
+            {
+                PartyMember target = GameManager.instance.playerData.GetActivePartyMember(i);
+                if (target.unitRef == unit) return i;
+            }
+            return -1;
+        }
+        public bool IsInActiveParty(Unit unit)
+        {
+            return GetActivePartyMemberIndex(unit) >= 0;
         }
         public int GetPartySize()
         {

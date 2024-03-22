@@ -28,7 +28,7 @@ namespace TUFF
 
         public PartyMember()
         {
-            
+
         }
         public override void TakeHit(BattleAnimationEvent hitInfo, int targetIndex)
         {
@@ -90,9 +90,9 @@ namespace TUFF
             {
                 if (level == 100) break; // Replace with level cap
                 levelProgress = GetNextLevelProgress(level, job, exp);
-                if (levelProgress >= 1f) { 
+                if (levelProgress >= 1f) {
                     level++;
-                    Debug.Log("LEVEL UP! " + level); 
+                    Debug.Log("LEVEL UP! " + level);
                 }
             }
             var skills = m_job?.GetSkillsToLearnAtLevel(level, 1);
@@ -426,7 +426,7 @@ namespace TUFF
         {
             List<Feature> features = featuresRef;
             if (features == null) features = new List<Feature>();
-            List<IEquipable> equipables = new List<IEquipable>{ primaryWeapon, secondaryWeapon, head, body, primaryAccessory, secondaryAccessory };
+            List<IEquipable> equipables = new List<IEquipable> { primaryWeapon, secondaryWeapon, head, body, primaryAccessory, secondaryAccessory };
             for (int i = 0; i < equipables.Count; i++)
             {
                 if (equipables[i] == null) continue;
@@ -472,7 +472,7 @@ namespace TUFF
             var skills = job?.GetSkillsToLearnAtLevel(level, 1);
             foreach (Skill skl in skills) LearnSkill(skl);
         }
-        
+
         public virtual void LearnSkill(Skill skill, bool learn = true)
         {
             if (skill == null) return;
@@ -494,6 +494,20 @@ namespace TUFF
             if (id < 0 || id >= learnedSkills.Length) return false;
             if (TUFFSettings.DebugIgnoreLearnedSkills()) return true;
             return learnedSkills[id];
+        }
+        public virtual bool HasWeaponEquipped(Weapon weapon)
+        {
+            if (primaryWeapon == weapon) return true;
+            if (secondaryWeapon == weapon) return true;
+            return false;
+        }
+        public virtual bool HasArmorEquipped(Armor armor)
+        {
+            if (head == armor) return true;
+            if (body == armor) return true;
+            if (primaryAccessory == armor) return true;
+            if (secondaryAccessory == armor) return true;
+            return false;
         }
     }
 }

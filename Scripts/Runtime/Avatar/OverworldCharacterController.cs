@@ -127,6 +127,7 @@ namespace TUFF
         [SerializeField] float ignoreWalkableForSeconds;
         [Tooltip("Avatar is currently ignoring walkable while jumping down.")]
         [SerializeField] bool ignoreWalkable;
+        [SerializeField] private bool ignoreCollision;
         [HideInInspector] public bool ignoreGroundCheck = false;
         [HideInInspector] public bool ignoreFallCheck = false;
         [SerializeField] protected float distancePerStep = 1.15f;
@@ -510,7 +511,7 @@ namespace TUFF
                     ignoreWalkable = false;
                     jumpExpectedLanding = Vector2.zero;
 
-                    Debug.Log("top kek");
+                    //Debug.Log("top kek");
                     DisableWalkableLayersCollision(false);
                 }
                 else
@@ -726,7 +727,7 @@ namespace TUFF
             if (climbDetect.climbable == null) return;
             if (disableClimbableCollision && climbDetect.IntersectsLastClimbPoints()) return;
 
-            Vector2 closestContactPoint = col.ClosestPoint((Vector3)rb.position - new Vector3(0, characterHeight, 0));
+            Vector2 closestContactPoint = col.ClosestPoint((Vector2)rb.position - new Vector2(0, characterHeight));
             Vector2 upperPoint = closestContactPoint + Vector2.up * col.bounds.size.y;
             UpdateRopePoints();
 
@@ -737,11 +738,12 @@ namespace TUFF
                 bool ropeIsDown = (closestContactPoint.y + 0.01f >= ropeTop.y);
                 if (input.verticalInput < 0 && !ropeIsDown)
                 {
+                    //Debug.Log($"ClosestPoint: {closestContactPoint.y + 0.01f} vs RopeTop.y {ropeTop.y}");
                     // If walkable layer is on the way down
                     RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, characterHeight * 0.75f, walkableLayers);
                     float offset = 0.1f;
                     float half = offset * 0.5f;
-                    bool noRopeBelow = LISAUtility.WithinValueRange(ropeBottom.y + half, ropeBottom.y - half, hit.point.y);
+                    bool noRopeBelow = LISAUtility.WithinValueRange(ropeBottom.y + offset, ropeBottom.y - offset, hit.point.y);
                     if (noRopeBelow)
                     {
                         return; 
@@ -1144,8 +1146,8 @@ namespace TUFF
             CancelLadder();
             ChangeFaceDirection(FaceDirections.South);
             SetClimbing(false);
-            StartCoroutine(ReenableCollisionDelay());
-            //DisableWalkableLayersCollision(false);
+            //StartCoroutine(ReenableCollisionDelay());
+            DisableWalkableLayersCollision(false);
             fellAfterClimbing = true;
             disableClimbableCollision = true;
             climbDetect.SetLastPoints();
@@ -1296,7 +1298,22 @@ namespace TUFF
         void DisableWalkableLayersCollision(bool input)
         {
             if (!col) return;
-            col.isTrigger = input;
+            //col.isTrigger = input;
+            ignoreCollision = input;
+            var walkableTagged = GameObject.FindGameObjectsWithTag("Walkable");
+            for (int i = 0; i < walkableTagged.Length; i++)
+            {
+                var colliders = walkableTagged[i].GetComponents<Collider2D>();
+                //Debug.Log("Found: " + colliders.Length + " colliders");
+                for (int j = 0; j < colliders.Length; j++)
+                {
+                    var targetCol = colliders[j];
+                    //Debug.Log($"Ignore {input} collision with: " + targetCol.gameObject.name);
+                    Physics2D.IgnoreCollision(col, targetCol, input);
+                }    
+                
+            }
+            //col.isTrigger = input;
             
             //for (int i = 0; i < 32; i++)
             //{
@@ -1307,17 +1324,20 @@ namespace TUFF
             //}
         }
         // Prevents Character getting stuck when jumping off a rope near a platform
-        private IEnumerator ReenableCollisionDelay()
-        {
-            if (!col) yield break;
-            yield return new WaitForFixedUpdate();
-            col.isTrigger = false;
-        }
+        //private IEnumerator ReenableCollisionDelay()
+        //{
+        //    yield break;
+        //    if (!col) yield break;
+        //    yield return new WaitForFixedUpdate();
+        //    yield return new WaitForFixedUpdate();
+        //    col.isTrigger = false;
+        //}
 
         private bool IsWalkableLayerCollisionDisabled()
         {
             if (!col) return true;
-            return col.isTrigger;
+            return ignoreCollision;
+            //return col.isTrigger;
             //for (int i = 0; i < 32; i++)
             //{
             //    if (walkableLayers == (walkableLayers | (1 << i)))
