@@ -181,6 +181,12 @@ namespace TUFF
         PrimaryAccessory = 4,
         SecondaryAccessory = 5
     }
+    public enum NumberComparisonType
+    {
+        EqualTo = 0,
+        MoreOrEqualTo = 1,
+        LessOrEqualTo = 2
+    }
     public enum OperationType
     {
         Add = 0,

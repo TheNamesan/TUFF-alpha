@@ -36,6 +36,9 @@ namespace TUFF
         public int targetSwitch;
 
         public UnitStatusComparator unitComparator;
+
+        public int targetMags;
+        public NumberComparisonType magsComparison;
         public bool ValidateCondition()
         {
             bool valid = false;
@@ -50,12 +53,32 @@ namespace TUFF
                 case BranchConditionType.Timer:
                     break;
                 case BranchConditionType.Unit:
-                    valid = unitComparator.ValidateUnit(); break;//ValidateUnit(targetUnit, unitCondition);
+                    valid = unitComparator.ValidateUnit(); break;
+                case BranchConditionType.Enemy:
+                    break;
+                case BranchConditionType.Character:
+                    break;
+                case BranchConditionType.Mags:
+                    valid = ValidateMags(); break;
                 default: break;
 
             }
             if (not) valid = !valid;
             return valid;
+        }
+        public bool ValidateMags()
+        {
+            int playerMags = PlayerData.instance.mags;
+            switch (magsComparison)
+            {
+                case NumberComparisonType.EqualTo:
+                    return playerMags == targetMags;
+                case NumberComparisonType.MoreOrEqualTo:
+                    return playerMags >= targetMags;
+                case NumberComparisonType.LessOrEqualTo:
+                    return playerMags <= targetMags;
+            }
+            return true;
         }
     }
 }

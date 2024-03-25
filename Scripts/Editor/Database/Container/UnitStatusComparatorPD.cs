@@ -28,14 +28,13 @@ namespace TUFF.TUFFEditor
             float w = orgWidth * 0.33f - 2;
             position.width = w;
 
-
-            var unitProp = property.FindPropertyRelative("targetUnit");
+            var unitProp = property.FindPropertyRelative(nameof(UnitStatusComparator.targetUnit));
             EditorGUIUtility.labelWidth = 64;
             EditorGUI.PropertyField(position, unitProp, new GUIContent("Unit"));
             EditorGUIUtility.labelWidth = orgLabel;
             position.x += position.width + 2;
             
-            var conditionTypeProp = property.FindPropertyRelative("unitCondition");
+            var conditionTypeProp = property.FindPropertyRelative(nameof(UnitStatusComparator.unitCondition));
             EditorGUI.PropertyField(position, conditionTypeProp, new GUIContent(""));
 
             position.x += position.width + 2;

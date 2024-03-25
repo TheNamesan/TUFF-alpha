@@ -64,7 +64,12 @@ namespace TUFF.TUFFEditor
                         text += "Timer"; break;
                     case BranchConditionType.Unit:
                         text += GetUnitText(element.unitComparator); break;
-
+                    case BranchConditionType.Enemy:
+                        text += "Enemy"; break;
+                    case BranchConditionType.Character:
+                        text += "Character"; break;
+                    case BranchConditionType.Mags:
+                        text += GetMagsText(element.targetMags, element.magsComparison); break;
                 }
             }
             return text;
@@ -92,7 +97,7 @@ namespace TUFF.TUFFEditor
             string text = "";
             string name = "null";
             if (target) name = target.gameObject.name;
-            text = $"{name} Switch is {targetSwitch}"; 
+            text = $"{name} Switch is {targetSwitch}";
             return text;
         }
         private static string GetUnitText(UnitStatusComparator comparator)
@@ -128,6 +133,18 @@ namespace TUFF.TUFFEditor
                     conditionText = $"is '{stateName}' inflicted"; break;
             }
             text = $"{name} {conditionText}";
+            return text;
+        }
+        private static string GetMagsText(int targetMags, NumberComparisonType comparison)
+        {
+            string text = $"Mags is {targetMags}";
+            switch (comparison)
+            {
+                case NumberComparisonType.MoreOrEqualTo:
+                    text += " or more"; break;
+                case NumberComparisonType.LessOrEqualTo:
+                    text += " or less"; break;
+            }
             return text;
         }
     }
@@ -189,6 +206,12 @@ namespace TUFF.TUFFEditor
                     ;
                 if (type == BranchConditionType.Unit)
                     DrawUnit(position, orgWidth, property);
+                if (type == BranchConditionType.Enemy)
+                    ;
+                if (type == BranchConditionType.Character)
+                    ;
+                if (type == BranchConditionType.Mags)
+                    DrawMags(position, orgWidth, property);
 
                 position.width += 15f;
                 position.x -= 15f;
@@ -221,6 +244,27 @@ namespace TUFF.TUFFEditor
             position.width = orgWidth - 2;
             EditorGUI.PropertyField(position, property.FindPropertyRelative("unitComparator"), new GUIContent(""));
             position.width = orgWidth;
+        }
+        private void DrawMags(Rect position, float orgWidth, SerializedProperty property)
+        {
+            var orgX = position.x;
+            var orgLabel = EditorGUIUtility.labelWidth;
+
+            float w = orgWidth * 0.33f - 2;
+            position.width = w;
+
+            var comparison = property.FindPropertyRelative(nameof(BranchActionContentElement.magsComparison));
+            EditorGUIUtility.labelWidth = 128;
+            EditorGUI.PropertyField(position, comparison, new GUIContent("Player Mags is"));
+            EditorGUIUtility.labelWidth = orgLabel;
+            position.x += position.width + 2;
+
+            var targetMags = property.FindPropertyRelative(nameof(BranchActionContentElement.targetMags));
+            EditorGUI.PropertyField(position, targetMags, new GUIContent(""));
+
+            //position.x += position.width + 2;
+            //EditorGUIUtility.labelWidth = 16;
+            //EditorGUIUtility.labelWidth = orgLabel;
         }
     }
 }
