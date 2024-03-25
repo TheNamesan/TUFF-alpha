@@ -87,6 +87,22 @@ namespace TUFF
             for (int i = 0; i < armors.Length; i++) { armors[i].id = i; }
             for (int i = 0; i < states.Length; i++) { states[i].id = i; }
         }
+        protected object GetFromArray(object[] array, int index)
+        {
+            if (index < 0 || index >= array.Length) return null;
+            return array[index];
+        }
+        public Unit GetUnitFromID(int index) => (Unit)GetFromArray(units, index);
+        public Job GetJobFromID(int index) => (Job)GetFromArray(jobs, index);
+        public Skill GetSkillFromID(int index) => (Skill)GetFromArray(skills, index);
+        public Command GetCommandFromID(int index) => (Command)GetFromArray(commands, index);
+        public Item GetItemFromID(int index) => (Item)GetFromArray(items, index);
+        public KeyItem GetKeyItemFromID(int index) => (KeyItem)GetFromArray(keyItems, index);
+        public Weapon GetWeaponFromID(int index) => (Weapon)GetFromArray(weapons, index);
+        public Armor GetArmorFromID(int index) => (Armor)GetFromArray(armors, index);
+        public State GetStateFromID(int index) => (State)GetFromArray(states, index);
+
+
         public List<State> GetAllStatesOfType(StateType type)
         {
             var statesOfType = new List<State>();

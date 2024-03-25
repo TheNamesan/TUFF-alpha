@@ -8,20 +8,54 @@ namespace TUFF
     public class PartyMember : Targetable
     {
         public virtual Unit unitRef { get; set; }
-        public Job job { get => m_job; }
-        [SerializeField] protected Job m_job;
+        public Job job
+        {
+            get => DatabaseLoader.instance.GetJobFromID(m_jobID);
+            protected set { m_jobID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_jobID = -1;
         public int prevExp = 0;
         public int exp = 0;
         public int prevLevel = 1;
         public int level = 1;
 
         // Equipment
-        public Weapon primaryWeapon;
-        public Weapon secondaryWeapon;
-        public Armor head;
-        public Armor body;
-        public Armor primaryAccessory;
-        public Armor secondaryAccessory;
+        public Weapon primaryWeapon
+        {
+            get => DatabaseLoader.instance.GetWeaponFromID(m_primaryWeaponID);
+            set { m_primaryWeaponID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_primaryWeaponID = -1;
+        public Weapon secondaryWeapon
+        {
+            get => DatabaseLoader.instance.GetWeaponFromID(m_secondaryWeaponID);
+            set { m_secondaryWeaponID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_secondaryWeaponID = -1;
+        public Armor head
+        {
+            get => DatabaseLoader.instance.GetArmorFromID(m_headID);
+            set { m_headID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_headID = -1;
+        public Armor body
+        {
+            get => DatabaseLoader.instance.GetArmorFromID(m_bodyID);
+            set { m_bodyID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_bodyID = -1;
+        public Armor primaryAccessory
+        {
+            get => DatabaseLoader.instance.GetArmorFromID(m_primaryAccessoryID);
+            set { m_primaryAccessoryID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_primaryAccessoryID = -1;
+        public Armor secondaryAccessory
+        {
+            get => DatabaseLoader.instance.GetArmorFromID(m_secondaryAccessoryID);
+            set { m_secondaryAccessoryID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_secondaryAccessoryID = -1;
 
         // Skills
         public bool[] learnedSkills = new bool[0];
@@ -73,7 +107,7 @@ namespace TUFF
             newLevel = Mathf.Max(0, newLevel); // Cap Min
             level = newLevel;
             exp = job.LevelToStat(level, LevelToStatType.EXP);
-            var skills = m_job?.GetSkillsToLearnAtLevel(level, 1);
+            var skills = this.job?.GetSkillsToLearnAtLevel(level, 1);
             foreach (Skill skl in skills) LearnSkill(skl);
         }
         public void AddLevel(int levelAdd)
@@ -95,7 +129,7 @@ namespace TUFF
                     Debug.Log("LEVEL UP! " + level);
                 }
             }
-            var skills = m_job?.GetSkillsToLearnAtLevel(level, 1);
+            var skills = this.job?.GetSkillsToLearnAtLevel(level, 1);
             foreach (Skill skl in skills) LearnSkill(skl);
         }
         public void SetEXP(int expSet)
@@ -467,7 +501,7 @@ namespace TUFF
         }
         public virtual void AssignJob(Job job)
         {
-            m_job = job;
+            this.job = job;
             if (job == null) return;
             var skills = job?.GetSkillsToLearnAtLevel(level, 1);
             foreach (Skill skl in skills) LearnSkill(skl);
