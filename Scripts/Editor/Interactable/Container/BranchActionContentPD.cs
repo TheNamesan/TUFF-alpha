@@ -149,6 +149,12 @@ namespace TUFF.TUFFEditor
                     lines += 1;
                 if (element.conditionType == BranchConditionType.Unit)
                     lines += 1;
+                if (element.conditionType == BranchConditionType.Enemy)
+                    lines += 1;
+                if (element.conditionType == BranchConditionType.Character)
+                    lines += 1;
+                if (element.conditionType == BranchConditionType.Mags)
+                    lines += 1;
                 //lines += 3;
             }
             return (20f * lines);

@@ -90,7 +90,10 @@ namespace TUFF
         GameVariable = 0,
         InteractableSwitch = 1,
         Timer = 2,
-        Unit = 3
+        Unit = 3,
+        Enemy = 4,
+        Character = 5,
+        Mags = 6
     }
     public enum UnitStatusConditionType
     {
