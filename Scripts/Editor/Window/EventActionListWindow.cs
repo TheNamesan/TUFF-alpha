@@ -250,7 +250,7 @@ namespace TUFF.TUFFEditor
         /// <param name="contentProperty">Optional. Content Property to Update. Set to null to update the main property (SelectedContentProperty)</param>
         public static void DisplayEventListContent(Rect position, List<EventAction> eventList, List<EventActionPD> eventListPDs, string selectionPanelTitle, SerializedProperty contentProperty, string parentPropertyPath)
         {
-
+            float orgY = position.y;
             // TODO: Add a "abortDraw" variable to cancel this and all other methods.
 
             if (eventList == null) { Debug.Log("Event List is null!"); return; }
@@ -621,18 +621,23 @@ namespace TUFF.TUFFEditor
         private static void GetList(ref ReorderableList list, List<EventAction> actionListContent)
         {
             list = new ReorderableList(actionListContent, typeof(EventAction), true, false, false, false);
+            list.multiSelect = true;
             list.drawElementCallback = DrawListItems;
             list.elementHeightCallback = GetElementHeight;
+            list.drawElementBackgroundCallback = DrawBackground;
         }
         private static ReorderableList GetList(List<EventAction> actionListContent)
         {
             var list = new ReorderableList(actionListContent, typeof(EventAction), true, false, false, false);
+            list.multiSelect = true;
             list.drawElementCallback = DrawListItems;
             list.elementHeightCallback = GetElementHeight;
+            list.drawElementBackgroundCallback = DrawBackground;
             list.onChangedCallback = (ReorderableList l) => { 
                 lowerPanelPD = null; 
                 //UpdatePDs(); 
                 Debug.Log("Moved"); }; // Change this so it doesn't exit the lower panel?
+            
             return list;
         }
         private static float GetElementHeight(int index)
@@ -679,6 +684,10 @@ namespace TUFF.TUFFEditor
         {
             if (eventDeleted) return;
 
+            // Line Render Stuff
+            float orgY = rect.y;
+            float height = 0;
+
             var curKey = renderingKey;
             if (curKey == null) { Debug.LogWarning($"No key! Index: {index}"); return; };
 
@@ -692,7 +701,8 @@ namespace TUFF.TUFFEditor
             if (index < 0 || index >= actionList.Count) { Debug.LogWarning($"Index {index} is invalid! Count: {actionList.Count}"); return; }
             if (actionList[index] == null) { Debug.LogWarning($"Index {index} is empty! Count: {actionList.Count}"); return; }
 
-            GUI.color = actionList[index].eventColor;
+            Color eventColor = actionList[index].eventColor;
+            GUI.color = eventColor;
             rect.height = 20f;
             bool markListDirty = false;
             CommandDefaultButtons(ref rect, actionList, actionListPDs, index, listSelectionPanelTitle, ref markListDirty, curListContentProperty);
@@ -707,11 +717,26 @@ namespace TUFF.TUFFEditor
             if (!contract) // Change this to contract per element
             {
                 if (actionListPDs.Count > 0 && index < actionListPDs.Count && actionListPDs[index] != null)
+                {
                     actionListPDs[index].SummaryGUI(rect);
+                    height += actionListPDs[index].GetSummaryHeight();
+                }
             }
             GUI.color = prevGUIColor;
             UpdateListContentProperty(curListContentProperty);
+
+            Rect lineRect = new Rect(rect.x - 10, orgY + 20, 1f, height);
+            GUI.DrawTexture(lineRect, lineTexture, ScaleMode.StretchToFill, true, 0, Color.gray * eventColor, 0, 0);
             //listContentProperty = prevListContentProperty;
+        }
+        public static void DrawBackground(Rect rect, int index, bool active, bool focused)
+        {
+            if (index % 2 == 0)
+            {
+                Color color = new Color(0.1f, 0.1f, 0.1f, 0.25f);
+                GUI.DrawTexture(rect, lineTexture, ScaleMode.StretchToFill, true, 0, color, 0, 0);
+            }
+            ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, active, focused, true);
         }
         private static void GetReferences()
         {
