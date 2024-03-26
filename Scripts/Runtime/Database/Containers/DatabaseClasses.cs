@@ -416,4 +416,51 @@ namespace TUFF
             }
         }
     }
+    [System.Serializable]
+    public struct InventoryComparator
+    {
+        public DropType inventoryType;
+        public NumberComparisonType numberComparison;
+        public int targetItemCount;
+        
+        public Item targetItem;
+        public KeyItem targetKeyItem;
+        public Weapon targetWeapon;
+        public Armor targetArmor;
+
+        public bool includeEquipment;
+        public bool ValidateInventory()
+        {
+            if (Inventory.instance == null) return false;
+            switch (inventoryType)
+            {
+                case DropType.Item:
+                    if (!targetItem) return false;
+                    return ValidateCount(Inventory.instance.GetItemAmount(targetItem));
+                case DropType.KeyItem:
+                    if (!targetKeyItem) return false;
+                    return ValidateCount(Inventory.instance.GetItemAmount(targetKeyItem));
+                case DropType.Weapon:
+                    if (!targetWeapon) return false;
+                    return ValidateCount(Inventory.instance.GetItemAmount(targetWeapon, includeEquipment));
+                case DropType.Armor:
+                    if (!targetArmor) return false;
+                    return ValidateCount(Inventory.instance.GetItemAmount(targetArmor, includeEquipment));
+                default: return false;
+            }
+        }
+        private bool ValidateCount(int count)
+        {
+            switch (numberComparison)
+            {
+                case NumberComparisonType.EqualTo:
+                    return count == targetItemCount;
+                case NumberComparisonType.MoreOrEqualTo:
+                    return count >= targetItemCount;
+                case NumberComparisonType.LessOrEqualTo:
+                    return count <= targetItemCount;
+            }
+            return true;
+        }
+    }
 }

@@ -281,8 +281,8 @@ namespace TUFF
             if (!si) return vector;
             vector = new Vector3
                 (
-                    Mathf.Clamp(vector.x, si.min.x + camHalfWidth, si.max.x - camHalfWidth),
-                    Mathf.Clamp(vector.y, si.min.y + camHalfHeight, si.max.y - camHalfHeight),
+                    Mathf.Clamp(vector.x, min.x + camHalfWidth, max.x - camHalfWidth),
+                    Mathf.Clamp(vector.y, min.y + camHalfHeight, max.y - camHalfHeight),
                     transform.position.z
                 );
 

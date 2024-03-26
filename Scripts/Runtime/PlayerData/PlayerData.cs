@@ -234,6 +234,10 @@ namespace TUFF
         public Dictionary<InventoryItem, int> GetWeaponsAndAmount() => inventory.GetWeaponsAndAmount();
         public Dictionary<InventoryItem, int> GetArmorsAndAmount() => inventory.GetArmorsAndAmount();
         public Dictionary<InventoryItem, int> GetEntireInventoryAndAmount() => inventory.GetEntireInventoryAndAmount();
+        public int GetItemAmountFromPartyEquipment(IEquipable equipable)
+        {
+            return 0;
+        }
         public bool IsValidGameVariableIndex(int index)
         {
             return index >= 0 && index < gameVariables.Length;

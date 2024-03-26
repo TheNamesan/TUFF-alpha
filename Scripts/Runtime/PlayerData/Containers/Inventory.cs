@@ -86,18 +86,25 @@ namespace TUFF
             GetArmorsAndAmount(baseDirectory, includeZero);
             return baseDirectory;
         }
-        public int GetItemAmount(InventoryItem item)
+        public int GetItemAmount(InventoryItem item, bool includeEquipment)
         {
+            if (!item) return -1;
             if (item is Item) return items[item.id];
             if (item is KeyItem) return keyItems[item.id];
-            if (item is Weapon) return weapons[item.id];
-            if (item is Armor) return armors[item.id];
+            if (item is Weapon) return weapons[item.id] + (includeEquipment ? GetItemAmountFromPartyEquipment(item as IEquipable) : 0);
+            if (item is Armor) return armors[item.id] + (includeEquipment ? GetItemAmountFromPartyEquipment(item as IEquipable) : 0);
             return -1;
         }
-        public bool HasItem(InventoryItem item)
+        public int GetItemAmount(InventoryItem item) => GetItemAmount(item, false);
+        public int GetItemAmountFromPartyEquipment(IEquipable equipable)
+        {
+            return PlayerData.instance.GetItemAmountFromPartyEquipment(equipable);
+        }
+        public bool HasItem(InventoryItem item, bool includeEquipment)
         {
             return GetItemAmount(item) >= 0;
         }
+        public bool HasItem(InventoryItem item) => HasItem(item, false);
         public void AddToInventory(Item item, int amount)
         {
             if (item == null) return;

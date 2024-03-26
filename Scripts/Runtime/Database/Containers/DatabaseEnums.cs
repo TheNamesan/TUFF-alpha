@@ -93,7 +93,9 @@ namespace TUFF
         Unit = 3,
         Enemy = 4,
         Character = 5,
-        Mags = 6
+        Mags = 6,
+        InventoryItem = 7,
+        Button = 8
     }
     public enum UnitStatusConditionType
     {

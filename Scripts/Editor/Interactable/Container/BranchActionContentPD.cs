@@ -69,7 +69,9 @@ namespace TUFF.TUFFEditor
                     case BranchConditionType.Character:
                         text += "Character"; break;
                     case BranchConditionType.Mags:
-                        text += GetMagsText(element.targetMags, element.magsComparison); break;
+                        text += GetMagsText(element.targetMags, element.numberComparison); break;
+                    case BranchConditionType.InventoryItem:
+                        text += GetInventoryItemText(element.inventoryComparator); break;
                 }
             }
             return text;
@@ -98,6 +100,27 @@ namespace TUFF.TUFFEditor
             string name = "null";
             if (target) name = target.gameObject.name;
             text = $"{name} Switch is {targetSwitch}";
+            return text;
+        }
+        private static string GetInventoryItemText(InventoryComparator comparator)
+        {
+            string text = "";
+            string name = "null";
+            DropType inventoryType = comparator.inventoryType;
+            switch (inventoryType)
+            {
+                case DropType.Item:
+                    if (comparator.targetItem) name = comparator.targetItem.GetName(); break;
+                case DropType.KeyItem:
+                    if (comparator.targetKeyItem) name = comparator.targetKeyItem.GetName(); break;
+                case DropType.Weapon:
+                    if (comparator.targetWeapon) name = comparator.targetWeapon.GetName(); break;
+                case DropType.Armor:
+                    if (comparator.targetArmor) name = comparator.targetArmor.GetName(); break;
+            }
+            text = $"{name} in Inventory";
+            if (inventoryType == DropType.Weapon || inventoryType == DropType.Armor)
+                text += (comparator.includeEquipment ? "(Include Equipment)" : "");
             return text;
         }
         private static string GetUnitText(UnitStatusComparator comparator)
@@ -158,20 +181,15 @@ namespace TUFF.TUFFEditor
             {
                 lines += 2;
                 var element = LISAEditorUtility.GetTargetObjectOfProperty(property) as BranchActionContentElement;
-                if (element.conditionType == BranchConditionType.GameVariable)
-                    lines += 2;
-                if (element.conditionType == BranchConditionType.InteractableSwitch)
-                    lines += 1;
-                if (element.conditionType == BranchConditionType.Timer)
-                    lines += 1;
-                if (element.conditionType == BranchConditionType.Unit)
-                    lines += 1;
-                if (element.conditionType == BranchConditionType.Enemy)
-                    lines += 1;
-                if (element.conditionType == BranchConditionType.Character)
-                    lines += 1;
-                if (element.conditionType == BranchConditionType.Mags)
-                    lines += 1;
+                if (element.conditionType == BranchConditionType.GameVariable) lines += 2;
+                if (element.conditionType == BranchConditionType.InteractableSwitch) lines += 1;
+                if (element.conditionType == BranchConditionType.Timer) lines += 1;
+                if (element.conditionType == BranchConditionType.Unit) lines += 1;
+                if (element.conditionType == BranchConditionType.Enemy) lines += 1;
+                if (element.conditionType == BranchConditionType.Character) lines += 1;
+                if (element.conditionType == BranchConditionType.Mags) lines += 1;
+                if (element.conditionType == BranchConditionType.InventoryItem) lines += 1;
+                if (element.conditionType == BranchConditionType.Button) lines += 1;
                 //lines += 3;
             }
             return (20f * lines);
@@ -212,6 +230,8 @@ namespace TUFF.TUFFEditor
                     ;
                 if (type == BranchConditionType.Mags)
                     DrawMags(position, orgWidth, property);
+                if (type == BranchConditionType.InventoryItem)
+                    DrawInventoryItem(position, orgWidth, property);//DrawMags(position, orgWidth, property, nameof(BranchActionContentElement.includeEquipment));
 
                 position.width += 15f;
                 position.x -= 15f;
@@ -253,7 +273,7 @@ namespace TUFF.TUFFEditor
             float w = orgWidth * 0.33f - 2;
             position.width = w;
 
-            var comparison = property.FindPropertyRelative(nameof(BranchActionContentElement.magsComparison));
+            var comparison = property.FindPropertyRelative(nameof(BranchActionContentElement.numberComparison));
             EditorGUIUtility.labelWidth = 128;
             EditorGUI.PropertyField(position, comparison, new GUIContent("Player Mags is"));
             EditorGUIUtility.labelWidth = orgLabel;
@@ -265,6 +285,12 @@ namespace TUFF.TUFFEditor
             //position.x += position.width + 2;
             //EditorGUIUtility.labelWidth = 16;
             //EditorGUIUtility.labelWidth = orgLabel;
+        }
+        private void DrawInventoryItem(Rect position, float orgWidth, SerializedProperty property)
+        {
+            position.width = orgWidth - 2;
+            EditorGUI.PropertyField(position, property.FindPropertyRelative("inventoryComparator"), new GUIContent(""));
+            position.width = orgWidth;
         }
     }
 }
