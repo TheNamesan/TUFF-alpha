@@ -61,21 +61,25 @@ namespace TUFF
             m_interactableEventPlaying = true;
             // This is probably an ugly way of forcing input disabling if a menu is closed for example.
             // Find a better alternative
+            bool yielded = false;
             yield return actionList.PlayActions(() =>
             {
                 if (!GameManager.disablePlayerInput)
                 {
                     GameManager.instance.DisablePlayerInput(true);
+                    yielded = true;
                     Debug.Log("Stop Control");
                 }
             });
             InteractableObject.UpdateAll();
-            yield return new WaitForSeconds(.025f);
+            if (yielded) 
+                yield return new WaitForSeconds(.025f);
             GameManager.instance.DisablePlayerInput(false);
             Debug.Log("Regain Control");
             m_interactableEventPlaying = false;
             if (m_queuedInteractableEvents.Count > 0)
             {
+                // Dequeue
                 var evt = m_queuedInteractableEvents[0];
                 m_queuedInteractableEvents.RemoveAt(0);
                 TriggerInteractableEvent(evt);
