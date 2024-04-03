@@ -47,14 +47,11 @@ namespace TUFF
             // Resolution
             windowRes.options = new List<string>();
             var supportedResolutions = GameManager.instance.supportedResolutions;
-            int index = -1; 
-            for (int i = 0; i < supportedResolutions.Length; i++)
-            {
-                if (currentResolution.width == supportedResolutions[i].width &&
-                    currentResolution.height == supportedResolutions[i].height) { index = i; break; }
-            }
+            int index = -1;
+            index = System.Array.FindIndex(supportedResolutions,
+                e => currentResolution.width == e.width && currentResolution.height == e.height);
             if (index < 0) 
-            { 
+            {
                 GameManager.instance.ExpandSupportedResolutions(currentResolution);
                 supportedResolutions = GameManager.instance.supportedResolutions;
                 index = supportedResolutions.Length - 1;
