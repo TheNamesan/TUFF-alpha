@@ -101,6 +101,9 @@ namespace TUFF
             fadeTween?.Kill();
             stretchTween?.Kill();
         }
-        
+        private void OnDestroy()
+        {
+            KillTweens();
+        }
     }
 }
