@@ -56,7 +56,7 @@ namespace TUFF
                     int index = Random.Range(0, propertiesData.stepSFXs.Count);
                     var sfx = propertiesData.stepSFXs[index];
                     var pitchVar = propertiesData.stepPitchVariation;
-                    AudioManager.instance.PlaySFX(sfx.audioClip, sfx.volume, sfx.pitch + Random.Range(-pitchVar, pitchVar));
+                    AudioManager.instance.PlaySFX(sfx.GetAudioClip(), sfx.GetVolume(), sfx.GetPitch() + Random.Range(-pitchVar, pitchVar));
                 }
                 if (propertiesData.stepEffectPrefab != null)
                 {
