@@ -76,7 +76,7 @@ namespace TUFF
             if (triggerEvents[m_index].triggerType == TriggerType.PlayOnStart)
                 StartCoroutine(PlayOnStart());
         }
-        public void Update()
+        public void FixedUpdate()
         {
             Autorun();
         }

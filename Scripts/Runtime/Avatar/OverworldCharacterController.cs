@@ -199,7 +199,7 @@ namespace TUFF
         [SerializeField] public bool runMomentum = false;
         [SerializeField] public bool runCanceled = false;
         [SerializeField] public Vector2 runDirection = new Vector2();
-        [SerializeField] double runButtonHoldTime = 0d;
+        [SerializeField] public double runButtonHoldTime = 0d;
         [SerializeField] double runButtonReleaseTime = 0d;
         [SerializeField] double timeForRunPrep = 0.35d;
         [Tooltip("Time to keep the runMomentum variable after releasing the run key.")]
@@ -233,6 +233,7 @@ namespace TUFF
         public UnityEvent onInputUpdate = new();
 
         [SerializeField] float timeJump = 0;
+        protected IEnumerator lateFixedUpdate;
 
         private void Awake()
         {
@@ -245,6 +246,12 @@ namespace TUFF
         private void OnEnable()
         {
             Physics2D.IgnoreLayerCollision(gameObject.layer, gameObject.layer, true);
+            if (lateFixedUpdate == null) lateFixedUpdate = LateFixedUpdate();
+            StartCoroutine(lateFixedUpdate);
+        }
+        private void OnDisable()
+        {
+            if (lateFixedUpdate != null) StopCoroutine(lateFixedUpdate);
         }
 
         void Start()
@@ -290,15 +297,18 @@ namespace TUFF
             lastPosition = rb.position;
             lastVelocity = rb.velocity;
             InputUpdate();
-            nextInput.interactionButtonDown = false;
-            nextInput.runButtonDown = false;
-            nextInput.pauseButtonDown = false;
+            //nextInput.interactionButtonDown = false;
+            //nextInput.runButtonDown = false;
+            //nextInput.pauseButtonDown = false;
             wasGrounded = grounded;
         }
-
-        private void LateUpdate()
+        private IEnumerator LateFixedUpdate()
         {
-            
+            while (true)
+            {
+                yield return new WaitForFixedUpdate();
+
+            }
         }
 
         private void VelocityZeroCorrection() // Attempts to fix sprite clipping when crossing other characters
@@ -552,27 +562,27 @@ namespace TUFF
                     nextXFacing = -1;
                 }
             //}
-            if (Mathf.Abs(input.horizontalInputTap) > 0)
-            {
-                input.horizontalInputTap = 0;
-            }
+            //if (Mathf.Abs(input.horizontalInputTap) > 0)
+            //{
+            //    input.horizontalInputTap = 0;
+            //}
             // Vertical Input
 
             //if (!GameManager.disablePlayerInput)
             //{
-                if (input.verticalInput > 0)
-                {
-                    nextYFacing = 1;
-                }
-                else if (input.verticalInput < 0)
-                {
-                    nextYFacing = -1;
-                }
-            //}
-            if (Mathf.Abs(input.verticalInputTap) > 0)
+            if (input.verticalInput > 0)
             {
-                input.verticalInputTap = 0;
+                nextYFacing = 1;
             }
+            else if (input.verticalInput < 0)
+            {
+                nextYFacing = -1;
+            }
+            //}
+            //if (Mathf.Abs(input.verticalInputTap) > 0)
+            //{
+            //    input.verticalInputTap = 0;
+            //}
             // Z
             if (input.interactionButtonDown)
             {
@@ -662,9 +672,10 @@ namespace TUFF
         private bool CheckInteractable()
         {
             if (GameManager.disablePlayerInput) return false;
+            if (hardLanded) return false;
+            //Debug.Log($"{gameObject.name}: Check interactable");
             if (grounded && rb.velocity.y == 0 && input.horizontalInput == 0)
             {
-                if (hardLanded) return false;
                 Debug.DrawRay(transform.position, Vector2.right * interactionDistance * faceX, Color.cyan, 3);
                 RaycastHit2D[] hit = Physics2D.RaycastAll(transform.position, Vector2.right * faceX, interactionDistance, LayerMask.GetMask("Interactable"));
                 for (int i = 0; i < hit.Length; i++)
@@ -1291,7 +1302,7 @@ namespace TUFF
         {
             if (grounded && !hardLanded)
             {
-                UIController.instance.InvokePauseMenu();
+                //UIController.instance.InvokePauseMenu();
             }
         }
 

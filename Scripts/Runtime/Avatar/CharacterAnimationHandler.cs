@@ -126,7 +126,7 @@ namespace TUFF
                             SetAnimationWait();
                             return "Skid" + postfix;
                         }
-                        if (c.nextInput.runButtonHold)
+                        if (c.runButtonHoldTime > 0 || c.runMomentum)
                         {
                             //if (lastStateName != "RunPrep" + postfix) SetAnimationWait();
                             return "RunPrep" + postfix;
@@ -176,12 +176,6 @@ namespace TUFF
                 case CharacterStates.Jump:
                     if (c.jumpDirection > 0) return "JumpDown";
                     return "Jump";
-                //case CharacterStates.Landing:
-                //    if (c.faceDirection == FaceDirections.East) return "LandingRight";
-                //    if (c.faceDirection == FaceDirections.West) return "LandingLeft";
-                //    if (c.faceDirection == FaceDirections.North) return "Landing";
-                //    if (c.faceDirection == FaceDirections.South) return "LandingDown";
-                //    return "Landing";
                 case CharacterStates.HardLanding:
                     if (c.faceDirection == FaceDirections.East) return "HardLandingRight";
                     if (c.faceDirection == FaceDirections.West) return "HardLandingLeft";

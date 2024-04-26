@@ -130,8 +130,8 @@ namespace TUFF
             Debug.Log($"Disable Player Input: {input}");
             if (input != prev)
             {
-                if (input) PlayerInputHandler.instance?.StopInput();
-                else PlayerInputHandler.instance?.ResumeInput();
+                if (input) inputManager.playerInputHandler?.StopInput();
+                else inputManager.playerInputHandler?.ResumeInput();
             }
             onPlayerInputToggle.Invoke(!input);
         }
