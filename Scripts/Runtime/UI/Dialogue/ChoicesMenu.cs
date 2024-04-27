@@ -154,7 +154,7 @@ namespace TUFF
                 var newArray = new UIElementContainer[rows + 1];
                 System.Array.Copy(uiMenu.UIElementContainers, newArray, uiMenu.UIElementContainers.Length);
                 uiMenu.UIElementContainers = newArray;
-                Debug.Log("Resize: " + uiMenu.UIElementContainers.Length);
+                //Debug.Log("Resize: " + uiMenu.UIElementContainers.Length);
             }
             if (uiMenu.UIElementContainers[0] == null) // Check Index 0
                 uiMenu.UIElementContainers[0] = new UIElementContainer();

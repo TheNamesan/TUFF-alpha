@@ -99,7 +99,8 @@ namespace TUFF
             //{
             //    AssignInstance(this);
             //}
-            if (instance != null && instance == this)
+            Debug.Log(instance, this);
+            if (instance == this)
             {
                 UpdateCurrentScene(SceneManager.GetActiveScene());
                 AddToLoadedScenes(currentScene);

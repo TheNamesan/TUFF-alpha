@@ -47,24 +47,42 @@ namespace TUFF
         public static bool gameOver = false;
 
         #region Singleton
-        public static GameManager instance;
+        public static GameManager instance
+        {
+            get { 
+                if (m_instance == null)
+                {
+                    m_instance = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+                    m_instance.InitializeGame();
+                }
+                return m_instance;
+            }
+            set { m_instance = value; }
+        }
+        private static GameManager m_instance;
+        
         private void Awake()
         {
             if (instance != null)
             {
                 if (instance != this) Destroy(gameObject);
             }
-            else
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-                Instantiate(gameCanvasPrefab);
-                LocalizationSettings.Instance.GetInitializationOperation();
-                LoadInitialData();
-                //LocalizationSettings.Instance.GetInitializationOperation(); //Start Localization
-                StartCoroutine(Dialogue.PreloadTextboxes());
-                DOTween.Init();
-            }
+            //else
+            //{
+            //    instance = this;
+            //    InitializeGame();
+            //}
+        }
+
+        private void InitializeGame()
+        {
+            DontDestroyOnLoad(gameObject);
+            Instantiate(gameCanvasPrefab);
+            LocalizationSettings.Instance.GetInitializationOperation();
+            LoadInitialData();
+            //LocalizationSettings.Instance.GetInitializationOperation(); //Start Localization
+            StartCoroutine(Dialogue.PreloadTextboxes());
+            DOTween.Init();
         }
         #endregion
 
