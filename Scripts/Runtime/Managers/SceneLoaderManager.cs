@@ -35,6 +35,7 @@ namespace TUFF
             if (cachedNeighbourScenes.IndexOf(scene) >= 0) return; //Neighbour already added
             if (scene == currentScene) return;
             cachedNeighbourScenes.Add(scene);
+            Debug.Log($"Added Neighbour ({scene.name}) to {currentScene.name}");
         }
         public bool HasScene(Scene scene)
         {
@@ -98,9 +99,12 @@ namespace TUFF
             //{
             //    AssignInstance(this);
             //}
-            UpdateCurrentScene(SceneManager.GetActiveScene());
-            AddToLoadedScenes(currentScene);
-            UpdateNodes(currentScene);
+            if (instance != null && instance == this)
+            {
+                UpdateCurrentScene(SceneManager.GetActiveScene());
+                AddToLoadedScenes(currentScene);
+                UpdateNodes(currentScene);
+            }
         }
         public static void AssignInstance(SceneLoaderManager target)
         {
@@ -188,10 +192,13 @@ namespace TUFF
                     SetAllRootGameObjectsActive(currentScene.GetRootGameObjects(), true);
                     SetPlayerPosition(playerPosition, faceDirection);
                 }
-                Debug.Log(Time.unscaledTime - tim);
+                //Debug.Log(Time.unscaledTime - tim);
                 StartCoroutine(UnloadScenes());
             }
-            else SetPlayerPosition(playerPosition, faceDirection);
+            else // Scene name is same as current, so just reposition the player
+            { 
+                SetPlayerPosition(playerPosition, faceDirection); 
+            }
             m_loading = false;
             UIController.instance.TriggerLoadingIcon(false);
             if (disableActionMap) GameManager.instance.DisableActionMaps(false);
@@ -223,12 +230,15 @@ namespace TUFF
             {
                 yield return null;
             }
+            //Debug.Log($"Current Scene Node: { currentSceneNode.currentScene.name }");
+            //Debug.Log($"Last Scene Node: { currentSceneNode.currentScene.name }");
             // Check Missing Intersections
             for (int i = 0; i < SceneManager.sceneCount; i++)
             {
                 var scene = SceneManager.GetSceneAt(i);
                 if (currentSceneNode.HasScene(scene)) continue;
                 if (lastSceneNode.HasScene(scene)) continue;
+                Debug.Log($"Unloading: {scene.name}");
                 var op = SceneManager.UnloadSceneAsync(scene.name);
                 unloadingScenes.Add(scene.name);
                 op.completed += (asyncOperation) => { unloadingScenes.Remove(scene.name); };
@@ -241,6 +251,7 @@ namespace TUFF
         }
         IEnumerator AsyncLoadNeighbourScene(string sceneName)
         {
+            // If neighbour is already loading, abort
             if (loadingNeighbourScenes.IndexOf(sceneName) >= 0) yield break;
             var targetScene = SceneManager.GetSceneByName(sceneName);
             int sceneIndex = preloadedScenes.IndexOf(targetScene);

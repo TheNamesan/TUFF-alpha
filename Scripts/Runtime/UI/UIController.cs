@@ -113,17 +113,17 @@ namespace TUFF
         public void GetCanvasCamera()
         {
             if (cameraCanvas == null) return;
-            Debug.Log(SceneLoaderManager.currentSceneNode);
-            Debug.Log(SceneLoaderManager.currentSceneProperties);
+            //Debug.Log(SceneLoaderManager.currentSceneNode);
+            //Debug.Log(SceneLoaderManager.currentSceneProperties);
             var currentSceneProp = SceneLoaderManager.currentSceneProperties;
-            Debug.Log("Current Scene Prop: " + currentSceneProp);
+            //Debug.Log("Current Scene Prop: " + currentSceneProp);
             if (currentSceneProp == null) return;
             var cameraFollow = currentSceneProp.camFollow;
             if (cameraFollow == null) return;
             var newCamera = cameraFollow.cam;
             cameraCanvas.worldCamera = newCamera;
             cameraCanvas.sortingLayerName = cameraCanvasSortingLayerName;
-            Debug.Log("Assigned camera: " + newCamera, this);
+            //Debug.Log("Assigned camera: " + newCamera, this);
         }
         public void RefreshDosh(int input)
         {
