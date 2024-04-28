@@ -34,6 +34,7 @@ namespace TUFF
                 //return m_instance;
             }
         }
+        private bool m_initialized = false;
         //protected static DatabaseLoader m_instance;
         public void Awake()
         {
@@ -45,6 +46,12 @@ namespace TUFF
             //{
             //    AssignInstance(this);
             //}
+            InitializeDatabase();
+        }
+
+        public void InitializeDatabase()
+        {
+            if (m_initialized) return;
             units = Resources.LoadAll<Unit>("Database/0Units");
             jobs = Resources.LoadAll<Job>("Database/1Jobs");
             skills = Resources.LoadAll<Skill>("Database/2Skills");
@@ -56,7 +63,9 @@ namespace TUFF
             states = Resources.LoadAll<State>("Database/10States");
             animations = Resources.LoadAll<BattleAnimation>(animationsPath);
             AssignIDs();
+            m_initialized = true;
         }
+
         //protected static void AssignInstance(DatabaseLoader target)
         //{
         //    if (target == null) return;

@@ -53,7 +53,7 @@ namespace TUFF
                 if (m_instance == null)
                 {
                     m_instance = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
-                    m_instance.InitializeGame();
+                    m_instance?.InitializeGame();
                 }
                 return m_instance;
             }
@@ -95,6 +95,7 @@ namespace TUFF
             SetGameResolution(configData.resolutionWidth, configData.resolutionHeight, configData.refreshRate);
             UpdateGlobalVolume();
 
+            databaseLoader.InitializeDatabase();
             //Load Dummy Save Data
             playerData.StartPlayerData();
             playerData.AddToParty(0); //dummy test
