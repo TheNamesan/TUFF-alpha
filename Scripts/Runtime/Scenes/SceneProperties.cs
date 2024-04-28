@@ -59,7 +59,7 @@ namespace TUFF
         }
         public void DisableScene()
         {
-            Debug.Log("disale");
+            Debug.Log("Disabled Clone");
             if (clone != null)
             {
                 clone.gameObject.name = gameObject.name;
