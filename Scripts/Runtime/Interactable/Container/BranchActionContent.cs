@@ -73,12 +73,18 @@ namespace TUFF
         {
             switch (numberComparison)
             {
-                case NumberComparisonType.EqualTo:
+                case NumberComparisonType.Equal:
                     return count == targetMags;
-                case NumberComparisonType.MoreOrEqualTo:
-                    return count >= targetMags;
-                case NumberComparisonType.LessOrEqualTo:
+                case NumberComparisonType.NotEqual:
+                    return count != targetMags;
+                case NumberComparisonType.Less:
+                    return count < targetMags;
+                case NumberComparisonType.LessOrEqual:
                     return count <= targetMags;
+                case NumberComparisonType.Greater:
+                    return count > targetMags;
+                case NumberComparisonType.GreaterOrEqual:
+                    return count >= targetMags;
             }
             return true;
         }

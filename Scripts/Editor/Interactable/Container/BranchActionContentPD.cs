@@ -69,7 +69,7 @@ namespace TUFF.TUFFEditor
                     case BranchConditionType.Character:
                         text += "Character"; break;
                     case BranchConditionType.Mags:
-                        text += GetMagsText(element.targetMags, element.numberComparison); break;
+                        text += "Mags is " + GetNumberComparisonText(element.targetMags, element.numberComparison); break;
                     case BranchConditionType.InventoryItem:
                         text += GetInventoryItemText(element.inventoryComparator); break;
                 }
@@ -118,7 +118,8 @@ namespace TUFF.TUFFEditor
                 case DropType.Armor:
                     if (comparator.targetArmor) name = comparator.targetArmor.GetName(); break;
             }
-            text = $"{name} in Inventory";
+            string amount = GetNumberComparisonText(comparator.targetItemCount, comparator.numberComparison);
+            text = $"Has {amount} {name} in Inventory";
             if (inventoryType == DropType.Weapon || inventoryType == DropType.Armor)
                 text += (comparator.includeEquipment ? "(Include Equipment)" : "");
             return text;
@@ -158,15 +159,23 @@ namespace TUFF.TUFFEditor
             text = $"{name} {conditionText}";
             return text;
         }
-        private static string GetMagsText(int targetMags, NumberComparisonType comparison)
+        private static string GetNumberComparisonText(int count, NumberComparisonType comparison)
         {
-            string text = $"Mags is {targetMags}";
+            string text = $"";
             switch (comparison)
             {
-                case NumberComparisonType.MoreOrEqualTo:
-                    text += " or more"; break;
-                case NumberComparisonType.LessOrEqualTo:
-                    text += " or less"; break;
+                case NumberComparisonType.NotEqual:
+                    text += $"not {count}"; break;
+                case NumberComparisonType.Less:
+                    text += $"less than {count}"; break;
+                case NumberComparisonType.LessOrEqual:
+                    text += $"{count} or less"; break;
+                case NumberComparisonType.Greater:
+                    text += $"more than {count}"; break;
+                case NumberComparisonType.GreaterOrEqual:
+                    text += $"{count} or more"; break;
+                default:
+                    text += $"{count}"; break;
             }
             return text;
         }
