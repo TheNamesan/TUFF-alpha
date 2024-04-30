@@ -117,8 +117,9 @@ namespace TUFF
         [Tooltip("The layers to ignore when checking for ground when jumping up or down.")]
         [SerializeField] LayerMask ignoredLayersAtJumpCheck;
 
+        public Collider2D touchingWalkable { get => m_touchingWalkable; }
         [Tooltip("Avatar currently touching Walkable.")]
-        [SerializeField] Collider2D touchingWalkable;
+        [SerializeField] Collider2D m_touchingWalkable;
         [Tooltip("Avatar touched Walkable before falling.")]
         [SerializeField] Collider2D touchingWalkableBeforeFalling;
         [Tooltip("Current Touching Walkable's terrain properties.")]
@@ -385,7 +386,7 @@ namespace TUFF
 
             if ((collision /*|| (nextCollision && grounded)*/) && !IsWalkableLayerCollisionDisabled()) //OnCollisionEnter/Stay
             {
-                if (touchingWalkable == collider || grounded)
+                if (m_touchingWalkable == collider || grounded)
                 {
                     boxColor = Color.yellow;
                 }
@@ -403,13 +404,13 @@ namespace TUFF
                 //    normal = nextCollision.normal;
                 //    point = nextCollision.point;
                 //}
-                if (grounded && touchingWalkable != collider)
+                if (grounded && m_touchingWalkable != collider)
                 {
                     Debug.Log(collider + " (" + collision.collider + ")," + slopeFound + "," + touchingWalkableNormal);
                     SetTouchingWalkable(collider);
                     boxColor = Color.yellow;
                 }
-                if (!grounded && touchingWalkable == null /*&& normal.y > 0*/ && rb.velocity.y < 0.1f && !ignoreGroundCheck)
+                if (!grounded && m_touchingWalkable == null /*&& normal.y > 0*/ && rb.velocity.y < 0.1f && !ignoreGroundCheck)
                 {
                     SnapToGround(closestContactPoint, DCOMultiplier, collider, point);
                     TouchLand(collider);
@@ -452,7 +453,7 @@ namespace TUFF
                 }
                 else
                 {
-                    touchingWalkableBeforeFalling = touchingWalkable;
+                    touchingWalkableBeforeFalling = m_touchingWalkable;
                     SetTouchingWalkable(null);
                 }
             }
@@ -1389,7 +1390,7 @@ namespace TUFF
                 rb.velocity = Vector3.up * jumpDownForce;
                 SetGrounded(false);
                 SetFallStart();
-                touchingWalkableBeforeFalling = touchingWalkable;
+                touchingWalkableBeforeFalling = m_touchingWalkable;
                 DisableWalkableLayersCollision(true);
                 ignoreWalkable = true;
             }
@@ -1546,7 +1547,7 @@ namespace TUFF
         }
         protected void SetupFallConditions()
         {
-            touchingWalkableBeforeFalling = touchingWalkable;
+            touchingWalkableBeforeFalling = m_touchingWalkable;
             muteLandSound = false;
             SetJumping(false, 1);
             SetGrounded(false);
@@ -1588,7 +1589,7 @@ namespace TUFF
         }
         private void SetTouchingWalkable(Collider2D collider2D)
         {
-            touchingWalkable = collider2D;
+            m_touchingWalkable = collider2D;
             if (collider2D != null)
             {
                 if (collider2D.transform.TryGetComponent(out touchingWalkableProperties))
