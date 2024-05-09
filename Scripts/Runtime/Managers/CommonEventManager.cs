@@ -72,8 +72,8 @@ namespace TUFF
                 }
             });
             InteractableObject.UpdateAll();
-            if (yielded) 
-                yield return new WaitForSeconds(.025f);
+            
+            if (yielded) yield return new WaitForSeconds(.025f);
             GameManager.instance.DisablePlayerInput(false);
             Debug.Log("Regain Control");
             m_interactableEventPlaying = false;
@@ -83,7 +83,11 @@ namespace TUFF
                 var evt = m_queuedInteractableEvents[0];
                 m_queuedInteractableEvents.RemoveAt(0);
                 TriggerInteractableEvent(evt);
-            }    
+            }
+            else
+            {
+                InteractableObject.CheckAutorunTriggers();
+            }
         }
 
         public void QueueCommonEvent(CommonEvent commonEvent)

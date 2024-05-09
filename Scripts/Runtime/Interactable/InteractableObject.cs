@@ -20,7 +20,7 @@ namespace TUFF
         private int m_index = 0;
         public InteractableEvent[] triggerEvents = new InteractableEvent[0];
 
-        protected static UnityEvent onUpdateAll = new();
+        public static List<InteractableObject> sceneInteractables = new();
 
         public void Awake()
         {
@@ -35,7 +35,7 @@ namespace TUFF
         }
         public void OnEnable()
         {
-            onUpdateAll.AddListener(LoadIndexData);
+            sceneInteractables.Add(this);
             for (int i = 0; i < triggerEvents.Length; i++)
             {
                 triggerEvents[i].actionList.OnEnable();
@@ -43,11 +43,11 @@ namespace TUFF
         }
         public void OnDisable()
         {
-            onUpdateAll.RemoveListener(LoadIndexData);
+            sceneInteractables.Remove(this);
         }
         private void OnDestroy()
         {
-            onUpdateAll.RemoveListener(LoadIndexData);
+            sceneInteractables.Remove(this);
         }
         public bool HasValidActions()
         {
@@ -80,11 +80,12 @@ namespace TUFF
         {
             Autorun();
         }
-        private void Autorun()
+        private bool Autorun()
         {
-            if (!HasValidActions()) return;
+            if (!HasValidActions()) return false;
             if (triggerEvents[m_index].triggerType == TriggerType.Autorun)
-                TriggerInteractable();
+                return TriggerInteractable();
+            return false;
         }
         public IEnumerator PlayOnStart()
         {
@@ -162,7 +163,18 @@ namespace TUFF
         }
         public static void UpdateAll()
         {
-            onUpdateAll?.Invoke();
+            for (int i = 0; i < sceneInteractables.Count; i++)
+            {
+                sceneInteractables[i].LoadIndexData();
+            }
+        }
+        public static void CheckAutorunTriggers()
+        {
+            for (int i = 0; i < sceneInteractables.Count; i++)
+            {
+                bool foundAutorun = sceneInteractables[i].Autorun();
+                if (foundAutorun) break;
+            }
         }
 
         public void OnTriggerEnter2D(Collider2D collision)
