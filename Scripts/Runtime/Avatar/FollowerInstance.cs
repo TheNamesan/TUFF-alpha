@@ -19,17 +19,5 @@ namespace TUFF
                 DontDestroyOnLoad(gameObject);
             }
         }
-        public void ChangeAnimationPack(AnimationPack animationPack)
-        {
-            charAnim?.LoadAnimationPack(animationPack);
-        }
-        public void PlayAnimation(AnimationClip animationClip)
-        {
-            charAnim?.PlayAnimation(animationClip);
-        }
-        public void ChangeSprite(Sprite sprite)
-        {
-            charAnim?.ChangeSprite(sprite);
-        }
     }
 }

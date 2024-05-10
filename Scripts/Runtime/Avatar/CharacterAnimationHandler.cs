@@ -57,6 +57,7 @@ namespace TUFF
         private AnimatorOverrideController overrideControl;
         private AnimationClipOverrides clipOverrides;
         private bool m_initialized = false;
+        private bool m_lockBuffer = false;
         void Start()
         {
             // Initialize Override Variables
@@ -84,17 +85,23 @@ namespace TUFF
         public void ChangeAnimationState(OverworldCharacterController controller, CharacterStates state, bool forcePlaySameState = false)
         {
             if (controller == null) return;
-            
             if (state != controller.lastState)
             {
                 CancelAnimationWait();
             }
             string stateName = GetAnimationStateName(controller, state);
             if (lastStateName == stateName && !forcePlaySameState) { return; }
+            
             anim.enabled = true;
-            anim.Play(stateName, -1, 0);
-            //controller.lastState = state;
             lastStateName = stateName;
+
+            if (m_lockBuffer) { /*Debug.Log($"LOCK BUFFER OFF, TRIED PLAYING: {stateName}");*/ m_lockBuffer = false; }
+            else
+            { 
+                anim.Play(stateName, -1, 0);
+                //Debug.Log($"Playing Anim: {stateName}");
+            }
+            //controller.lastState = state;
         }
         public string GetAnimationStateName(OverworldCharacterController c, CharacterStates state)
         {
@@ -121,7 +128,8 @@ namespace TUFF
                     if (c.faceDirection == FaceDirections.East || c.faceDirection == FaceDirections.West)
                     {
                         if (animationInWait) return lastStateName;
-                        if (lastStateName == "Run" + postfix || lastStateName == "RunTransition" + postfix)
+                        if ((lastStateName == $"Run{postfix}" || lastStateName == $"RunTransition{postfix}") &&
+                            c.runCanceled)
                         {
                             SetAnimationWait();
                             return "Skid" + postfix;
@@ -309,6 +317,8 @@ namespace TUFF
                 clipOverrides[id] = clip;
                 overrideControl.ApplyOverrides(clipOverrides);
                 anim.Play("FreeAnim", -1, 0);
+                //Debug.Log("LOCK BUFFER ON");
+                m_lockBuffer = true; // Used to avoid animations from being interrupted when an ActionList plays without yielding first
             }
             else { Debug.LogWarning("No Animator component assigned"); return; }
         }
@@ -332,6 +342,7 @@ namespace TUFF
         public void RestoreState(OverworldCharacterController controller)
         {
             if (!controller) return;
+            m_lockBuffer = false;
             ChangeAnimationState(controller, controller.lastState, true);
         }
     }

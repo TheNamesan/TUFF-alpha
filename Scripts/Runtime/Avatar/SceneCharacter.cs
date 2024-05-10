@@ -22,6 +22,18 @@ namespace TUFF
         {
             if (lightSource) lightSource.SetActive(enable);
         }
+        public virtual void ChangeAnimationPack(AnimationPack animationPack)
+        {
+            charAnim?.LoadAnimationPack(animationPack);
+        }
+        public virtual void PlayAnimation(AnimationClip animationClip)
+        {
+            charAnim?.PlayAnimation(animationClip);
+        }
+        public virtual void ChangeSprite(Sprite sprite)
+        {
+            charAnim?.ChangeSprite(sprite);
+        }
     }
 }
 

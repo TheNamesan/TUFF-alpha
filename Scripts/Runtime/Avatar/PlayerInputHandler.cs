@@ -64,13 +64,8 @@ namespace TUFF
         public void StopInput()
         {
             if (avatar == null) return;
-            //avatar.nextInput.horizontalInput = 0f;
-            //avatar.nextInput.horizontalInputTap = 0f;
-            //avatar.nextInput.verticalInput = 0f;
-            //avatar.nextInput.verticalInputTap = 0f;
             Debug.Log("STOP INPUT");
-            avatar.nextInput = new();
-            avatar.StopRunMomentum();
+            avatar.StopInput();
         }
         public void ResumeInput()
         {

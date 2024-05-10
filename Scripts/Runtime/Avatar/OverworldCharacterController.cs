@@ -536,6 +536,17 @@ namespace TUFF
             }
         }
 
+        public void StopInput()
+        {
+            nextInput = new();
+            input = new();
+            nextYFacing = 0;
+            nextXFacing = 0;
+            AbortRunMomentum();
+            MoveHandler();
+            //AnimatorSpeed();
+        }
+
         private void InputUpdate()
         {
             
@@ -668,6 +679,11 @@ namespace TUFF
             runPrepped = false;
             runButtonHoldTime = 0;
             runButtonReleaseTime = 0;
+        }
+        public void AbortRunMomentum()
+        {
+            StopRunMomentum();
+            runCanceled = false;
         }
 
         private bool CheckInteractable()
