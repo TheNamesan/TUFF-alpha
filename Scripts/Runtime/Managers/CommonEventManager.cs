@@ -8,16 +8,20 @@ namespace TUFF
     {
         // Interactable Events
         [SerializeField] private List<InteractableEvent> m_queuedInteractableEvents = new();
+        [SerializeField] private List<InteractableEvent> m_parallelInteractableEvents = new();
+
         public static IEnumerator eventsCoroutine;
         public static bool interactableEventPlaying { get => m_interactableEventPlaying; }
+        public static bool parallelProcessPlaying { get => instance.m_parallelInteractableEvents.Count > 0; }
         private static bool m_interactableEventPlaying = false;
+
 
         // Common Events
         [SerializeField] private List<CommonEvent> queuedEvents = new List<CommonEvent>();
         public bool isRunning { get => m_isRunning; }
         private bool m_isRunning = false;
         #region Singleton
-        public static CommonEventManager instance { get 
+        public static CommonEventManager instance { get
             {
                 if (!GameManager.instance) return null;
                 return GameManager.instance.commonEventManager;
@@ -25,17 +29,16 @@ namespace TUFF
         }
         private void Awake()
         {
-            //if (instance != null) Destroy(gameObject);
-            //else
-            //{
-            //    instance = this;
-            //    DontDestroyOnLoad(gameObject);
-            //}
 
         }
         #endregion
 
-        
+        public void TriggerParallelProcessEvent(InteractableEvent interactableEvent)
+        {
+            if (m_parallelInteractableEvents.Contains(interactableEvent)) return;
+            m_parallelInteractableEvents.Add(interactableEvent);
+            instance.StartCoroutine(TriggerParallelProcess(interactableEvent));
+        }
         public void TriggerInteractableEvent(InteractableEvent interactableEvent, bool queue = false)
         {
             if (m_interactableEventPlaying)
@@ -43,7 +46,7 @@ namespace TUFF
                 if (queue)
                     m_queuedInteractableEvents.Add(interactableEvent);
                 //else Debug.LogWarning($"Tried to play: {interactableEvent.interactableObject} with {interactableEvent.eventList.content.Count} Events");
-                return; 
+                return;
             }
             if (eventsCoroutine != null) StopEvents();
             eventsCoroutine = TriggerEventsCoroutine(interactableEvent);
@@ -88,6 +91,13 @@ namespace TUFF
             {
                 InteractableObject.CheckAutorunTriggers();
             }
+        }
+        protected IEnumerator TriggerParallelProcess(InteractableEvent interactableEvent)
+        {
+            ActionList actionList = interactableEvent.actionList;
+            yield return actionList.PlayActions();
+            m_parallelInteractableEvents.Remove(interactableEvent);
+            InteractableObject.CheckParallelProcessTriggers();
         }
 
         public void QueueCommonEvent(CommonEvent commonEvent)

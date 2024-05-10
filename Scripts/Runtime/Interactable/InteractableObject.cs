@@ -79,12 +79,20 @@ namespace TUFF
         public void FixedUpdate()
         {
             Autorun();
+            ParallelProcess();
         }
         private bool Autorun()
         {
             if (!HasValidActions()) return false;
             if (triggerEvents[m_index].triggerType == TriggerType.Autorun)
                 return TriggerInteractable();
+            return false;
+        }
+        private bool ParallelProcess()
+        {
+            if (!HasValidActions()) return false;
+            if (triggerEvents[m_index].triggerType == TriggerType.ParallelProcess)
+                return TriggerParallelProcess();
             return false;
         }
         public IEnumerator PlayOnStart()
@@ -117,6 +125,26 @@ namespace TUFF
                 return false;
             }
             CommonEventManager.instance.TriggerInteractableEvent(triggerEvents[m_index], queue);
+            return true;
+        }
+        public bool TriggerParallelProcess()
+        {
+            if (triggerEvents.Length <= 0)
+            {
+                //Debug.Log("Trigger Events List is empty");
+                return false;
+            }
+            if (m_index < 0)
+            {
+                //Debug.LogWarning("Index is less than zero");
+                return false;
+            }
+            if (m_index >= triggerEvents.Length)
+            {
+                //Debug.LogWarning("Index is out of range");
+                return false;
+            }
+            CommonEventManager.instance.TriggerParallelProcessEvent(triggerEvents[m_index]);
             return true;
         }
         public TriggerType GetCurrentIndexType()
@@ -172,8 +200,17 @@ namespace TUFF
         {
             for (int i = 0; i < sceneInteractables.Count; i++)
             {
+                if (!sceneInteractables[i]) continue;
                 bool foundAutorun = sceneInteractables[i].Autorun();
                 if (foundAutorun) break;
+            }
+        }
+        public static void CheckParallelProcessTriggers()
+        {
+            for (int i = 0; i < sceneInteractables.Count; i++)
+            {
+                if (!sceneInteractables[i]) continue;
+                bool foundParallelProcess = sceneInteractables[i].ParallelProcess();
             }
         }
 
