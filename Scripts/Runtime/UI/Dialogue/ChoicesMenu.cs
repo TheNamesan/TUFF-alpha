@@ -28,6 +28,14 @@ namespace TUFF
         {
             Initialize();
         }
+        private void ForceRebuild()
+        {
+            if (content)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(content); //called two times on purpose
+            }
+        }
         private void Initialize()
         {
             if (initialized) return;
@@ -70,6 +78,7 @@ namespace TUFF
             SetPosition();
             //yield return new WaitForEndOfFrame();
             uiMenu?.OpenMenu();
+            ForceRebuild(); // Fixes Content Size Fitter compontent not updating when opening the choices menu
         }
         private void SetPosition()
         {
