@@ -10,6 +10,7 @@ namespace TUFF
         public static string version { get => "1.0.0"; }
         public static string interactableGizmoFilename { get => Instance.m_interactableGizmoFilename; }
         public static GameObject interactablePrefab { get => Instance.m_interactablePrefab; }
+        public static GameObject overworldCharacterPrefab { get => Instance.m_overworldCharacterPrefab; }
         public static GameObject enemyGraphicPrefab { get => Instance.m_enemyGraphicPrefab; }
         public static GameObject defaultTextbox { get => Instance.m_defaultTextbox; }
         public static GameObject fixedTextbox { get => Instance.m_systemTextbox; }
@@ -155,6 +156,7 @@ namespace TUFF
 
         [Header("TUFF Prefabs")]
         [SerializeField] private GameObject m_interactablePrefab;
+        [SerializeField] private GameObject m_overworldCharacterPrefab;
         [SerializeField] private GameObject m_enemyGraphicPrefab;
 
         [Header("Textbox Prefabs")]

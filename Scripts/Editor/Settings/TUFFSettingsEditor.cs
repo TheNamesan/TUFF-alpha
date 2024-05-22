@@ -18,6 +18,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_interactableGizmoFilename"));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_interactablePrefab"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_overworldCharacterPrefab"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_enemyGraphicPrefab"));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_defaultTextbox"));

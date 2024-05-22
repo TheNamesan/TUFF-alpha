@@ -3,15 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 namespace TUFF.TUFFEditor
 {
     public class TUFFWizard
     {
+        private static Transform FindSceneProperties()
+        {
+            if (Application.isPlaying)
+            {
+                return SceneLoaderManager.currentSceneProperties.transform;
+            }
+            else
+            {
+                var activeScene = SceneManager.GetActiveScene();
+                if (activeScene.IsValid())
+                {
+                    var gameObjects = activeScene.GetRootGameObjects();
+                    var scenePropGO = System.Array.Find(gameObjects, q => q.gameObject.CompareTag("SceneProperties"));
+                    if (!scenePropGO) return null;
+                    var sceneProperties = scenePropGO.GetComponent<SceneProperties>();
+                    if (sceneProperties) return sceneProperties.transform;
+                }
+            }
+            return null;
+        }
         [MenuItem("TUFF/Create/Interactable")]
         public static void CreateInteractable()
         {
-            CreateItem(TUFFSettings.interactablePrefab);
+            CreateItem(TUFFSettings.interactablePrefab, FindSceneProperties());
+        }
+        [MenuItem("TUFF/Create/Overworld Character")]
+        public static void CreateOverworldCharacter()
+        {
+            CreateItem(TUFFSettings.overworldCharacterPrefab, FindSceneProperties());
         }
         [MenuItem("TUFF/Stop Preview BGM")]
         public static void StopPreviewBGM()
