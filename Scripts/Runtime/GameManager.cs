@@ -114,6 +114,7 @@ namespace TUFF
             {
                 loaded = true;
                 load.CheckListSizes();
+                load.CheckUnitRefs();
 
                 playerData = load;
                 PlayerData.fileLoaded = fileIndex;

@@ -100,6 +100,13 @@ namespace TUFF
                 gameVariables[i].variableType = variableData[i].variableType;
             }
         }
+        public void CheckUnitRefs()
+        {
+            for (int i = 0; i < party.Length; i++)
+            {
+                party[i].unitRef = DatabaseLoader.instance.units[i];
+            }
+        }
         public void Update()
         {
             var player = FollowerInstance.player;

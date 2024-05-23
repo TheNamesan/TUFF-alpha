@@ -7,7 +7,8 @@ namespace TUFF
     [System.Serializable]
     public class PartyMember : Targetable
     {
-        public virtual Unit unitRef { get; set; }
+        public virtual Unit unitRef { get => m_unitRef; set => m_unitRef = value; }
+        [System.NonSerialized] protected Unit m_unitRef;
         public Job job
         {
             get => DatabaseLoader.instance.GetJobFromID(m_jobID);
