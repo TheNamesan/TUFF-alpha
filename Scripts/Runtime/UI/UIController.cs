@@ -216,9 +216,9 @@ namespace TUFF
         {
             shopMenu.OpenShop(shopData, actionCallback);
         }
-        public void OpenFileSelectMenu(FileSelectMenuMode openMenu)
+        public void OpenFileSelectMenu(FileSelectMenuMode openMenu, EventAction actionCallback = null)
         {
-            fileSelectMenu?.OpenFileSelectMenu(openMenu);
+            fileSelectMenu?.OpenFileSelectMenu(openMenu, actionCallback);
         }
         public void OpenOptionsMenu()
         {

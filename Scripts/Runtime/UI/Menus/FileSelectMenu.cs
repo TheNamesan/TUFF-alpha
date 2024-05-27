@@ -14,6 +14,8 @@ namespace TUFF
         public Transform buttonsParent;
         public SaveFileHUD saveFileHUDPrefab;
         public List<SaveFileHUD> elements = new();
+        [System.NonSerialized]
+        public EventAction actionCallback = null;
 
         protected bool initialized = false;
         private void Awake()
@@ -42,6 +44,7 @@ namespace TUFF
             //    }
             //}
             InitializeSaveFileHUDs();
+            if (uiMenu) uiMenu.onCloseMenu.AddListener(OnCloseMenu);
             initialized = true;
         }
         private void OnEnable()
@@ -49,9 +52,10 @@ namespace TUFF
             UpdatePromptText();
         }
 
-        public void OpenFileSelectMenu(FileSelectMenuMode openMode)
+        public void OpenFileSelectMenu(FileSelectMenuMode openMode, EventAction actionCallback = null)
         {
             mode = openMode;
+            this.actionCallback = actionCallback;
             Initialize();
             UpdateSaveFileHUDs();
             UpdatePromptText();
@@ -149,7 +153,12 @@ namespace TUFF
                 if (loaded) { Debug.Log($"Loaded File {file}"); StartCoroutine(Continue()); }
                 else Debug.Log($"No file found at {file}");
             }
-            
+            else
+            {
+                GameManager.instance.SavePlayerData(file);
+                AudioManager.instance.PlaySFX(TUFFSettings.saveSFX);
+                uiMenu?.CloseMenu();
+            }
         }
         private IEnumerator Continue()
         {
@@ -166,6 +175,10 @@ namespace TUFF
                 () => {
                     GameManager.instance.DisableUIInput(false);
                 });
+        }
+        private void OnCloseMenu()
+        {
+            if (actionCallback != null) actionCallback.isFinished = true;
         }
 
         private void UpdatePromptText()
