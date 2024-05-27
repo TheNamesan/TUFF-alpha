@@ -159,8 +159,8 @@ namespace TUFF
             UIController.instance.fadeScreen.TriggerFadeOut(1f);
             AudioManager.instance.FadeOutVolume(1f);
             yield return new WaitForSeconds(2f);
-            uiMenu?.CloseMenu();
-            GameManager.instance.DisableUIInput(true);
+            UIController.instance.CloseAllMenus();
+            //GameManager.instance.DisableUIInput(true); // Put this here to stop the menu from
             PlayerData.instance.GetSceneData(out string sceneName, out Vector3 playerPosition, out FaceDirections playerFacing);
             SceneLoaderManager.instance.LoadSceneWithFadeIn(sceneName, 0.5f, playerPosition, playerFacing, true, true,
                 () => {
