@@ -133,6 +133,8 @@ namespace TUFF.TUFFEditor
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_quantityTermKey", TUFFSettings.quantityText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_acceptTermKey", TUFFSettings.acceptText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_cancelTermKey", TUFFSettings.cancelText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_saveFilePromptTermKey", TUFFSettings.saveFilePromptText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_loadFilePromptTermKey", TUFFSettings.loadFilePromptText);
 
             EditorGUILayout.LabelField("Basic Status", EditorStyles.boldLabel);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_levelTermKey", TUFFSettings.levelText);

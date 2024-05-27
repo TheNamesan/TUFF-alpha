@@ -171,6 +171,7 @@ namespace TUFF
         {
             for (int i = 0; i < onCloseMenuMenusToOpen.Count; i++)
             {
+                if (!onCloseMenuMenusToOpen[i]) continue;
                 onCloseMenuMenusToOpen[i].OpenMenu();
             }
         }

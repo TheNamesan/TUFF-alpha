@@ -17,7 +17,7 @@ namespace TUFF
         public void Initialize(int index)
         {
             this.index = index;
-            UpdateHUD();
+            //UpdateHUD();
         }
         public void UpdateHUD()
         {

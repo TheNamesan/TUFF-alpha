@@ -25,10 +25,12 @@ namespace TUFF
         List<TextMeshProUGUI> Names;
         [SerializeField]
         int DisplaySlots;
+        [Header("Menus")]
         [SerializeField] protected PauseMenuHUD pauseMenu;
-        [SerializeField] protected OptionsMenuManager optionsMenu;
         [SerializeField] protected ChoicesMenu choicesMenu;
         [SerializeField] protected ShopMenu shopMenu;
+        [SerializeField] protected FileSelectMenu fileSelectMenu;
+        [SerializeField] protected OptionsMenuManager optionsMenu;
         [SerializeField] protected RectTransform loadingIcon;
         public DialogueManager textbox;
         public DialogueManager dimTextbox;
@@ -205,18 +207,24 @@ namespace TUFF
         {
             return activeMenus[0];
         }
-        public void OpenOptionsMenu()
+        
+        public void ShowChoices(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
         {
-            optionsMenu.OpenOptionsMenu();
+            choicesMenu.DisplayChoices(callback, options, closeWithCancel, onMenuCancel);
         }
         public void OpenShop(ShopData shopData, EventAction actionCallback = null)
         {
             shopMenu.OpenShop(shopData, actionCallback);
         }
-        public void ShowChoices(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
+        public void OpenFileSelectMenu(FileSelectMenuMode openMenu)
         {
-            choicesMenu.DisplayChoices(callback, options, closeWithCancel, onMenuCancel);
+            fileSelectMenu?.OpenFileSelectMenu(openMenu);
         }
+        public void OpenOptionsMenu()
+        {
+            optionsMenu.OpenOptionsMenu();
+        }
+
         public void InvokePauseMenu()
         {
             //AudioManager.instance.PlaySFX(pauseClip, 1f, 1f);

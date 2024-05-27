@@ -1,17 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace TUFF
 {
+    public enum FileSelectMenuMode { LoadFile = 0, SaveFile = 1 }
     public class FileSelectMenu : MonoBehaviour
     {
+        public FileSelectMenuMode mode = FileSelectMenuMode.LoadFile;
+        public TMP_Text promptText;
         public UIMenu uiMenu;
         public Transform buttonsParent;
         public SaveFileHUD saveFileHUDPrefab;
         public List<SaveFileHUD> elements = new();
+
+        protected bool initialized = false;
         private void Awake()
         {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            if (initialized) return;
             if (uiMenu == null) uiMenu = GetComponent<UIMenu>();
             //if (uiMenu == null) uiMenu = GetComponent<UIMenu>();
             //if (uiMenu != null)
@@ -30,6 +42,20 @@ namespace TUFF
             //    }
             //}
             InitializeSaveFileHUDs();
+            initialized = true;
+        }
+        private void OnEnable()
+        {
+            UpdatePromptText();
+        }
+
+        public void OpenFileSelectMenu(FileSelectMenuMode openMode)
+        {
+            mode = openMode;
+            Initialize();
+            UpdateSaveFileHUDs();
+            UpdatePromptText();
+            uiMenu?.OpenMenu();
         }
         private void InitializeSaveFileHUDs()
         {
@@ -76,6 +102,13 @@ namespace TUFF
             //    }
             //}
         }
+        private void UpdateSaveFileHUDs()
+        {
+            for (int i = 0; i < elements.Count; i++)
+            {
+                elements[i].UpdateHUD();
+            }
+        }
         private void VerifyMenuArrays(int rows)
         {
             if (uiMenu == null) return;
@@ -104,39 +137,41 @@ namespace TUFF
             uiMenu.UIElementContainers[index].UIElements.Add(element);
 
             element.useCustomSelectSFX = true;
-            element.customSelectSFX = TUFFSettings.loadSFX;
+            element.customSelectSFX = new SFX();
             element.onSelect.AddListener(() => SelectFile(index));
             //element.onSelect.AddListener(() => { SelectFile(index); });
         }
         public void SelectFile(int file)
         {
-            bool loaded = GameManager.instance.LoadSaveData(file);
-            if (loaded) { Debug.Log($"Loaded File {file}"); StartCoroutine(Continue()); }
-            else Debug.Log($"No file found at {file}");
+            if (mode == FileSelectMenuMode.LoadFile)
+            {
+                bool loaded = GameManager.instance.LoadSaveData(file);
+                if (loaded) { Debug.Log($"Loaded File {file}"); StartCoroutine(Continue()); }
+                else Debug.Log($"No file found at {file}");
+            }
+            
         }
         private IEnumerator Continue()
         {
-            UIController.instance.SetMenu(null);
+            //UIController.instance.SetMenu(null);
+            AudioManager.instance.PlaySFX(TUFFSettings.loadSFX);
+            GameManager.instance.DisableUIInput(true);
             UIController.instance.fadeScreen.TriggerFadeOut(1f);
             AudioManager.instance.FadeOutVolume(1f);
             yield return new WaitForSeconds(2f);
+            uiMenu?.CloseMenu();
+            GameManager.instance.DisableUIInput(true);
             PlayerData.instance.GetSceneData(out string sceneName, out Vector3 playerPosition, out FaceDirections playerFacing);
-            SceneLoaderManager.instance.LoadSceneWithFadeIn(sceneName, 0.5f, playerPosition, playerFacing, true, true); //Replace with save data scene name and start position
-        }
-        private void OnEnable()
-        {
-            
-        }
-        // Start is called before the first frame update
-        void Start()
-        {
-        
+            SceneLoaderManager.instance.LoadSceneWithFadeIn(sceneName, 0.5f, playerPosition, playerFacing, true, true,
+                () => {
+                    GameManager.instance.DisableUIInput(false);
+                });
         }
 
-        // Update is called once per frame
-        void Update()
+        private void UpdatePromptText()
         {
-        
+            if (!promptText) return;
+            promptText.text = (mode == FileSelectMenuMode.LoadFile ? TUFFSettings.loadFilePromptText : TUFFSettings.saveFilePromptText );
         }
     }
 }

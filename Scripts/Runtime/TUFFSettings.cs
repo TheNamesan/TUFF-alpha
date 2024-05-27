@@ -116,6 +116,8 @@ namespace TUFF
         public static string quantityText { get => ParseText(Instance.m_quantityTermKey); }
         public static string acceptText { get => ParseText(Instance.m_acceptTermKey); }
         public static string cancelText { get => ParseText(Instance.m_cancelTermKey); }
+        public static string saveFilePromptText { get => ParseText(Instance.m_saveFilePromptTermKey); }
+        public static string loadFilePromptText { get => ParseText(Instance.m_loadFilePromptTermKey); }
         // Terms
         public static string levelText { get => ParseText(Instance.m_levelTermKey); }
         public static string levelShortText { get => ParseText(Instance.m_levelShortTermKey); }
@@ -302,6 +304,8 @@ namespace TUFF
         public string m_quantityTermKey = "Quantity";
         public string m_acceptTermKey = "";
         public string m_cancelTermKey = "";
+        public string m_saveFilePromptTermKey = "Save to which file?";
+        public string m_loadFilePromptTermKey = "Load which file?";
 
         public string m_levelTermKey = "";
         public string m_levelShortTermKey = "";
