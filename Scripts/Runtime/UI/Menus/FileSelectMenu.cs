@@ -59,7 +59,11 @@ namespace TUFF
             Initialize();
             UpdateSaveFileHUDs();
             UpdatePromptText();
-            uiMenu?.OpenMenu();
+            if (uiMenu)
+            {
+                uiMenu?.OpenMenu();
+                uiMenu?.HighlightAt(uiMenu.highlightX, ConfigData.instance.lastLoadedFile);
+            }
         }
         private void InitializeSaveFileHUDs()
         {

@@ -117,7 +117,8 @@ namespace TUFF
                 load.CheckUnitRefs();
 
                 playerData = load;
-                PlayerData.fileLoaded = fileIndex;
+                configData.lastLoadedFile = fileIndex;
+                configData.SaveData();
             }
             return loaded;
         }

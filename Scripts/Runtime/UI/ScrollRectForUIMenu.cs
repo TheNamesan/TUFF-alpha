@@ -25,6 +25,7 @@ namespace TUFF
         {
             scroll = GetComponent<ScrollRect>();
             content = scroll.content;
+            
         }
         private void OnEnable()
         {
@@ -54,6 +55,7 @@ namespace TUFF
                     }
                 }
             }
+            uiMenu.onOpenMenu.AddListener(UpdateScroll);
         }
 
         public void UpdateScroll()
@@ -73,27 +75,29 @@ namespace TUFF
             }
             else if (cursorValue > bottomVisibleIndex)
             {
-                topVisibleIndex++;
-                bottomVisibleIndex++;
-                ScrollDown();
+                int valueDiff = cursorValue - bottomVisibleIndex;
+                topVisibleIndex += valueDiff;
+                bottomVisibleIndex += valueDiff;
+                ScrollDown(valueDiff);
             }
             else if (cursorValue < topVisibleIndex)
             {
-                topVisibleIndex--;
-                bottomVisibleIndex--;
-                ScrollUp();
+                int valueDiff = Mathf.Abs(cursorValue - topVisibleIndex);
+                topVisibleIndex -= valueDiff;
+                bottomVisibleIndex -= valueDiff;
+                ScrollUp(valueDiff);
             }
             UpdateArrows();
         }
         
-        void ScrollUp()
+        private void ScrollUp(float times = 1)
         {
-            content.anchoredPosition -= new Vector2(0, scrollValue);
+            content.anchoredPosition -= new Vector2(0, scrollValue) * times;
         }
 
-        void ScrollDown()
+        private void ScrollDown(float times = 1)
         {
-            content.anchoredPosition += new Vector2(0, scrollValue);
+            content.anchoredPosition += new Vector2(0, scrollValue) * times;
         }
         void SetScroll(float value)
         {

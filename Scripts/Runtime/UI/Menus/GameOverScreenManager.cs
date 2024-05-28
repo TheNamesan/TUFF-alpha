@@ -22,7 +22,7 @@ namespace TUFF
             UIController.instance.SetMenu(null);
             UIController.instance.fadeScreen.TriggerFadeOut(0.125f);
             AudioManager.instance.FadeOutVolume(1f);
-            bool loaded = GameManager.instance.LoadSaveData(PlayerData.fileLoaded); // Load Last Opened Save
+            bool loaded = GameManager.instance.LoadSaveData(ConfigData.instance.lastLoadedFile); // Load Last Opened Save
             if (!loaded) // No save file detected
             {
                 GameManager.instance.StartNewGame(); //Start a new game

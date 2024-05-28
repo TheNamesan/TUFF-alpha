@@ -7,7 +7,6 @@ namespace TUFF
     [System.Serializable]
     public class PlayerData
     {
-        public static int fileLoaded = 0;
         public const int activePartyMaxSize = 4; // Move to TUFF Settings
 
         [Tooltip("Data list of all Units")]

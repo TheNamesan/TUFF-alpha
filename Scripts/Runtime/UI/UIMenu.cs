@@ -269,6 +269,19 @@ namespace TUFF
         {
             if (CheckIfUIMenuHasElements(this)) UIElements[y][x].Highlight();
         }
+        /// <summary>
+        /// Unhighlights the current element and highlights the specified one.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public void HighlightAt(int x, int y)
+        {
+            if (!CheckIfUIMenuHasElements(this)) return;
+            if (HighlightInUIMenuIsValid(this)) UnhighlightCurrent();
+            highlightX = x;
+            highlightY = y;
+            HighlightCurrent();
+        }
 
         public void UnhighlightCurrent()
         {

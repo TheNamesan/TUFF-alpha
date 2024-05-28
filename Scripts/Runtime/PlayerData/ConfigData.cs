@@ -16,7 +16,17 @@ namespace TUFF
         [Range(0f, 1f)] public float globalSFXVolume = 1f;
         [Range(0f, 1f)] public float globalAmbienceVolume = 1f;
         public int textSpeed = 0;
+        public int lastLoadedFile = 0;
         public bool lost = false;
+
+        public static ConfigData instance
+        {
+            get
+            {
+                return (GameManager.instance != null ?
+                    GameManager.instance.configData : null);
+            }
+        }
 
         public void SaveData()
         {
@@ -35,6 +45,7 @@ namespace TUFF
             globalSFXVolume = load.globalSFXVolume;
             globalAmbienceVolume = load.globalAmbienceVolume;
             textSpeed = load.textSpeed;
+            lastLoadedFile = load.lastLoadedFile;
             lost = load.lost;
         }
         public static ConfigData GetDefaultData() // Set Best Settings for current device on first load here
