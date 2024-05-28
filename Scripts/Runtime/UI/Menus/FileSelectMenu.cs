@@ -154,7 +154,11 @@ namespace TUFF
             if (mode == FileSelectMenuMode.LoadFile)
             {
                 bool loaded = GameManager.instance.LoadSaveData(file);
-                if (loaded) { Debug.Log($"Loaded File {file}"); StartCoroutine(Continue()); }
+                if (loaded) { 
+                    Debug.Log($"Loaded File {file}"); 
+                    GameManager.instance.stopPlaytime = true; 
+                    StartCoroutine(Continue()); 
+                }
                 else Debug.Log($"No file found at {file}");
             }
             else
@@ -173,6 +177,7 @@ namespace TUFF
             AudioManager.instance.FadeOutVolume(1f);
             yield return new WaitForSeconds(2f);
             UIController.instance.CloseAllMenus();
+            GameManager.instance.stopPlaytime = false;
             //GameManager.instance.DisableUIInput(true); // Put this here to stop the menu from
             PlayerData.instance.GetSceneData(out string sceneName, out Vector3 playerPosition, out FaceDirections playerFacing);
             SceneLoaderManager.instance.LoadSceneWithFadeIn(sceneName, 0.5f, playerPosition, playerFacing, true, true,

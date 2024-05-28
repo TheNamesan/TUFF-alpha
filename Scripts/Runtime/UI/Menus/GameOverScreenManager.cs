@@ -23,11 +23,13 @@ namespace TUFF
             UIController.instance.fadeScreen.TriggerFadeOut(0.125f);
             AudioManager.instance.FadeOutVolume(1f);
             bool loaded = GameManager.instance.LoadSaveData(ConfigData.instance.lastLoadedFile); // Load Last Opened Save
+            GameManager.instance.stopPlaytime = true;
             if (!loaded) // No save file detected
             {
                 GameManager.instance.StartNewGame(); //Start a new game
             }
             yield return new WaitForSeconds(0.125f);
+            GameManager.instance.stopPlaytime = false;
             PlayerData.instance.GetSceneData(out string sceneName, out Vector3 playerPosition, out FaceDirections playerFacing);
             SceneLoaderManager.instance.LoadSceneWithFadeIn(sceneName, 0.25f, playerPosition, playerFacing, true, true);
         }

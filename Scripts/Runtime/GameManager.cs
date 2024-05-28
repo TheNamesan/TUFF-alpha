@@ -19,6 +19,7 @@ namespace TUFF
         public DatabaseLoader databaseLoader;
         public SceneLoaderManager sceneLoaderManager;
         public CommonEventManager commonEventManager;
+        public bool stopPlaytime = false;
         
 
         private static bool m_disablePlayerInput = false;
@@ -120,6 +121,7 @@ namespace TUFF
                 configData.lastLoadedFile = fileIndex;
                 configData.SaveData();
             }
+            if (loaded) Debug.Log($"Loaded File {fileIndex}");
             return loaded;
         }
         private void Start()

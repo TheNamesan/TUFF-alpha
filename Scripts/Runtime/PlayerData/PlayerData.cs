@@ -9,6 +9,7 @@ namespace TUFF
     {
         public const int activePartyMaxSize = 4; // Move to TUFF Settings
 
+        public double playtime = 0;
         [Tooltip("Data list of all Units")]
         public PartyMember[] party; //Save 
         public List<sbyte> partyOrder = new List<sbyte>(); //Save
@@ -114,6 +115,18 @@ namespace TUFF
                 charProperties.playerPosition = player.controller.transform.position;
                 charProperties.playerFacing = player.controller.faceDirection;
             }
+            if (!GameManager.instance.stopPlaytime)
+                playtime += Time.unscaledDeltaTime;
+        }
+        public string GetPlaytimeText()
+        {
+            System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(playtime);
+            var culture = System.Globalization.CultureInfo.InvariantCulture;
+            string hours = (timeSpan.Hours.ToString("00", culture));
+            string minutes = (timeSpan.Minutes.ToString("00", culture));
+            string seconds = (timeSpan.Seconds.ToString("00", culture));
+            
+            return $"{hours}:{minutes}:{seconds}";
         }
         public void GetSceneData(out string sceneName, out Vector3 playerPosition, out FaceDirections playerFacing)
         {

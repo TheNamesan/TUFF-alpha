@@ -24,7 +24,11 @@ namespace TUFF
             if (fileText) fileText.text = $"File {index + 1}";
             var load = PlayerData.LoadData(index);
             UpdateGraphics(load);
-            if (timeText) timeText.gameObject.SetActive(load != null);
+            if (timeText)
+            { 
+                timeText.gameObject.SetActive(load != null);
+                if (load != null) timeText.text = load.GetPlaytimeText();
+            }
         }
 
         private void UpdateGraphics(PlayerData load)
