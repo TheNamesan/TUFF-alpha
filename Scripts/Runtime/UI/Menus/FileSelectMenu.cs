@@ -83,7 +83,7 @@ namespace TUFF
             }
             if (saveFileHUDPrefab)
             {
-                for (; index < 16; index++) // Tmp 16 number
+                for (; index < TUFFSettings.maxSaveFileSlots; index++)
                 {
                     var create = Instantiate(saveFileHUDPrefab, buttonsParent);
                     create.Initialize(index);
@@ -93,6 +93,8 @@ namespace TUFF
             for (int i = 0; i < elements.Count; i++)
             {
                 AddToMenu(i, elements[i].fileSelectButton);
+                elements[i].gameObject.SetActive(true);
+                if (i >= TUFFSettings.maxSaveFileSlots) elements[i].gameObject.SetActive(false);
             }
             if (uiMenu.UIElements == null) uiMenu.SetupUIElements();
 

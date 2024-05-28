@@ -33,6 +33,10 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_overrideUnitInitLevelValue"));
             EditorGUILayout.EndHorizontal();
 
+            // Player Data
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_maxSaveFileSlots"));
+
+            // Battle System
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_critMultiplier"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_TPRecoveryByDamageType"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_TPRecoveryByDamageRatio"));

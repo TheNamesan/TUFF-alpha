@@ -20,6 +20,8 @@ namespace TUFF
         public static bool ignoreLearnedSkills { get => Instance.m_ignoreLearnedSkills; }
         public static bool overrideUnitInitLevel { get => Instance.m_overrideUnitInitLevel; }
         public static int overrideUnitInitLevelValue { get => Instance.m_overrideUnitInitLevelValue; }
+        // Player Data
+        public static int maxSaveFileSlots { get => Mathf.Max(1, Instance.m_maxSaveFileSlots); }
         // Battle System
         public static float critMultiplier { get => Instance.m_critMultiplier; }
         public static TPRecoveryByDamageType TPRecoveryByDamageType { get => Instance.m_TPRecoveryByDamageType; }
@@ -174,8 +176,13 @@ namespace TUFF
         [SerializeField] private bool m_skillsCostNoResources = false;
         [Tooltip("If true, all party members can use any skill from a command regardless of if the skill is known or not.")]
         [SerializeField] private bool m_ignoreLearnedSkills = false;
+        [Tooltip("If true, all party members will join at the specified level.")]
         [SerializeField] private bool m_overrideUnitInitLevel = false;
         [SerializeField] private int m_overrideUnitInitLevelValue = 1;
+
+        [Header("Player Data")]
+        [Tooltip("The amount of save files the player can save to. Minimum of 1.")]
+        [SerializeField] public int m_maxSaveFileSlots = 16;
 
         [Header("Battle System")]
         [Tooltip("Default: 3")]
