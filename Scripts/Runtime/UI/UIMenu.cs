@@ -13,6 +13,8 @@ namespace TUFF
         public UIElementContainer[] UIElementContainers;
         public UIElement[][] UIElements;
 
+        public int RowCount { get => UIElements.Length; }
+
         protected bool m_isOpen = false;
         public bool IsOpen { get => m_isOpen; }
 

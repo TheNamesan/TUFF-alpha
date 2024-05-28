@@ -20,6 +20,8 @@ namespace TUFF
         public SceneLoaderManager sceneLoaderManager;
         public CommonEventManager commonEventManager;
         public bool stopPlaytime = false;
+        [Tooltip("Index of the last opened or loaded save file ingame.")]
+        public int lastLoadedFile = -1;
         
 
         private static bool m_disablePlayerInput = false;
@@ -103,7 +105,10 @@ namespace TUFF
         }
         public void SavePlayerData(int fileIndex)
         {
+            lastLoadedFile = fileIndex;
+            configData.lastOpenedFile = fileIndex;
             playerData.SaveData(fileIndex);
+            configData.SaveData();
         }
         public bool LoadSaveData(int fileIndex)
         {
@@ -118,7 +123,8 @@ namespace TUFF
                 load.CheckUnitRefs();
 
                 playerData = load;
-                configData.lastLoadedFile = fileIndex;
+                lastLoadedFile = fileIndex;
+                configData.lastOpenedFile = fileIndex;
                 configData.SaveData();
             }
             if (loaded) Debug.Log($"Loaded File {fileIndex}");

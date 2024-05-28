@@ -62,7 +62,9 @@ namespace TUFF
             if (uiMenu)
             {
                 uiMenu?.OpenMenu();
-                uiMenu?.HighlightAt(uiMenu.highlightX, ConfigData.instance.lastLoadedFile);
+                int highlight = ConfigData.instance.lastOpenedFile;
+                if (highlight >= 0 && highlight < uiMenu.RowCount) 
+                    uiMenu?.HighlightAt(uiMenu.highlightX, ConfigData.instance.lastOpenedFile);
             }
         }
         private void InitializeSaveFileHUDs()
