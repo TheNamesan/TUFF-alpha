@@ -22,8 +22,16 @@ namespace TUFF
         SealCommand = 13,
         AddSkill = 14,
         SealSkill = 15,
-        AutoState = 16,
-        SpecialFeature = 17
+        AddWeaponEquipType = 16,
+        AddArmorEquipType = 17,
+        FixEquipmentSlot = 18,
+        SealEquipmentSlot = 19,
+        DualWield = 20,
+        ActionTimes = 21,
+        CollapseEffect = 22,
+        PartyAbility = 23,
+        AutoState = 24,
+        SpecialFeature = 25
     }
     public enum StatChangeType
     {
