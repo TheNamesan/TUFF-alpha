@@ -55,7 +55,7 @@ namespace TUFF
             }
             return baseDirectory;
         }
-        public Dictionary<InventoryItem, int> GetWeaponsAndAmount(Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        public Dictionary<InventoryItem, int> GetAllWeaponsAndAmount(Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < weapons.Length; i++) {
@@ -66,11 +66,51 @@ namespace TUFF
             }
             return baseDirectory;
         }
-        public Dictionary<InventoryItem, int> GetArmorsAndAmount(Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(int[] weaponTypes, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        {
+            if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                var item = DatabaseLoader.instance.weapons[i];
+                if (!System.Array.Exists(weaponTypes, e => e == item.weaponType)) continue;
+                var amount = GetItemAmount(item);
+                if (!includeZero && amount <= 0) continue;
+                baseDirectory.Add(item, amount);
+            }
+            return baseDirectory;
+        }
+        public Dictionary<InventoryItem, int> GetAllArmorsAndAmount(Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < armors.Length; i++) {
                 var item = DatabaseLoader.instance.armors[i];
+                var amount = GetItemAmount(item);
+                if (!includeZero && amount <= 0) continue;
+                baseDirectory.Add(item, amount);
+            }
+            return baseDirectory;
+        }
+        public Dictionary<InventoryItem, int> GetArmorsAndAmountOfType(EquipType equipType, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        {
+            if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
+            for (int i = 0; i < armors.Length; i++)
+            {
+                var item = DatabaseLoader.instance.armors[i];
+                if (item.equipType != equipType) continue; 
+                var amount = GetItemAmount(item);
+                if (!includeZero && amount <= 0) continue;
+                baseDirectory.Add(item, amount);
+            }
+            return baseDirectory;
+        }
+        public Dictionary<InventoryItem, int> GetArmorsAndAmountOfType(EquipType equipType, int[] armorTypes, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        {
+            if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
+            for (int i = 0; i < armors.Length; i++)
+            {
+                var item = DatabaseLoader.instance.armors[i];
+                if (!System.Array.Exists(armorTypes, e => e == item.armorType)
+                    || item.equipType != equipType) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
@@ -82,8 +122,8 @@ namespace TUFF
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             GetItemsAndAmount(baseDirectory, includeZero);
             GetKeyItemsAndAmount(baseDirectory, includeZero);
-            GetWeaponsAndAmount(baseDirectory, includeZero);
-            GetArmorsAndAmount(baseDirectory, includeZero);
+            GetAllWeaponsAndAmount(baseDirectory, includeZero);
+            GetAllArmorsAndAmount(baseDirectory, includeZero);
             return baseDirectory;
         }
         public int GetItemAmount(InventoryItem item, bool includeEquipment)
