@@ -66,13 +66,13 @@ namespace TUFF
             }
             return baseDirectory;
         }
-        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(int[] weaponTypes, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(List<int> weaponTypes, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < weapons.Length; i++)
             {
                 var item = DatabaseLoader.instance.weapons[i];
-                if (!System.Array.Exists(weaponTypes, e => e == item.weaponType)) continue;
+                if (weaponTypes == null || !weaponTypes.Contains(item.weaponType)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
@@ -103,14 +103,14 @@ namespace TUFF
             }
             return baseDirectory;
         }
-        public Dictionary<InventoryItem, int> GetArmorsAndAmountOfType(EquipType equipType, int[] armorTypes, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        public Dictionary<InventoryItem, int> GetArmorsAndAmountOfType(EquipType equipType, List<int> armorTypes, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < armors.Length; i++)
             {
                 var item = DatabaseLoader.instance.armors[i];
-                if (!System.Array.Exists(armorTypes, e => e == item.armorType)
-                    || item.equipType != equipType) continue;
+                if (armorTypes == null || !armorTypes.Contains(item.armorType)) continue;
+                if (item.equipType != equipType) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);

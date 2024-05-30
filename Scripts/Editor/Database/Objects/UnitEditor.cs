@@ -34,6 +34,9 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("primaryAccessory"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("secondaryAccessory"));
 
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponTypes"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("armorTypes"));
+
             EditorGUILayout.PropertyField(serializedObject.FindProperty("features"));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("winQuotes"));

@@ -350,6 +350,17 @@ namespace TUFF
     }
 
     [System.Serializable]
+    public struct WeaponTypeList
+    {
+        public List<int> weaponTypes;
+    }
+    [System.Serializable]
+    public struct ArmorTypeList
+    {
+        public List<int> armorTypes;
+    }
+
+    [System.Serializable]
     public struct GameVariableComparator
     {
         public int targetVariableIndex;

@@ -30,6 +30,12 @@ namespace TUFF
         public Armor primaryAccessory;
         public Armor secondaryAccessory;
 
+        [Header("Equip Types")]
+        [Tooltip("The weapons of the specified type the Unit can use by default.")]
+        public WeaponTypeList weaponTypes = new();
+        [Tooltip("The armors of the specified type the Unit can use by default.")]
+        public ArmorTypeList armorTypes = new();
+
         [Header("Features")]
         [Tooltip("The changes applied to the affected user.")]
         public List<Feature> features = new List<Feature>();

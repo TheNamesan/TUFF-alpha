@@ -544,5 +544,33 @@ namespace TUFF
             if (secondaryAccessory == armor) return true;
             return false;
         }
+        public override List<int> GetWeaponEquipTypes()
+        {
+            var list = base.GetWeaponEquipTypes();
+            if (m_unitRef)
+            {
+                var unitRefEquips = m_unitRef.weaponTypes.weaponTypes;
+                for (int i = 0; i < unitRefEquips.Count; i++)
+                {
+                    int index = unitRefEquips[i];
+                    if (!list.Contains(index)) list.Add(index);
+                }
+            }
+            return list;
+        }
+        public override List<int> GetArmorEquipTypes()
+        {
+            var list = base.GetArmorEquipTypes();
+            if (m_unitRef)
+            {
+                var unitRefEquips = m_unitRef.armorTypes.armorTypes;
+                for (int i = 0; i < unitRefEquips.Count; i++)
+                {
+                    int index = unitRefEquips[i];
+                    if (!list.Contains(index)) list.Add(index);
+                }
+            }
+            return list;
+        }
     }
 }

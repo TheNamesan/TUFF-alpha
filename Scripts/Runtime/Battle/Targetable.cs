@@ -830,6 +830,14 @@ namespace TUFF
         {
             return true;
         }
+        public virtual List<int> GetWeaponEquipTypes()
+        {
+            return new List<int>();
+        }
+        public virtual List<int> GetArmorEquipTypes()
+        {
+            return new List<int>();
+        }
         public virtual List<Feature> GetAllFeaturesOfType(FeatureType featureType)
         {
             var features = new List<Feature>();
