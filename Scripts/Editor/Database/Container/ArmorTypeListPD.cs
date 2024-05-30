@@ -23,7 +23,7 @@ namespace TUFF.TUFFEditor
             if (list == null) list = GetList(array);
             array.isExpanded = EditorGUI.Foldout(position, array.isExpanded, label, true);
             position.y += 20f;
-            if (array.isExpanded)
+            if (list != null && array.isExpanded)
             {
                 list.DoList(position);
                 position.y += list.GetHeight();
@@ -32,8 +32,8 @@ namespace TUFF.TUFFEditor
         }
         public ReorderableList GetList(SerializedProperty arrayProperty)
         {
-            var elements = LISAEditorUtility.GetTargetObjectOfProperty(arrayProperty) as List<int>;
-            var list = new ReorderableList(elements, typeof(int), true, false, true, true);
+            if (arrayProperty == null) return null;
+            var list = new ReorderableList(arrayProperty.serializedObject, arrayProperty, true, false, true, true);
             list.drawElementCallback = DrawListItems;
             list.elementHeightCallback = GetElementHeight;
             return list;
@@ -50,7 +50,8 @@ namespace TUFF.TUFFEditor
                 options[i] = armorTypes[i].GetName();
                 values[i] = i;
             }
-            list.list[index] = EditorGUI.IntPopup(rect, "Armor Type", (int)list.list[index], options, values);
+            list.serializedProperty.GetArrayElementAtIndex(index).intValue =
+                EditorGUI.IntPopup(rect, "Armor Type", list.serializedProperty.GetArrayElementAtIndex(index).intValue, options, values);
         }
         private float GetElementHeight(int index)
         {
