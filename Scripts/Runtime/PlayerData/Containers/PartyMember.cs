@@ -556,6 +556,15 @@ namespace TUFF
                     if (!list.Contains(index)) list.Add(index);
                 }
             }
+            if (job)
+            {
+                var jobRefEquips = job.weaponTypes.weaponTypes;
+                for (int i = 0; i < jobRefEquips.Count; i++)
+                {
+                    int index = jobRefEquips[i];
+                    if (!list.Contains(index)) list.Add(index);
+                }
+            }
             return list;
         }
         public override List<int> GetArmorEquipTypes()
@@ -567,6 +576,15 @@ namespace TUFF
                 for (int i = 0; i < unitRefEquips.Count; i++)
                 {
                     int index = unitRefEquips[i];
+                    if (!list.Contains(index)) list.Add(index);
+                }
+            }
+            if (job)
+            {
+                var jobRefEquips = job.armorTypes.armorTypes;
+                for (int i = 0; i < jobRefEquips.Count; i++)
+                {
+                    int index = jobRefEquips[i];
                     if (!list.Contains(index)) list.Add(index);
                 }
             }
