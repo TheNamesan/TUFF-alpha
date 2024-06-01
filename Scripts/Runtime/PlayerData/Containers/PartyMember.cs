@@ -565,6 +565,7 @@ namespace TUFF
                     if (!list.Contains(index)) list.Add(index);
                 }
             }
+            CheckRemoveWeaponTypes(list);
             return list;
         }
         public override List<int> GetArmorEquipTypes()
@@ -588,6 +589,7 @@ namespace TUFF
                     if (!list.Contains(index)) list.Add(index);
                 }
             }
+            CheckRemoveArmorTypes(list);
             return list;
         }
     }

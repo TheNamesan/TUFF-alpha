@@ -832,11 +832,47 @@ namespace TUFF
         }
         public virtual List<int> GetWeaponEquipTypes()
         {
-            return new List<int>();
+            var list = new List<int>();
+            var addWeaponTypeFeats = GetAllFeaturesOfType(FeatureType.AddWeaponEquipType);
+            for (int i = 0; i < addWeaponTypeFeats.Count; i++)
+            {
+                int index = addWeaponTypeFeats[i].weaponType;
+                if (!list.Contains(index)) list.Add(index);
+            }
+            CheckRemoveWeaponTypes(list);
+            return list;
         }
+
+        protected void CheckRemoveWeaponTypes(List<int> list)
+        {
+            var removeTypeFeats = GetAllFeaturesOfType(FeatureType.RemoveWeaponEquipType);
+            for (int i = 0; i < removeTypeFeats.Count; i++)
+            {
+                int index = removeTypeFeats[i].weaponType;
+                list.Remove(index);
+            }
+        }
+
         public virtual List<int> GetArmorEquipTypes()
         {
-            return new List<int>();
+            var list = new List<int>();
+            var addArmorTypeFeats = GetAllFeaturesOfType(FeatureType.AddArmorEquipType);
+            for (int i = 0; i < addArmorTypeFeats.Count; i++)
+            {
+                int index = addArmorTypeFeats[i].armorType;
+                if (!list.Contains(index)) list.Add(index);
+            }
+            CheckRemoveArmorTypes(list);
+            return list;
+        }
+        protected void CheckRemoveArmorTypes(List<int> list)
+        {
+            var removeTypeFeats = GetAllFeaturesOfType(FeatureType.RemoveArmorEquipType);
+            for (int i = 0; i < removeTypeFeats.Count; i++)
+            {
+                int index = removeTypeFeats[i].armorType;
+                list.Remove(index);
+            }
         }
         public virtual List<Feature> GetAllFeaturesOfType(FeatureType featureType)
         {
