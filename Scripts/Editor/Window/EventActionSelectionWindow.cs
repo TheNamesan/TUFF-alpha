@@ -214,6 +214,10 @@ namespace TUFF.TUFFEditor
             GUI.backgroundColor = EventGUIColors.character;
             EditorGUILayout.BeginVertical("box");
             GUILayout.Label("Character", EditorStyles.boldLabel);
+            if (GUILayout.Button(new GUIContent("Change Game Object", "Changes a scene object's GameObject properties. Properties are reset when reloading the Scene.")))
+            {
+                AddEvent(new ChangeGameObjectAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Change Transform", "Changes a scene object's transform properties. Properties are reset when reloading the Scene.")))
             {
                 AddEvent(new ChangeTransformAction(), eventList, eventListPDs);
