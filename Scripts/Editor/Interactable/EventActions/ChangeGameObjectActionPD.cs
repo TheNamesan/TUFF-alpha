@@ -10,8 +10,8 @@ namespace TUFF.TUFFEditor
     {
         public override void InspectorGUIContent()
         {
-            var transform = targetProperty.FindPropertyRelative("gameObject");
-            EditorGUILayout.PropertyField(transform);
+            var gameObject = targetProperty.FindPropertyRelative("gameObject");
+            EditorGUILayout.PropertyField(gameObject);
 
             // Active
             var keepActive = targetProperty.FindPropertyRelative("keepActive");
@@ -20,12 +20,33 @@ namespace TUFF.TUFFEditor
             {
                 EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("setActive"));
             }
-            // Rotation
+            // Name
             var changeName = targetProperty.FindPropertyRelative("changeName");
             EditorGUILayout.PropertyField(changeName);
             if (changeName.boolValue)
             {
                 EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("newName"));
+            }
+            // Tag
+            string[] tags = UnityEditorInternal.InternalEditorUtility.tags;
+            int[] values = new int[tags.Length];
+            for (int i = 0; i < tags.Length; i++)
+            {
+                values[i] = i;
+            }
+            var keepTag = targetProperty.FindPropertyRelative("keepTag");
+            EditorGUILayout.PropertyField(keepTag);
+            if (!keepTag.boolValue)
+            {
+                var newTag = targetProperty.FindPropertyRelative("newTag");
+
+                string tag = "";
+                if (gameObject.objectReferenceValue) tag = newTag.stringValue;
+                int index = System.Array.IndexOf(tags, tag);
+                if (index < 0) index = 0;
+                index = EditorGUILayout.IntPopup("Tag", index, tags, values);
+                newTag.stringValue = tags[index];
+
             }
         }
         public override void SummaryGUI(Rect position)
@@ -45,9 +66,14 @@ namespace TUFF.TUFFEditor
             string newName = "";
             if (action.changeName)
             {
-                active = $"[Name: {action.newName}]";
+                newName = $"[Name: {action.newName}]";
             }
-            return $"Set {name}: {active}{newName}";
+            string newTag = "";
+            if (!action.keepTag)
+            {
+                newTag = $"[Tag: {action.newTag}]";
+            }
+            return $"Set {name}: {active}{newName}{newTag}";
         }
     }
 }

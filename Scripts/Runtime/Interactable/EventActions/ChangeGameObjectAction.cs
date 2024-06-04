@@ -9,12 +9,18 @@ namespace TUFF
         public GameObject gameObject;
 
         [Header("Active")]
-        public bool keepActive = false;
+        public bool keepActive = true;
         public bool setActive = false;
 
         [Header("Name")]
         public bool changeName = false;
         public string newName = "";
+
+        [Header("Tag")]
+        public bool keepTag = true;
+        public string newTag = "";
+
+
 
         public ChangeGameObjectAction()
         {
@@ -32,6 +38,10 @@ namespace TUFF
                 if (changeName)
                 {
                     gameObject.name = newName;
+                }
+                if (!keepTag)
+                {
+                    gameObject.tag = newTag;
                 }
             }
             isFinished = true;
