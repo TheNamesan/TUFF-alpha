@@ -168,6 +168,7 @@ namespace TUFF
         public void Pause(InputAction.CallbackContext context)
         {
             if (!FollowerInstance.player) return;
+            if (PlayerData.instance != null && PlayerData.instance.charProperties.disableMenuAccess) return;
             if (context.performed)
             {
                 if (GameManager.disablePlayerInput) return;

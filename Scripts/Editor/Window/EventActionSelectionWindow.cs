@@ -340,9 +340,16 @@ namespace TUFF.TUFFEditor
         }
         private static void SystemOptions()
         {
+            var oldColor = GUI.backgroundColor;
+            GUI.backgroundColor = EventGUIColors.system;
             EditorGUILayout.BeginVertical("box");
             GUILayout.Label("System", EditorStyles.boldLabel);
+            if (GUILayout.Button(new GUIContent("Change Menu Access", "Toggle the player's ability to open or close the pause menu manually.")))
+            {
+                AddEvent(new ChangeMenuAccessAction(), eventList, eventListPDs);
+            }
             EditorGUILayout.EndVertical();
+            GUI.backgroundColor = oldColor;
         }
         private static void BattleOptions()
         {
