@@ -56,6 +56,7 @@ namespace TUFF
                 }
             }
             uiMenu.onOpenMenu.AddListener(UpdateScroll);
+            UpdateArrows();
         }
 
         public void UpdateScroll()
