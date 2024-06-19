@@ -19,6 +19,8 @@ namespace TUFF
 
         [Header("References")]
         public TMP_Text nameText;
+        public UIButton optimizeButton;
+        public UIButton clearButton;
         public StatChangeElement maxHPElement;
         public StatChangeElement maxSPElement;
         public StatChangeElement maxTPElement;
@@ -37,15 +39,42 @@ namespace TUFF
         public InventoryItem selectedEquipment = null;
         public EquipmentSlotType selectedSlot = EquipmentSlotType.PrimaryWeapon;
         [System.NonSerialized] public PartyMember selectedMember;
-        public void InitializeMenu()
+        public void Awake()
+        {
+            if (optimizeButton)
+            {
+                optimizeButton.useCustomSelectSFX = true;
+                optimizeButton.customSelectSFX = TUFFSettings.equipSFX;
+                optimizeButton.onHighlight.AddListener(ClearItemsBox);
+            }
+            if (clearButton)
+            {
+                clearButton.useCustomSelectSFX = true;
+                clearButton.customSelectSFX = TUFFSettings.equipSFX;
+                clearButton.onSelect.AddListener(ClearEquipment);
+                clearButton.onHighlight.AddListener(ClearItemsBox);
+            }
+            if (memberEquipmentMenu)
+            {
+                if (memberEquipmentMenu.uiMenu)
+                    memberEquipmentMenu.uiMenu.onCloseMenu.AddListener(OnEquipmentBoxClose);
+            }
+        }
+        public void OnOpenMenu()
         {
             detailedUnitsMenu.uiMenu = uiMenu;
             detailedUnitsMenu?.UpdateUnits();
             selectedMember = null;
             selectedSlot = EquipmentSlotType.PrimaryWeapon;
             selectedEquipment = null;
+
+            ClearItemsBox();
             UpdateEquipment();
             ApplyLabels();
+        }
+        public void OnEquipmentBoxClose()
+        {
+            ClearItemsBox();
         }
         public void UpdateInfo(List<IEquipable> previewEquipment)
         {
@@ -103,6 +132,10 @@ namespace TUFF
                 LoadPrimaryAccessoryArmors();
             else if (selectedSlot == EquipmentSlotType.SecondaryAccessory)
                 LoadSecondaryAccessoryArmors();
+        }
+        public void ClearItemsBox()
+        {
+            inventoryItemViewer?.LoadItems(new(), false);
         }
         public void LoadPrimaryWeapons()
         {
@@ -173,6 +206,14 @@ namespace TUFF
         protected void EquipToUser()
         {
             selectedMember?.Equip((IEquipable)selectedEquipment, selectedSlot);
+            detailedUnitsMenu?.UpdateUnits();
+            UpdateEquipment();
+            UpdateInfo();
+        }
+        public void ClearEquipment()
+        {
+            Debug.Log("Clear");
+            selectedMember?.ClearEquipment();
             detailedUnitsMenu?.UpdateUnits();
             UpdateEquipment();
             UpdateInfo();

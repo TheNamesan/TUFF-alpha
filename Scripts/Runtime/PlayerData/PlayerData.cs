@@ -20,7 +20,7 @@ namespace TUFF
         public CharacterProperties charProperties = new CharacterProperties();
         public GameVariable[] gameVariables = new GameVariable[0];
         public int[] persistentInteractableIDs = new int[0];
-        
+
 
         public static PlayerData instance
         {
@@ -125,7 +125,7 @@ namespace TUFF
             string hours = (timeSpan.Hours.ToString("00", culture));
             string minutes = (timeSpan.Minutes.ToString("00", culture));
             string seconds = (timeSpan.Seconds.ToString("00", culture));
-            
+
             return $"{hours}:{minutes}:{seconds}";
         }
         public void GetSceneData(out string sceneName, out Vector3 playerPosition, out FaceDirections playerFacing)
@@ -163,10 +163,10 @@ namespace TUFF
         {
             if (!unit) return false;
             return IsInParty(unit.id);
-        } 
+        }
         public void AddEXPToParty(int exp)
         {
-            foreach(sbyte id in partyOrder)
+            foreach (sbyte id in partyOrder)
             {
                 party[id].AddEXP(exp);
             }
@@ -205,9 +205,19 @@ namespace TUFF
         {
             if (user == null) return;
             var equipable = GetEquipmentFromUserSlot(user, slot);
+            EquipInUserSlot(user, null, slot);
             user.CapValues();
             if (equipable is Weapon) AddToInventory((Weapon)equipable, +1);
             else if (equipable is Armor) AddToInventory((Armor)equipable, +1);
+        }
+        public void ClearEquipmentFromUser(PartyMember user)
+        {
+            if (user == null) return;
+            int totalEquipmentSlots = 6;
+            for (int i = 0; i < totalEquipmentSlots; i++)
+            {
+                UnequipFromUser(user, (EquipmentSlotType)i);
+            }
         }
         protected void EquipInUserSlot(PartyMember user, IEquipable equipable, EquipmentSlotType slot)
         {

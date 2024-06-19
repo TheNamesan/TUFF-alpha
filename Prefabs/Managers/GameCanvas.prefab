@@ -14173,8 +14173,11 @@ MonoBehaviour:
   detailedUnitsMenu: {fileID: 6998007961725586466}
   inventoryItemViewer: {fileID: 5873790856846294025}
   memberEquipmentMenu: {fileID: 7979867179264457611}
+  equipmentBoxMenu: {fileID: 4353833955260257167}
   uiMenu: {fileID: 6842782342183967303}
   nameText: {fileID: 4167982744377538328}
+  optimizeButton: {fileID: 7068432811415054790}
+  clearButton: {fileID: 4453571825140956237}
   maxHPElement: {fileID: 583351008035711163}
   maxSPElement: {fileID: 2325251580239621167}
   maxTPElement: {fileID: 7999463905448424260}
@@ -14217,7 +14220,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1880777488068092161}
         m_TargetAssemblyTypeName: TUFF.EquipMenu, TUFF.Runtime
-        m_MethodName: InitializeMenu
+        m_MethodName: OnOpenMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -28053,11 +28056,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1495503120907034897, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
       propertyPath: m_Name
-      value: WeaponsButton
+      value: ClearButton
       objectReference: {fileID: 0}
     - target: {fileID: 1495503120907034898, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
       propertyPath: menusToOpen.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1495503120907034898, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
       propertyPath: menusToOpen.Array.data[0]
@@ -28099,6 +28102,17 @@ PrefabInstance:
     - {fileID: 7974109591849477732, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
     - {fileID: 1495503120484906780, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
+--- !u!114 &4453571825140956237 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1495503120907034898, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
+  m_PrefabInstance: {fileID: 2958684431819218271}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49fedab1cd3abc4b89c2a3a97ea2e8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4453571825140956239 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1495503120907034896, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
@@ -38526,6 +38540,9 @@ MonoBehaviour:
     - {fileID: 7708036419200692466}
   - UIElements:
     - {fileID: 6464246839686301198}
+  - UIElements:
+    - {fileID: 7068432811415054790}
+    - {fileID: 4453571825140956237}
   highlightX: 0
   highlightY: 0
   transitionHandler: {fileID: 0}
@@ -45673,11 +45690,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1495503120907034897, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
       propertyPath: m_Name
-      value: ItemsButton
+      value: OptimizeButton
       objectReference: {fileID: 0}
     - target: {fileID: 1495503120907034898, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
       propertyPath: menusToOpen.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1495503120907034898, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
       propertyPath: menusToOpen.Array.data[0]
@@ -45724,6 +45741,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1495503120907034896, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
   m_PrefabInstance: {fileID: 8563882880013093076}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7068432811415054790 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1495503120907034898, guid: 7540775b681bec245be6574006aa3dbd, type: 3}
+  m_PrefabInstance: {fileID: 8563882880013093076}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49fedab1cd3abc4b89c2a3a97ea2e8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8597103771466962766
 PrefabInstance:
   m_ObjectHideFlags: 0
