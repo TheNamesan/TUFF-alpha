@@ -66,12 +66,26 @@ namespace TUFF
             }
             return baseDirectory;
         }
-        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(List<int> weaponTypes, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(WeaponWieldType wieldType, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < weapons.Length; i++)
             {
                 var item = DatabaseLoader.instance.weapons[i];
+                if (item.wieldType != wieldType && item.wieldType != WeaponWieldType.AnyWeaponSlot) continue;
+                var amount = GetItemAmount(item);
+                if (!includeZero && amount <= 0) continue;
+                baseDirectory.Add(item, amount);
+            }
+            return baseDirectory;
+        }
+        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(WeaponWieldType wieldType, List<int> weaponTypes, Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
+        {
+            if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                var item = DatabaseLoader.instance.weapons[i];
+                if (item.wieldType != wieldType && item.wieldType != WeaponWieldType.AnyWeaponSlot) continue;
                 if (weaponTypes == null || !weaponTypes.Contains(item.weaponType)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;

@@ -119,7 +119,12 @@ namespace TUFF
         Enemy = 0,
         Ally = 1
     }
-
+    public enum WeaponWieldType
+    {
+        PrimarySlotOnly = 0,
+        SecondarySlotOnly = 1,
+        AnyWeaponSlot = 2
+    }
     public enum EquipType
     {
         Head = 0,

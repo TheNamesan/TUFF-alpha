@@ -109,14 +109,14 @@ namespace TUFF
             selectedSlot = EquipmentSlotType.PrimaryWeapon;
             var types = new List<int>();
             if (selectedMember != null) types = selectedMember.GetWeaponEquipTypes();
-            inventoryItemViewer?.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(types), true);
+            inventoryItemViewer?.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(WeaponWieldType.PrimarySlotOnly, types), true);
         }
         public void LoadSecondaryWeapons()
         {
             selectedSlot = EquipmentSlotType.SecondaryWeapon;
             var types = new List<int>();
             if (selectedMember != null) types = selectedMember.GetWeaponEquipTypes();
-            inventoryItemViewer?.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(types), true);
+            inventoryItemViewer?.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(WeaponWieldType.SecondarySlotOnly, types), true);
         }
         public void LoadHeadArmors()
         {

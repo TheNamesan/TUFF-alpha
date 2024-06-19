@@ -251,8 +251,11 @@ namespace TUFF
         public Dictionary<InventoryItem, int> GetItemsAndAmount() => inventory.GetItemsAndAmount();
         public Dictionary<InventoryItem, int> GetKeyItemsAndAmount() => inventory.GetKeyItemsAndAmount();
         public Dictionary<InventoryItem, int> GetAllWeaponsAndAmount() => inventory.GetAllWeaponsAndAmount();
-        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(List<int> weaponTypes) 
-            => inventory.GetWeaponsAndAmountOfType(weaponTypes);
+        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(WeaponWieldType wieldType)
+           => inventory.GetWeaponsAndAmountOfType(wieldType);
+        public Dictionary<InventoryItem, int> GetWeaponsAndAmountOfType(WeaponWieldType wieldType, List<int> weaponTypes) 
+            => inventory.GetWeaponsAndAmountOfType(wieldType, weaponTypes);
+        
         public Dictionary<InventoryItem, int> GetAllArmorsAndAmount() => inventory.GetAllArmorsAndAmount();
         public Dictionary<InventoryItem, int> GetArmorsAndAmountOfType(EquipType equipType)
             => inventory.GetArmorsAndAmountOfType(equipType);
