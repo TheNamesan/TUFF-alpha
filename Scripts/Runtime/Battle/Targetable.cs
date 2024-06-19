@@ -266,6 +266,7 @@ namespace TUFF
                 HP = GetMaxHP();
             }
         }
+        
         public virtual void CapSP()
         {
             SP = Mathf.Clamp(SP, 0, GetMaxSP());
@@ -273,6 +274,12 @@ namespace TUFF
         public virtual void CapTP()
         {
             TP = Mathf.Clamp(TP, 0, GetMaxTP());
+        }
+        public virtual void CapValues()
+        {
+            CapHP();
+            CapSP();
+            CapTP();
         }
         public virtual void PaySkillCost(Skill skill)
         {

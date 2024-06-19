@@ -197,6 +197,7 @@ namespace TUFF
             if (user == null) return;
             UnequipFromUser(user, slot);
             EquipInUserSlot(user, equipable, slot);
+            user.CapValues();
             if (equipable is Weapon) AddToInventory((Weapon)equipable, -1);
             else if (equipable is Armor) AddToInventory((Armor)equipable, -1);
         }
@@ -204,6 +205,7 @@ namespace TUFF
         {
             if (user == null) return;
             var equipable = GetEquipmentFromUserSlot(user, slot);
+            user.CapValues();
             if (equipable is Weapon) AddToInventory((Weapon)equipable, +1);
             else if (equipable is Armor) AddToInventory((Armor)equipable, +1);
         }
