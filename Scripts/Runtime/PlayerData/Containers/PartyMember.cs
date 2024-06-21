@@ -147,9 +147,12 @@ namespace TUFF
         {
             PlayerData.instance.UnequipFromUser(this, slot);
         }
+        public void OptimizeEquipment()
+        {
+            PlayerData.instance.OptimizeEquipmentFromUser(this);
+        }
         public void ClearEquipment()
         {
-            // TODO: Add Check for Sealed Equipment so it doesn't get removed.
             PlayerData.instance.ClearEquipmentFromUser(this);
         }
         public static float GetNextLevelProgress(int level, Job job, int exp)

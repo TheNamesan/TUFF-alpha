@@ -45,6 +45,7 @@ namespace TUFF
             {
                 optimizeButton.useCustomSelectSFX = true;
                 optimizeButton.customSelectSFX = TUFFSettings.equipSFX;
+                optimizeButton.onSelect.AddListener(OptimizeEquipment);
                 optimizeButton.onHighlight.AddListener(ClearItemsBox);
             }
             if (clearButton)
@@ -210,9 +211,15 @@ namespace TUFF
             UpdateEquipment();
             UpdateInfo();
         }
+        public void OptimizeEquipment()
+        {
+            selectedMember?.OptimizeEquipment();
+            detailedUnitsMenu?.UpdateUnits();
+            UpdateEquipment();
+            UpdateInfo();
+        }
         public void ClearEquipment()
         {
-            Debug.Log("Clear");
             selectedMember?.ClearEquipment();
             detailedUnitsMenu?.UpdateUnits();
             UpdateEquipment();

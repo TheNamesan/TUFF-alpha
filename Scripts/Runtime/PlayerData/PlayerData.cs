@@ -210,8 +210,19 @@ namespace TUFF
             if (equipable is Weapon) AddToInventory((Weapon)equipable, +1);
             else if (equipable is Armor) AddToInventory((Armor)equipable, +1);
         }
+        public void OptimizeEquipmentFromUser(PartyMember user)
+        {
+            // TODO: Add Check for Sealed Equipment so it doesn't get removed.
+            if (user == null) return;
+            int totalEquipmentSlots = 6;
+            for (int i = 0; i < totalEquipmentSlots; i++)
+            {
+                OptimizeSlot(user, (EquipmentSlotType)i);
+            }
+        }
         public void ClearEquipmentFromUser(PartyMember user)
         {
+            // TODO: Add Check for Sealed Equipment so it doesn't get removed.
             if (user == null) return;
             int totalEquipmentSlots = 6;
             for (int i = 0; i < totalEquipmentSlots; i++)
@@ -238,6 +249,37 @@ namespace TUFF
                     user.primaryAccessory = armor; return;
                 case EquipmentSlotType.SecondaryAccessory:
                     user.secondaryAccessory = armor; return;
+            }
+        }
+        protected void OptimizeSlot(PartyMember user, EquipmentSlotType slot)
+        {
+            if (user == null) return;
+            bool isWeapon = (slot == EquipmentSlotType.PrimaryWeapon || slot == EquipmentSlotType.SecondaryWeapon);
+            user.GetArmorEquipTypes();
+            IEquipable currentEquipable = GetEquipmentFromUserSlot(user, slot);
+            IEquipable nextEquipable;
+            if (isWeapon) {
+                WeaponWieldType wieldType = WeaponWieldType.AnyWeaponSlot;
+                if (slot == EquipmentSlotType.PrimaryWeapon) wieldType = WeaponWieldType.PrimarySlotOnly;
+                if (slot == EquipmentSlotType.SecondaryWeapon) wieldType = WeaponWieldType.SecondarySlotOnly;
+                nextEquipable = GetHighestStatsWeapon(wieldType, user.GetWeaponEquipTypes());
+            }
+            else {
+                EquipType equipType = EquipType.Head;
+                if (slot == EquipmentSlotType.Head) equipType = EquipType.Head;
+                if (slot == EquipmentSlotType.Body) equipType = EquipType.Body;
+                if (slot == EquipmentSlotType.PrimaryAccessory || slot == EquipmentSlotType.SecondaryAccessory) 
+                    equipType = EquipType.Accessory;
+                nextEquipable = GetHighestStatsArmor(equipType, user.GetArmorEquipTypes());
+            }
+            if (nextEquipable != null)
+            {
+                if (currentEquipable != null)
+                {
+                    if (nextEquipable.GetStatTotal() > currentEquipable.GetStatTotal())
+                        EquipToUser(user, nextEquipable, slot);
+                }
+                else EquipToUser(user, nextEquipable, slot);
             }
         }
         protected IEquipable GetEquipmentFromUserSlot(PartyMember user, EquipmentSlotType slot)
@@ -274,6 +316,8 @@ namespace TUFF
         public Dictionary<InventoryItem, int> GetArmorsAndAmountOfType(EquipType equipType, List<int> armorTypes) 
             => inventory.GetArmorsAndAmountOfType(equipType, armorTypes);
         public Dictionary<InventoryItem, int> GetEntireInventoryAndAmount() => inventory.GetEntireInventoryAndAmount();
+        public IEquipable GetHighestStatsWeapon(WeaponWieldType wieldType, List<int> weaponTypes) => inventory.GetHighestStatsWeapon(wieldType, weaponTypes);
+        public IEquipable GetHighestStatsArmor(EquipType equipType, List<int> armorTypes) => inventory.GetHighestStatsArmor(equipType, armorTypes);
         public int GetItemAmountFromPartyEquipment(IEquipable equipable)
         {
             return 0;

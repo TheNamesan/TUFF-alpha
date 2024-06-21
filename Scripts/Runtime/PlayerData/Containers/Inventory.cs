@@ -72,7 +72,7 @@ namespace TUFF
             for (int i = 0; i < weapons.Length; i++)
             {
                 var item = DatabaseLoader.instance.weapons[i];
-                if (item.wieldType != wieldType && item.wieldType != WeaponWieldType.AnyWeaponSlot) continue;
+                if (!IsMatchingWeaponType(item, wieldType, null)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
@@ -85,13 +85,39 @@ namespace TUFF
             for (int i = 0; i < weapons.Length; i++)
             {
                 var item = DatabaseLoader.instance.weapons[i];
-                if (item.wieldType != wieldType && item.wieldType != WeaponWieldType.AnyWeaponSlot) continue;
-                if (weaponTypes == null || !weaponTypes.Contains(item.weaponType)) continue;
+                if (!IsMatchingWeaponType(item, wieldType, weaponTypes)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
             }
             return baseDirectory;
+        }
+        public IEquipable GetHighestStatsWeapon(WeaponWieldType wieldType, List<int> weaponTypes)
+        {
+            IEquipable bestItem = null;
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                Weapon item = DatabaseLoader.instance.weapons[i];
+                if (!IsMatchingWeaponType(item, wieldType, weaponTypes)) continue;
+                var amount = GetItemAmount(item);
+                if (amount <= 0) continue;
+                if (bestItem != null)
+                { 
+                    if (((IEquipable)item).GetStatTotal() > bestItem.GetStatTotal()) 
+                    {
+                        bestItem = item;
+                    }
+                }
+                else bestItem = item;
+            }
+            return bestItem;
+        }
+        protected bool IsMatchingWeaponType(Weapon item, WeaponWieldType wieldType, List<int> weaponTypes)
+        {
+            if (!item) return false;
+            if (item.wieldType != wieldType && item.wieldType != WeaponWieldType.AnyWeaponSlot) return false;
+            if (weaponTypes == null || !weaponTypes.Contains(item.weaponType)) return false;
+            return true;
         }
         public Dictionary<InventoryItem, int> GetAllArmorsAndAmount(Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
         {
@@ -110,7 +136,7 @@ namespace TUFF
             for (int i = 0; i < armors.Length; i++)
             {
                 var item = DatabaseLoader.instance.armors[i];
-                if (item.equipType != equipType) continue; 
+                if (!IsMatchingArmorType(item, equipType, null)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
@@ -123,13 +149,39 @@ namespace TUFF
             for (int i = 0; i < armors.Length; i++)
             {
                 var item = DatabaseLoader.instance.armors[i];
-                if (armorTypes == null || !armorTypes.Contains(item.armorType)) continue;
-                if (item.equipType != equipType) continue;
+                if (!IsMatchingArmorType(item, equipType, armorTypes)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
             }
             return baseDirectory;
+        }
+        public IEquipable GetHighestStatsArmor(EquipType equipType, List<int> armorTypes)
+        {
+            IEquipable bestItem = null;
+            for (int i = 0; i < armors.Length; i++)
+            {
+                Armor item = DatabaseLoader.instance.armors[i];
+                if (!IsMatchingArmorType(item, equipType, armorTypes)) continue;
+                var amount = GetItemAmount(item);
+                if (amount <= 0) continue;
+                if (bestItem != null)
+                {
+                    if (((IEquipable)item).GetStatTotal() > bestItem.GetStatTotal())
+                    {
+                        bestItem = item;
+                    }
+                }
+                else bestItem = item;
+            }
+            return bestItem;
+        }
+        protected bool IsMatchingArmorType(Armor item, EquipType equipType, List<int> armorTypes)
+        {
+            if (!item) return false;
+            if (item.equipType != equipType) return false;
+            if (armorTypes != null && !armorTypes.Contains(item.armorType)) return false;
+            return true;
         }
         public Dictionary<InventoryItem, int> GetEntireInventoryAndAmount(Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
         {
