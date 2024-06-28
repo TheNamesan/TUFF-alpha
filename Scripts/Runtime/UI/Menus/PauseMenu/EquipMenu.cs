@@ -15,25 +15,13 @@ namespace TUFF
         public DetailedUnitsMenu detailedUnitsMenu;
         public InventoryItemViewer inventoryItemViewer;
         public MemberEquipmentMenu memberEquipmentMenu;
+        public StatsOverviewHUD statsOverviewHUD;
         public UIMenu uiMenu;
 
         [Header("References")]
-        public TMP_Text nameText;
+        
         public UIButton optimizeButton;
         public UIButton clearButton;
-        public StatChangeElement maxHPElement;
-        public StatChangeElement maxSPElement;
-        public StatChangeElement maxTPElement;
-        public StatChangeElement ATKElement;
-        public StatChangeElement DEFElement;
-        public StatChangeElement SATKElement;
-        public StatChangeElement SDEFElement;
-        public StatChangeElement AGIElement;
-        public StatChangeElement LUKElement;
-        public StatChangeElement hitRateElement;
-        public StatChangeElement evasionRateElement;
-        public StatChangeElement critRateElement;
-        public StatChangeElement targetRateElement;
 
         [Header("Selection")]
         public InventoryItem selectedEquipment = null;
@@ -71,7 +59,7 @@ namespace TUFF
 
             ClearItemsBox();
             UpdateEquipment();
-            ApplyLabels();
+            statsOverviewHUD?.UpdateLabels();
         }
         public void OnEquipmentBoxClose()
         {
@@ -81,34 +69,8 @@ namespace TUFF
         {
             var member = selectedMember;
             if (member == null) return;
-            var job = member.GetJob();
-            if (job == null) return;
-            Debug.Log(member.GetName());
-            nameText.text = member.GetName();
-            maxHPElement.UpdateInfo(member.GetMaxHP(), member.GetMaxHP(previewEquipment));
-            if (job.usesSP)
-            {
-                maxSPElement.gameObject.SetActive(true);
-                maxSPElement.UpdateInfo(member.GetMaxSP(), member.GetMaxSP(previewEquipment));
-            }
-            else maxSPElement.gameObject.SetActive(false);
-            if (job.usesTP)
-            {
-                maxTPElement.gameObject.SetActive(true);
-                maxTPElement.UpdateInfo(member.GetMaxTP(), member.GetMaxTP(previewEquipment));
-            }
-            else maxTPElement.gameObject.SetActive(false);
-            ATKElement.UpdateInfo(member.GetATK(), member.GetATK(previewEquipment));
-            DEFElement.UpdateInfo(member.GetDEF(), member.GetDEF(previewEquipment));
-            SATKElement.UpdateInfo(member.GetSATK(), member.GetSATK(previewEquipment));
-            SDEFElement.UpdateInfo(member.GetSDEF(), member.GetSDEF(previewEquipment));
-            AGIElement.UpdateInfo(member.GetAGI(), member.GetAGI(previewEquipment));
-            LUKElement.UpdateInfo(member.GetLUK(), member.GetLUK(previewEquipment));
-            ExtraRateUpdateInfo(hitRateElement, member.GetHitRate() * 100f, member.GetHitRate(previewEquipment) * 100f);
-            ExtraRateUpdateInfo(evasionRateElement, member.GetEvasionRate() * 100f, member.GetEvasionRate(previewEquipment) * 100f);
-            ExtraRateUpdateInfo(critRateElement, member.GetCritRate() * 100f, member.GetCritRate(previewEquipment) * 100f);
-            ExtraRateUpdateInfo(targetRateElement, member.GetTargetRate() * 100f, member.GetTargetRate(previewEquipment) * 100f);
-
+            if (statsOverviewHUD)
+                statsOverviewHUD.UpdateInfo(member, previewEquipment);
             memberEquipmentMenu?.UpdateInfo(member);
         }
         protected void ExtraRateUpdateInfo(StatChangeElement element, float oldValue, float newValue)
@@ -229,19 +191,6 @@ namespace TUFF
         {
             selectedMember = member;
             UpdateInfo();
-        }
-
-        protected void ApplyLabels()
-        {
-            maxHPElement?.UpdateLabel(TUFFSettings.maxHPShortText);
-            maxSPElement?.UpdateLabel(TUFFSettings.maxSPShortText);
-            maxTPElement?.UpdateLabel(TUFFSettings.maxTPShortText);
-            ATKElement?.UpdateLabel(TUFFSettings.ATKShortText);
-            DEFElement?.UpdateLabel(TUFFSettings.DEFShortText);
-            SATKElement?.UpdateLabel(TUFFSettings.SATKShortText);
-            SDEFElement?.UpdateLabel(TUFFSettings.SDEFShortText);
-            AGIElement?.UpdateLabel(TUFFSettings.AGIShortText);
-            LUKElement?.UpdateLabel(TUFFSettings.LUKShortText);
         }
     }
 }

@@ -281,6 +281,11 @@ namespace TUFF
             CapSP();
             CapTP();
         }
+        public virtual void OnEquipChange()
+        {
+            UpdateStates();
+            CapValues();
+        }
         public virtual void PaySkillCost(Skill skill)
         {
             if (skill == null) return;

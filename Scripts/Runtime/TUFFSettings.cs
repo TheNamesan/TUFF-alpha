@@ -138,6 +138,18 @@ namespace TUFF
         public static string SDEFShortText { get => ParseText(Instance.m_SDEFShortTermKey); }
         public static string AGIShortText { get => ParseText(Instance.m_AGIShortTermKey); }
         public static string LUKShortText { get => ParseText(Instance.m_LUKShortTermKey); }
+        // Extra Rate
+        public static string hitRateText { get => ParseText(Instance.m_hitRateTermKey); }
+        public static string hitRateShortText { get => ParseText(Instance.m_hitRateShortTermKey); }
+        public static string evasionRateText { get => ParseText(Instance.m_evasionRateTermKey); }
+        public static string evasionRateShortText { get => ParseText(Instance.m_evasionRateShortTermKey); }
+        public static string criticalRateText { get => ParseText(Instance.m_criticalRateTermKey); }
+        public static string criticalRateShortText { get => ParseText(Instance.m_criticalRateShortTermKey); }
+        public static string criticalEvasionRateText { get => ParseText(Instance.m_criticalEvasionRateTermKey); }
+        public static string criticalEvasionRateShortText { get => ParseText(Instance.m_criticalEvasionRateShortTermKey); }
+        // Special Rate
+        public static string targetRateText { get => ParseText(Instance.m_targetRateTermKey); }
+        public static string targetRateShortText { get => ParseText(Instance.m_targetRateShortTermKey); }
         public static string currencyText { get => ParseText(Instance.m_currencyTermKey); }
         public static string currencyShortText { get => ParseText(Instance.m_currencyShortTermKey); }
         public static string weaponText { get => ParseText(Instance.m_weaponTermKey); }
@@ -202,7 +214,7 @@ namespace TUFF
         [SerializeField] private bool m_showEnemyStatsByDefault = false;
         [Tooltip("Base value for UP value.")]
         [SerializeField] private int m_baseMaxUP = 300;
-        
+
         // Battle Types
         [Tooltip("List of special characteristics given to attacks. Users can have weaknesses or resistance to a certain element, multiplying the damage dealt.")]
         [SerializeField] private List<BattleType> m_elements = new List<BattleType>();
@@ -331,6 +343,18 @@ namespace TUFF
         public string m_SDEFShortTermKey = "";
         public string m_AGIShortTermKey = "";
         public string m_LUKShortTermKey = "";
+
+        public string m_hitRateTermKey = "Hit Rate";
+        public string m_hitRateShortTermKey = "Hit";
+        public string m_evasionRateTermKey = "Evasion Rate";
+        public string m_evasionRateShortTermKey = "Evasion";
+        public string m_criticalRateTermKey = "Critical Rate";
+        public string m_criticalRateShortTermKey = "Critical";
+        public string m_criticalEvasionRateTermKey = "Critical Evasion Rate";
+        public string m_criticalEvasionRateShortTermKey = "Crit Evasion";
+        public string m_targetRateTermKey = "Target Rate";
+        public string m_targetRateShortTermKey = "Aggro";
+
         public string m_currencyTermKey = "Magazines";
         public string m_currencyShortTermKey = "Mags";
 

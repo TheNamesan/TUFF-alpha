@@ -158,6 +158,20 @@ namespace TUFF.TUFFEditor
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_SDEFShortTermKey", TUFFSettings.SDEFShortText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_AGIShortTermKey", TUFFSettings.AGIShortText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_LUKShortTermKey", TUFFSettings.LUKShortText);
+
+            EditorGUILayout.LabelField("Extra Rate", EditorStyles.boldLabel);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_hitRateTermKey", TUFFSettings.hitRateText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_hitRateShortTermKey", TUFFSettings.hitRateShortText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_evasionRateTermKey", TUFFSettings.evasionRateText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_evasionRateShortTermKey", TUFFSettings.evasionRateShortText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_criticalRateTermKey", TUFFSettings.criticalRateText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_criticalRateShortTermKey", TUFFSettings.criticalRateShortText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_criticalEvasionRateTermKey", TUFFSettings.criticalEvasionRateText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_criticalEvasionRateShortTermKey", TUFFSettings.criticalEvasionRateShortText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_targetRateTermKey", TUFFSettings.targetRateText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_targetRateShortTermKey", TUFFSettings.targetRateShortText);
+
+            EditorGUILayout.LabelField("Currency", EditorStyles.boldLabel);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_currencyTermKey", TUFFSettings.currencyText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_currencyShortTermKey", TUFFSettings.currencyShortText);
 

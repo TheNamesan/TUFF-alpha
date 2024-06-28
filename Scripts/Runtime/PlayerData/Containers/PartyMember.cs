@@ -442,6 +442,11 @@ namespace TUFF
             var value = (GetBaseCritRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.CritRate);
             return value;
         }
+        public virtual float GetCritEvasionRate(List<IEquipable> equipables)
+        {
+            var value = (GetBaseCritEvasionRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.CritEvasionRate);
+            return value;
+        }
         public virtual float GetTargetRate(List<IEquipable> equipables)
         {
             var value = (GetBaseTargetRate() * 0.01f) * BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange, equipables), SpecialRateChangeType.TargetRate);
