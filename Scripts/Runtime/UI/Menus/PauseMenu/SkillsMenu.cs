@@ -8,6 +8,7 @@ namespace TUFF
     {
         public DetailedUnitsMenu detailedUnitsMenu;
         public PreviewCommandListHUD previewCommandListHUD;
+        public DetailedUnitHUD selectedDetailedUnitHUD;
         public UIMenu uiMenu;
         
         [System.NonSerialized] public PartyMember selectedMember;
@@ -34,6 +35,8 @@ namespace TUFF
             if (selectedMember == null) return;
             if (previewCommandListHUD)
                 previewCommandListHUD.UpdateCommands(selectedMember);
+            if (selectedDetailedUnitHUD)
+                selectedDetailedUnitHUD.UpdateInfo(selectedMember, true);
         }
     }
 }

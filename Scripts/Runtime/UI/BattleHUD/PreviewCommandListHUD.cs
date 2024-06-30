@@ -29,7 +29,6 @@ namespace TUFF
         }
         private void InitializeElements()
         {
-            //VerifyMenuArrays(0);
             uiMenu?.ExpandRows(0);
             foreach (Transform child in elementsParent) // Add existing GameObjects to list
             {
@@ -45,35 +44,12 @@ namespace TUFF
             }
             if (uiMenu.UIElements == null) SetupElements();
         }
-        private void VerifyMenuArrays(int newRowCount)
-        {
-            if (uiMenu == null) return;
-            if (uiMenu.UIElementContainers == null)
-            {
-                uiMenu.UIElementContainers = new UIElementContainer[newRowCount];
-            }
-            if (newRowCount > uiMenu.UIElementContainers.Length) // If row is out of row count, expand
-            {
-                var newArray = new UIElementContainer[newRowCount];
-                System.Array.Copy(uiMenu.UIElementContainers, newArray, uiMenu.UIElementContainers.Length);
-                uiMenu.UIElementContainers = newArray;
-                Debug.Log("New size: " + uiMenu.UIElementContainers.Length);
-            }
-            for (int i = 0; i < uiMenu.UIElementContainers.Length; i++)
-            {
-                if (uiMenu.UIElementContainers[i] == null)
-                    uiMenu.UIElementContainers[i] = new UIElementContainer();
-            }
-            //if (uiMenu.UIElementContainers[0] == null) // Check Index 0
-                //uiMenu.UIElementContainers[0] = new UIElementContainer();
-        }
         protected void AddToMenu(int index, UIButton element)
         {
             if (uiMenu == null) return;
             if (index >= uiMenu.UIElementContainers.Length)
             {
                 int rowsDelta = (index + 1) - uiMenu.UIElementContainers.Length;
-                //VerifyMenuArrays(uiMenu.UIElementContainers.Length + rowsDelta);
                 uiMenu?.ExpandRows(uiMenu.UIElementContainers.Length + rowsDelta);
             }
             if (uiMenu.UIElementContainers[index] == null)
@@ -106,7 +82,6 @@ namespace TUFF
         {
             int row = 0;
             if (commandList == null) return;
-            //VerifyMenuArrays(commandList.Count);
             uiMenu?.ExpandRows(commandList.Count);
 
             for (; row < commandList.Count; row++)
