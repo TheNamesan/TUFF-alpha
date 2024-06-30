@@ -16,6 +16,7 @@ namespace TUFF
         public List<Command> defaultCommands;
         public List<CommandElement> commandElements = new List<CommandElement>();
         [System.NonSerialized] public PartyMember memberRef;
+        [Tooltip("Index of memberRef in Active Party Members list")]
         private int commandListIndex;
 
         public void InitializeCommandListHUD(BattleHUD battleHUD)
@@ -73,14 +74,13 @@ namespace TUFF
             UIButton comUIElement = commandGO.GetComponent<UIButton>();
             uiElementContainer[containerPosition].UIElements.Add(comUIElement);
             if (memberRef.HasCommandSeal(command)) comUIElement.disabled = true;
-            comUIElement.highlightDisplayText = command.GetName();
+            comUIElement.highlightDisplayText = command.GetDescription();
             if (command.skills.Count > 0)
             {
                 if (command.commandType == CommandType.Single)
                 {
                     var skill = command.skills[0].skill;
                     var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, skill.scopeData);
-                    comUIElement.highlightDisplayText = skill.GetDescription();
                     if (!BattleManager.instance.CanUseSkill(skill, memberRef, false)) comUIElement.disabled = true;
                     comUIElement.onHighlight.AddListener(() => 
                     {

@@ -20,5 +20,14 @@ namespace TUFF
         {
             return TUFFTextParser.ParseText(nameKey);
         }
+        public override string GetDescription()
+        {
+            if (commandType == CommandType.Single)
+            {
+                var skill = skills[0].skill;
+                if (skill) return skill.GetDescription();
+            }
+            return GetName();
+        }
     }
 }

@@ -244,6 +244,8 @@ namespace TUFF
             UIElements = new UIElement[UIElementContainers.Length][];
             for (int i = 0; i < UIElementContainers.Length; i++)
             {
+                if (UIElementContainers[i] == null) { Debug.LogWarning($"Row {i} is null!"); return; }
+                if (UIElementContainers[i].UIElements == null) { Debug.LogWarning($"Row {i} list is null!"); return; }
                 if (UIElementContainers[i].UIElements.Count == 0) return;
                 UIElements[i] = new UIElement[UIElementContainers[i].UIElements.Count];
                 for (int j = 0; j < UIElementContainers[i].UIElements.Count; j++)
@@ -251,6 +253,25 @@ namespace TUFF
                     UIElements[i][j] = UIElementContainers[i].UIElements[j];
                     if (UIElements[i][j] != null) UIElements[i][j].Unhighlight();
                 }
+            }
+        }
+        public void ExpandRows(int newRowCount)
+        {
+            if (UIElementContainers == null)
+            {
+                UIElementContainers = new UIElementContainer[newRowCount];
+            }
+            if (newRowCount > UIElementContainers.Length) // If row is out of row count, expand
+            {
+                var newArray = new UIElementContainer[newRowCount];
+                System.Array.Copy(UIElementContainers, newArray, UIElementContainers.Length);
+                UIElementContainers = newArray;
+                //Debug.Log("New size: " + uiMenu.UIElementContainers.Length);
+            }
+            for (int i = 0; i < UIElementContainers.Length; i++)
+            {
+                if (UIElementContainers[i] == null)
+                    UIElementContainers[i] = new UIElementContainer();
             }
         }
 

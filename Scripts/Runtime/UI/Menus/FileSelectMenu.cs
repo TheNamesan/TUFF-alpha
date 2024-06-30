@@ -27,22 +27,6 @@ namespace TUFF
         {
             if (initialized) return;
             if (uiMenu == null) uiMenu = GetComponent<UIMenu>();
-            //if (uiMenu == null) uiMenu = GetComponent<UIMenu>();
-            //if (uiMenu != null)
-            //{
-            //    if (uiMenu.UIElements == null) uiMenu.SetupUIElements();
-            //    for (int i = 0; i < uiMenu.UIElements.Length; i++)
-            //    {
-            //        if (uiMenu.UIElements[i].Length > 0)
-            //        {
-            //            int index = i;
-            //            var element = uiMenu.UIElements[i][0];
-            //            element.useCustomSelectSFX = true;
-            //            element.customSelectSFX = TUFFSettings.loadSFX;
-            //            element.onSelect.AddListener(() => { SelectFile(index); });
-            //        }
-            //    }
-            //}
             InitializeSaveFileHUDs();
             if (uiMenu) uiMenu.onCloseMenu.AddListener(OnCloseMenu);
             initialized = true;
@@ -97,22 +81,6 @@ namespace TUFF
                 if (i >= TUFFSettings.maxSaveFileSlots) elements[i].gameObject.SetActive(false);
             }
             if (uiMenu.UIElements == null) uiMenu.SetupUIElements();
-
-            //if (uiMenu != null)
-            //{
-            //    if (uiMenu.UIElements == null) uiMenu.SetupUIElements();
-            //    for (int i = 0; i < uiMenu.UIElements.Length; i++)
-            //    {
-            //        if (uiMenu.UIElements[i].Length > 0)
-            //        {
-            //            int index = i;
-            //            var element = uiMenu.UIElements[i][0];
-            //            element.useCustomSelectSFX = true;
-            //            element.customSelectSFX = TUFFSettings.loadSFX;
-            //            element.onSelect.AddListener(() => { SelectFile(index); });
-            //        }
-            //    }
-            //}
         }
         private void UpdateSaveFileHUDs()
         {

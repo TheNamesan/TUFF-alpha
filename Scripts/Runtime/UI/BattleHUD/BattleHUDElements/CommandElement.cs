@@ -13,6 +13,7 @@ namespace TUFF
     { 
         public Image icon;
         public TMP_Text text;
+        public UIButton uiButton;
         [SerializeField] Command command;
 
         public void SetCommand(Command setCommand)

@@ -1,0 +1,165 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace TUFF
+{
+    public class PreviewCommandListHUD : MonoBehaviour
+    {
+        public CommandElement commandElementPrefab;
+        public Transform elementsParent;
+        public UIMenu uiMenu;
+        public ScrollRectForUIMenu scrollRect;
+        public List<CommandElement> elements = new();
+        [System.NonSerialized] public PartyMember memberRef;
+
+        protected bool initialized = false;
+        protected bool elementAdded = false;
+
+        private void Awake()
+        {
+            Initialize();
+        }
+        private void Initialize()
+        {
+            if (initialized) return;
+            if (uiMenu == null) uiMenu = GetComponent<UIMenu>();
+            InitializeElements();
+            initialized = true;
+        }
+        private void InitializeElements()
+        {
+            //VerifyMenuArrays(0);
+            uiMenu?.ExpandRows(0);
+            foreach (Transform child in elementsParent) // Add existing GameObjects to list
+            {
+                if (child.TryGetComponent(out CommandElement existing))
+                {
+                    elements.Add(existing);
+                }
+            }
+            for (int i = 0; i < elements.Count; i++)
+            {
+                AddToMenu(i, elements[i].uiButton);
+                elements[i].gameObject.SetActive(true);
+            }
+            if (uiMenu.UIElements == null) SetupElements();
+        }
+        private void VerifyMenuArrays(int newRowCount)
+        {
+            if (uiMenu == null) return;
+            if (uiMenu.UIElementContainers == null)
+            {
+                uiMenu.UIElementContainers = new UIElementContainer[newRowCount];
+            }
+            if (newRowCount > uiMenu.UIElementContainers.Length) // If row is out of row count, expand
+            {
+                var newArray = new UIElementContainer[newRowCount];
+                System.Array.Copy(uiMenu.UIElementContainers, newArray, uiMenu.UIElementContainers.Length);
+                uiMenu.UIElementContainers = newArray;
+                Debug.Log("New size: " + uiMenu.UIElementContainers.Length);
+            }
+            for (int i = 0; i < uiMenu.UIElementContainers.Length; i++)
+            {
+                if (uiMenu.UIElementContainers[i] == null)
+                    uiMenu.UIElementContainers[i] = new UIElementContainer();
+            }
+            //if (uiMenu.UIElementContainers[0] == null) // Check Index 0
+                //uiMenu.UIElementContainers[0] = new UIElementContainer();
+        }
+        protected void AddToMenu(int index, UIButton element)
+        {
+            if (uiMenu == null) return;
+            if (index >= uiMenu.UIElementContainers.Length)
+            {
+                int rowsDelta = (index + 1) - uiMenu.UIElementContainers.Length;
+                //VerifyMenuArrays(uiMenu.UIElementContainers.Length + rowsDelta);
+                uiMenu?.ExpandRows(uiMenu.UIElementContainers.Length + rowsDelta);
+            }
+            if (uiMenu.UIElementContainers[index] == null)
+                uiMenu.UIElementContainers[index] = new UIElementContainer();
+            uiMenu.UIElementContainers[index].UIElements.Add(element);
+        }
+        public void UpdateCommands(PartyMember partyMember)
+        {
+            Initialize();
+            memberRef = partyMember;
+            if (memberRef == null) { Debug.LogWarning("No Party Member Reference"); return; }
+            var commandList = memberRef.GetCommands();
+            UpdateContent(commandList);
+
+            if (elementAdded) SetupElements();
+        }
+
+        private void SetupElements()
+        {
+            uiMenu.SetupUIElements();
+            if (scrollRect)
+            {
+                scrollRect.uiMenu = uiMenu;
+                scrollRect.SetupScroll();
+            }
+            elementAdded = false;
+        }
+
+        protected void UpdateContent(List<Command> commandList)
+        {
+            int row = 0;
+            if (commandList == null) return;
+            //VerifyMenuArrays(commandList.Count);
+            uiMenu?.ExpandRows(commandList.Count);
+
+            for (; row < commandList.Count; row++)
+            {
+                if (row >= elements.Count)
+                {
+                    InstantiateCommandElement(commandList[row], row);
+                }
+                else
+                {
+                    UpdateCommand(commandList[row], elements[row]);
+                }
+                elements[row].gameObject.SetActive(true);
+            }
+            for (int i = row; i < elements.Count; i++)
+                elements[i].gameObject.SetActive(false);
+            //CheckIfCurrentHighlightIsValid();
+        }
+
+        private void InstantiateCommandElement(Command command, int row)
+        {
+            CommandElement create = Instantiate(commandElementPrefab, elementsParent);
+            UpdateCommand(command, create);
+
+            elements.Add(create);
+            AddToMenu(row, create.uiButton);
+            elementAdded = true;
+        }
+
+        private static void UpdateCommand(Command command, CommandElement create)
+        {
+            //if (!command) return;
+            //if (!create) return;
+            create.SetCommand(command);
+            create.LoadCommandInfo();
+
+            UIButton button = create.uiButton;
+            if (button)
+            {
+                //if (memberRef.HasCommandSeal(command)) button.disabled = true;
+                button.highlightDisplayText = command.GetDescription();
+                if (command.skills.Count > 0)
+                {
+                    if (command.commandType == CommandType.Single)
+                    {
+                        var skill = command.skills[0].skill;
+                        //var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, skill.scopeData);
+                        //if (!BattleManager.instance.CanUseSkill(skill, memberRef, false)) button.disabled = true;
+                    }
+                }
+                //button.onHighlight.AddListener(() => battleHUD.ShowDescriptionDisplay(true));
+            }
+        }
+    }
+
+}
