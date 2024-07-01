@@ -85,7 +85,7 @@ namespace TUFF
                 menuGO.name = $"CommandsList{i}";
                 CommandListHUD listHUD = menuGO.GetComponent<CommandListHUD>();
                 if (listHUD == null) continue;
-                listHUD.InitializeCommandListHUD(this);
+                listHUD.AssignBattleHUD(this);
                 commandListHUD[i] = listHUD;
             }
             var selectUnitGO = Instantiate(unitHUDPrefab, selectedUnitInfoContent);

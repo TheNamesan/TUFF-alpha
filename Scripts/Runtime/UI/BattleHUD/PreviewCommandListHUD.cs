@@ -113,8 +113,8 @@ namespace TUFF
 
         private static void UpdateCommand(Command command, CommandElement create)
         {
-            //if (!command) return;
-            //if (!create) return;
+            if (!command) return;
+            if (!create) return;
             create.SetCommand(command);
             create.LoadCommandInfo();
 
@@ -123,14 +123,11 @@ namespace TUFF
             {
                 //if (memberRef.HasCommandSeal(command)) button.disabled = true;
                 button.highlightDisplayText = command.GetDescription();
-                if (command.skills.Count > 0)
+                if (command.IsValidSingleCommand())
                 {
-                    if (command.commandType == CommandType.Single)
-                    {
-                        var skill = command.skills[0].skill;
-                        //var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, skill.scopeData);
-                        //if (!BattleManager.instance.CanUseSkill(skill, memberRef, false)) button.disabled = true;
-                    }
+                    var skill = command.skills[0].skill;
+                    //var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, skill.scopeData);
+                    //if (!BattleManager.instance.CanUseSkill(skill, memberRef, false)) button.disabled = true;
                 }
                 //button.onHighlight.AddListener(() => battleHUD.ShowDescriptionDisplay(true));
             }

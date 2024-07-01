@@ -373,14 +373,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7536947c683d14a9141625d3043eca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  commandElementPrefab: {fileID: 4394584592101043209, guid: dc3c3bd6871cafc4981e140fe630bbe0, type: 3}
-  uiMenu: {fileID: 6428758636971290158}
+  commandElementPrefab: {fileID: 6595524393224550878, guid: dc3c3bd6871cafc4981e140fe630bbe0, type: 3}
+  elementsParent: {fileID: 5922915504329385853}
   scrollRect: {fileID: 2631161723922057907}
-  content: {fileID: 5922915504329385853}
-  battleHUD: {fileID: 0}
+  uiMenu: {fileID: 6428758636971290158}
   defaultCommands:
   - {fileID: 11400000, guid: eddecd4c928e42642bbe6f6d34f6a1c5, type: 2}
-  commandElements: []
+  elements: []
+  battleHUD: {fileID: 0}
 --- !u!114 &6428758636971290158
 MonoBehaviour:
   m_ObjectHideFlags: 0

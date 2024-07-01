@@ -29,5 +29,16 @@ namespace TUFF
             }
             return GetName();
         }
+        /// <summary>
+        /// Validates if the Command Type is Single and has a skill.
+        /// </summary>
+        /// <returns>Returns true if the command is Single and has at least one skill.</returns>
+        public bool IsValidSingleCommand()
+        {
+            if (skills == null) return false;
+            if (commandType == CommandType.Single && skills.Count > 0)
+                return true;
+            return false;
+        }
     }
 }
