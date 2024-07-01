@@ -149,14 +149,6 @@ namespace TUFF
             int neededAmount = itemAmount;
             return curAmount >= neededAmount;
         }
-        public bool CanBeUsedInMenu()
-        {
-            return occasion == OccasionType.Always || occasion == OccasionType.OnlyFromMenu;
-        }
-        public bool CanBeUsedInBattle()
-        {
-            return occasion == OccasionType.Always || occasion == OccasionType.OnlyInBattle;
-        }
         public bool UnitedUsersCanAct()
         {
             if (!isUnitedSkill) return true;

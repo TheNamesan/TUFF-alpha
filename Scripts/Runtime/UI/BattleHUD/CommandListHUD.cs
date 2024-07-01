@@ -110,14 +110,7 @@ namespace TUFF
             UpdateContent(commandList);
 
             if (elementAdded) SetupElements();
-
-            //AddFromCommandList(commandList, uiElementContainer);
-            //AddDefaultCommands(commandList, uiElementContainer);
-
-            //uiMenu.descriptionDisplay = battleHUD.descriptionDisplay.text;
-            //uiMenu.UIElementContainers = uiElementContainer;
-            //uiMenu.SetupUIElements();
-            //scrollRect.SetupScroll();
+            if (scrollRect) scrollRect.UpdateScroll();
         }
         private void UpdateContent(List<Command> commandList)
         {

@@ -37,7 +37,7 @@ namespace TUFF
             UIElementContainer[] uiElementContainer = new UIElementContainer[0];
             if (command.commandType == CommandType.Items)
             {
-                var valid = GetValidItemIDs(GameManager.instance.playerData.inventory.items);
+                var valid = GetValidItemIDs(Inventory.instance.items);
                 if (valid.Length <= 0) 
                 { 
                     uiElementContainer = new UIElementContainer[1]; 

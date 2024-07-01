@@ -67,6 +67,7 @@ namespace TUFF
             UpdateContent(commandList);
 
             if (elementAdded) SetupElements();
+            if (scrollRect) scrollRect.UpdateScroll();
         }
 
         private void SetupElements()

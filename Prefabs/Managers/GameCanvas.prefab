@@ -14961,7 +14961,7 @@ MonoBehaviour:
   uiMenu: {fileID: 691421142100080417}
   upArrow: {fileID: 2513227666242107345}
   downArrow: {fileID: 1534615064376196461}
-  maxVisibleElements: 4
+  maxVisibleElements: 8
   UIElementsHeight: 125
   layoutSpaceValue: 0
   topVisibleIndex: 0

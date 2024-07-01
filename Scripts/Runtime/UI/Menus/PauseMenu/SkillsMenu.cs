@@ -38,7 +38,6 @@ namespace TUFF
                 previewCommandListHUD.UpdateCommands(selectedMember);
             if (previewCommandSubmenuHUD)
                 previewCommandSubmenuHUD.ClearSubmenu();
-
             if (selectedDetailedUnitHUD)
                 selectedDetailedUnitHUD.UpdateInfo(selectedMember, true);
         }

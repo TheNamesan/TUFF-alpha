@@ -90,6 +90,7 @@ namespace TUFF
             UpdateContent();
 
             if (elementAdded) SetupElements();
+            if (scrollRect) scrollRect.UpdateScroll();
         }
         public void ClearSubmenu()
         {
@@ -101,18 +102,16 @@ namespace TUFF
         {
             if (commandRef.commandType == CommandType.Items)
             {
-                //var valid = GetValidItemIDs(GameManager.instance.playerData.inventory.items);
-                //if (valid.Length <= 0)
-                //{
-                //    uiElementContainer = new UIElementContainer[1];
-                //    AddEmpty(uiElementContainer);
-                //}
-                //else
-                //{
-                //    rows = LISAUtility.Ceil(valid.Length / ((float)columns));
-                //    uiElementContainer = new UIElementContainer[rows];
-                //    AddFromItems(valid, uiElementContainer, rows);
-                //}
+                var valid = Inventory.instance.GetItemsAndAmount();
+                if (valid.Count <= 0)
+                {
+                    AddEmpty();
+                }
+                else
+                {
+                    int rows = LISAUtility.Ceil(valid.Count / ((float)columns));
+                    AddFromItems(valid, rows);
+                }
             }
             else
             {
@@ -166,7 +165,29 @@ namespace TUFF
             for (int i = index; i < elements.Count; i++)
                 elements[i].gameObject.SetActive(false);
         }
-        private void InstantiateElement(Skill skill, int index)
+        private void AddFromItems(Dictionary<InventoryItem, int> items, int rows)
+        {
+            int index = 0;
+            if (items == null) return;
+            uiMenu?.ExpandRows(rows);
+            foreach (KeyValuePair<InventoryItem, int> pair in items)
+            {
+                Item item = (Item)pair.Key;
+                if (index >= elements.Count)
+                {
+                    InstantiateElement(item, index);
+                }
+                else
+                {
+                    UpdateElement(elements[index], item);
+                }
+                elements[index].gameObject.SetActive(true);
+                index++;
+            }
+            for (int i = index; i < elements.Count; i++)
+                elements[i].gameObject.SetActive(false);
+        }
+        private void InstantiateElement(IBattleInvocation skill, int index)
         {
             if (!submenuElementPrefab) return;
             CommandSubmenuElement create = Instantiate(submenuElementPrefab, elementsParent);
@@ -188,10 +209,10 @@ namespace TUFF
             elementAdded = true;
         }
 
-        protected void UpdateElement(CommandSubmenuElement submenuElement, Skill skill)
+        protected void UpdateElement(CommandSubmenuElement submenuElement, IBattleInvocation skill)
         {
             if (!submenuElement) return;
-            if (!skill) return;
+            if (skill == null) return;
             submenuElement.SetInvocation(skill);
             submenuElement.LoadInvocationInfo(memberRef);
             if (submenuElement.uiElement)
