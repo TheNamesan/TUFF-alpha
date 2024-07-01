@@ -8,6 +8,7 @@ namespace TUFF
     {
         public DetailedUnitsMenu detailedUnitsMenu;
         public PreviewCommandListHUD previewCommandListHUD;
+        public PreviewCommandSubmenuHUD previewCommandSubmenuHUD;
         public DetailedUnitHUD selectedDetailedUnitHUD;
         public UIMenu uiMenu;
         
@@ -35,6 +36,9 @@ namespace TUFF
             if (selectedMember == null) return;
             if (previewCommandListHUD)
                 previewCommandListHUD.UpdateCommands(selectedMember);
+            if (previewCommandSubmenuHUD)
+                previewCommandSubmenuHUD.ClearSubmenu();
+
             if (selectedDetailedUnitHUD)
                 selectedDetailedUnitHUD.UpdateInfo(selectedMember, true);
         }

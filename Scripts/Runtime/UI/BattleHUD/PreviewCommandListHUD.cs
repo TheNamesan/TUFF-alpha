@@ -10,6 +10,7 @@ namespace TUFF
         public Transform elementsParent;
         public UIMenu uiMenu;
         public ScrollRectForUIMenu scrollRect;
+        public PreviewCommandSubmenuHUD previewCommandSubmenuHUD;
         public List<CommandElement> elements = new();
         [System.NonSerialized] public PartyMember memberRef;
 
@@ -34,6 +35,7 @@ namespace TUFF
             {
                 if (child.TryGetComponent(out CommandElement existing))
                 {
+                    ApplyEventsToElement(existing);
                     elements.Add(existing);
                 }
             }
@@ -92,7 +94,7 @@ namespace TUFF
                 }
                 else
                 {
-                    UpdateCommand(commandList[row], elements[row]);
+                    UpdateCommand(elements[row], commandList[row]);
                 }
                 elements[row].gameObject.SetActive(true);
             }
@@ -104,14 +106,16 @@ namespace TUFF
         private void InstantiateCommandElement(Command command, int row)
         {
             CommandElement create = Instantiate(commandElementPrefab, elementsParent);
-            UpdateCommand(command, create);
+            ApplyEventsToElement(create);
+
+            UpdateCommand(create, command);
 
             elements.Add(create);
             AddToMenu(row, create.uiButton);
             elementAdded = true;
         }
 
-        private static void UpdateCommand(Command command, CommandElement create)
+        private static void UpdateCommand(CommandElement create, Command command)
         {
             if (!command) return;
             if (!create) return;
@@ -123,13 +127,38 @@ namespace TUFF
             {
                 //if (memberRef.HasCommandSeal(command)) button.disabled = true;
                 button.highlightDisplayText = command.GetDescription();
-                if (command.IsValidSingleCommand())
+                //if (command.IsSubmenuType())
+                //    button.disabled = false;
+                //else button.disabled = true;
+            }
+        }
+        private void ApplyEventsToElement(CommandElement element)
+        {
+            if (!element) return;
+            if (!element.uiButton) return;
+            
+            element.uiButton.onHighlight.AddListener(() => OnCommandHighlight(element.GetCommand()));
+            element.uiButton.onSelect.AddListener(() => OnCommandSelect(element.GetCommand()));
+        }
+        private void OnCommandHighlight(Command command)
+        {
+            if (!command) return;
+            if (previewCommandSubmenuHUD)
+            {
+                if (command.IsSubmenuType())
                 {
-                    var skill = command.skills[0].skill;
-                    //var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, skill.scopeData);
-                    //if (!BattleManager.instance.CanUseSkill(skill, memberRef, false)) button.disabled = true;
+                    previewCommandSubmenuHUD.UpdateSubmenu(command, memberRef);
                 }
-                //button.onHighlight.AddListener(() => battleHUD.ShowDescriptionDisplay(true));
+                else previewCommandSubmenuHUD.ClearSubmenu();
+            }
+        }
+        private void OnCommandSelect(Command command)
+        {
+            if (!command) return;
+            if (command.IsSubmenuType())
+            {
+                if (previewCommandSubmenuHUD)
+                    previewCommandSubmenuHUD.uiMenu.OpenMenu();
             }
         }
     }

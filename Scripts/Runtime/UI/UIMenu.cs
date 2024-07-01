@@ -274,6 +274,18 @@ namespace TUFF
                     UIElementContainers[i] = new UIElementContainer();
             }
         }
+        public void ExpandColumnsAtRow(int newColumnCount, int rowIndex)
+        {
+            if (UIElementContainers == null) return;
+            if (rowIndex >= UIElementContainers.Length) { Debug.LogWarning("Row Index is out of bounds!"); return; }
+            if (newColumnCount > UIElementContainers[rowIndex].UIElements.Count) // If row is out of row count, expand
+            {
+                while (UIElementContainers[rowIndex].UIElements.Count < newColumnCount)
+                {
+                    UIElementContainers[rowIndex].UIElements.Add(null);
+                }
+            }
+        }
 
         public UIElement GetCurrentHighlight()
         {

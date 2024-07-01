@@ -7,7 +7,7 @@ namespace TUFF
 {
     public class CommandSubmenuHUD : MonoBehaviour
     {
-        public GameObject submenuElementPrefab;
+        public CommandSubmenuElement submenuElementPrefab;
         public UIMenu uiMenu;
         public GridLayoutGroup gridLayoutGroup;
         public ScrollRectForUIMenu scrollRect;
@@ -15,11 +15,14 @@ namespace TUFF
         public int columns = 3;
         [HideInInspector] public BattleHUD battleHUD;
         public List<CommandSubmenuElement> submenuElements = new List<CommandSubmenuElement>();
-        [HideInInspector] public Command commandRef;
+        
         [System.NonSerialized] public PartyMember memberRef;
+        [HideInInspector] public Command commandRef;
         public void InitializeSubmenuHUD(BattleHUD battleHUD)
         {
             this.battleHUD = battleHUD;
+            if (uiMenu && this.battleHUD)
+                uiMenu.descriptionDisplay = battleHUD.descriptionDisplay.text;
         }
         public void UpdateSubmenu(Command command, PartyMember member)
         {
@@ -66,7 +69,6 @@ namespace TUFF
             //    $"\ncolumns: {columns}" +
             //    $"\nrows: {rows}");
             //Debug.Log(uiElementContainer.Length);
-            uiMenu.descriptionDisplay = battleHUD.descriptionDisplay.text;
             uiMenu.UIElementContainers = uiElementContainer;
             uiMenu.SetupUIElements();
             scrollRect.SetupScroll();
@@ -119,12 +121,11 @@ namespace TUFF
                     index++;
                     if (index >= skillList.Count) return;
 
-                    GameObject skillGO = InstantiateElement(index);
-                    var submenuElement = skillGO.GetComponent<CommandSubmenuElement>();
+                    CommandSubmenuElement submenuElement = InstantiateElement(index);
                     var skill = skillList[index].skill;
                     submenuElement.SetInvocation(skill);
                     submenuElement.LoadInvocationInfo(memberRef);
-                    var comUIElement = skillGO.GetComponent<UIButton>();
+                    var comUIElement = submenuElement.GetComponent<UIButton>();
                     comUIElement.highlightDisplayText = skill.GetDescription();
                     if (!BattleManager.instance.CanUseSkill(skillList[index].skill, memberRef, false)) comUIElement.disabled = true;
                     var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, skill.scopeData);
@@ -142,11 +143,10 @@ namespace TUFF
             }
         }
 
-        private GameObject InstantiateElement(int index)
+        private CommandSubmenuElement InstantiateElement(int index)
         {
-            GameObject skillGO = Instantiate(submenuElementPrefab);
+            CommandSubmenuElement skillGO = Instantiate(submenuElementPrefab, content.transform);
             skillGO.name = $"SubmenuCommand{index}";
-            skillGO.transform.SetParent(content.transform, false);
             return skillGO;
         }
 
@@ -161,12 +161,11 @@ namespace TUFF
                     index++;
                     if (index >= validItems.Length) return;
 
-                    GameObject skillGO = InstantiateElement(index);
-                    var submenuElement = skillGO.GetComponent<CommandSubmenuElement>();
+                    CommandSubmenuElement submenuElement = InstantiateElement(index);
                     var item = DatabaseLoader.instance.items[validItems[index]];
                     submenuElement.SetInvocation(item);
                     submenuElement.LoadInvocationInfo(memberRef);
-                    var comUIElement = skillGO.GetComponent<UIButton>();
+                    var comUIElement = submenuElement.GetComponent<UIButton>();
                     comUIElement.highlightDisplayText = item.GetDescription();
                     var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, item.scopeData);
                     comUIElement.onSelect.AddListener(() => {
@@ -180,9 +179,8 @@ namespace TUFF
         private void AddEmpty(UIElementContainer[] uiElementContainer)
         {
             uiElementContainer[0] = new UIElementContainer();
-            GameObject skillGO = InstantiateElement(0);
-            var submenuElement = skillGO.GetComponent<CommandSubmenuElement>();
-            var comUIElement = skillGO.GetComponent<UIButton>();
+            CommandSubmenuElement submenuElement = InstantiateElement(0);
+            var comUIElement = submenuElement.GetComponent<UIButton>();
             submenuElement.LoadInvocationInfo(memberRef);
             uiElementContainer[0].UIElements.Add(comUIElement);
             submenuElements.Add(submenuElement);

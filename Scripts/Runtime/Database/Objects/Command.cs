@@ -40,5 +40,9 @@ namespace TUFF
                 return true;
             return false;
         }
+        public bool IsSubmenuType()
+        {
+            return commandType == CommandType.Group || commandType == CommandType.Items; 
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace TUFF
         public void AssignBattleHUD(BattleHUD battleHUD)
         {
             this.battleHUD = battleHUD;
-            if (uiMenu && battleHUD)
+            if (uiMenu && this.battleHUD)
                 uiMenu.descriptionDisplay = battleHUD.descriptionDisplay.text;
         }
         private void Awake()
@@ -133,7 +133,7 @@ namespace TUFF
                 }
                 else
                 {
-                    UpdateCommand(commandList[row], elements[row]);
+                    UpdateCommand(elements[row], commandList[row]);
                 }
                 elements[row].gameObject.SetActive(true);
             }
@@ -165,13 +165,13 @@ namespace TUFF
             CommandElement create = Instantiate(commandElementPrefab, elementsParent);
             create.Initialize(this);
 
-            UpdateCommand(command, create);
+            UpdateCommand(create, command);
             
             elements.Add(create);
             AddToMenu(row, create.uiButton);
             elementAdded = true;
         }
-        private void UpdateCommand(Command command, CommandElement create)
+        private void UpdateCommand(CommandElement create, Command command)
         {
             if (!command) return;
             if (!create) return;

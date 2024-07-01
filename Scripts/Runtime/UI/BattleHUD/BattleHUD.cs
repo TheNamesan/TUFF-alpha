@@ -615,16 +615,21 @@ namespace TUFF
         {
             Skill skill; //If command is Single, go to next List, or, goto pick target menu and then goto next List. If group, open that command group.
             if (command.commandType == CommandType.Single) skill = command.skills[0].skill;
-            else if (command.commandType == CommandType.Group)
+            else if (command.IsSubmenuType())
             {
                 OpenCommandSubmenu(command, user);
                 return;
             }
-            else if (command.commandType == CommandType.Items)
-            {
-                OpenCommandSubmenu(command, user);
-                return;
-            }
+            //else if (command.commandType == CommandType.Group)
+            //{
+            //    OpenCommandSubmenu(command, user);
+            //    return;
+            //}
+            //else if (command.commandType == CommandType.Items)
+            //{
+            //    OpenCommandSubmenu(command, user);
+            //    return;
+            //}
             else return;
             var validTargets = BattleManager.instance.GetInvocationValidTargets(user, skill.scopeData);
             unitHUD[commandMenuIndex].UpdateCommandIcon(skill.icon); //if command is group, dont update yet
