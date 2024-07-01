@@ -286,6 +286,23 @@ namespace TUFF
                 }
             }
         }
+        public int GetVisibleColumnsCount()
+        {
+            if (UIElements == null) return -1;
+            int count = UIElements.Length;
+            for (int i = 0; i < UIElements.Length; i++)
+            {
+                bool hasOneElementVisible = false;
+                for (int j = 0; j < UIElements[i].Length; j++)
+                {
+                    if (UIElements[i][j] == null) continue;
+                    if (UIElements[i][j].IsActiveInHierarchy()) { hasOneElementVisible = true; break; }
+                }
+                if (!hasOneElementVisible) count--;
+            }
+            return count;
+        }
+
 
         public UIElement GetCurrentHighlight()
         {

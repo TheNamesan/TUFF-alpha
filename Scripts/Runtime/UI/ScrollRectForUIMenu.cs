@@ -61,6 +61,7 @@ namespace TUFF
 
         public void UpdateScroll()
         {
+            int visibleColumns = uiMenu.GetVisibleColumnsCount();
             int cursorValue = uiMenu.highlightY;
             if (cursorValue == 0)
             {
@@ -68,11 +69,11 @@ namespace TUFF
                 bottomVisibleIndex = maxVisibleElements - 1;
                 SetScroll(0);
             }
-            else if (cursorValue == Mathf.Max(maxVisibleElements, uiMenu.UIElements.Length - 1))
+            else if (cursorValue == Mathf.Max(maxVisibleElements, visibleColumns - 1))
             {
                 topVisibleIndex = uiMenu.highlightY - maxVisibleElements + 1;
                 bottomVisibleIndex = uiMenu.highlightY;
-                SetScroll((uiMenu.UIElements.Length - maxVisibleElements) * scrollValue);
+                SetScroll((visibleColumns - maxVisibleElements) * scrollValue);
             }
             else if (cursorValue > bottomVisibleIndex)
             {
@@ -107,14 +108,15 @@ namespace TUFF
         public void UpdateArrows()
         {
             if (!UIMenu.CheckIfUIMenuHasElements(uiMenu)) return;
-            if (uiMenu.UIElements.Length < maxVisibleElements)
+            int visibleColumns = uiMenu.GetVisibleColumnsCount();
+            if (visibleColumns < maxVisibleElements)
             {
                 if (upArrow != null) upArrow?.SetActive(false);
                 if (downArrow != null) downArrow?.SetActive(false);
                 return;
             }
             if (upArrow != null) upArrow?.SetActive(topVisibleIndex > 0);
-            if (downArrow != null) downArrow?.SetActive(bottomVisibleIndex < uiMenu.UIElements.Length - 1);
+            if (downArrow != null) downArrow?.SetActive(bottomVisibleIndex < visibleColumns - 1);
         }
     }
 }
