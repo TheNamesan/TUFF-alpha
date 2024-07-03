@@ -221,17 +221,6 @@ namespace TUFF
                 submenuElement.uiElement.disabled = false;
                 if (!skill.CanBeUsedInMenu()) submenuElement.uiElement.disabled = true; 
                 if (!BattleManager.instance.CanUseSkill(skill, memberRef, false)) submenuElement.uiElement.disabled = true;
-                //var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, skill.scopeData);
-                //comUIElement.onHighlight.AddListener(() =>
-                //{
-                //    battleHUD.MarkVulnerableTargets(skill, memberRef, validTargets);
-                //});
-                //comUIElement.onSelect.AddListener(() =>
-                //{
-                //    battleHUD.TargetSelectionMenu(validTargets, skill, memberRef, true);
-                //});
-                //uiElementContainer[i].UIElements.Add(comUIElement);
-                //submenuElements.Add(submenuElement);
             }
         }
         protected void UpdateEmpty(CommandSubmenuElement submenuElement)

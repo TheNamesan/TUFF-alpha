@@ -222,10 +222,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   submenuElementPrefab: {fileID: 961175641783182129, guid: 1f8bab04488ee29468d75c816451b067, type: 3}
+  elementsParent: {fileID: 348195918301442809}
   uiMenu: {fileID: 1139674561668201386}
-  gridLayoutGroup: {fileID: 7467798673914232065}
   scrollRect: {fileID: 8242895424807460663}
-  content: {fileID: 348195918301442809}
   columns: 3
   battleHUD: {fileID: 0}
   submenuElements: []

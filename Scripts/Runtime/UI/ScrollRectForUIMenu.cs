@@ -15,17 +15,23 @@ namespace TUFF
         public float UIElementsHeight;
         public float layoutSpaceValue;
         ScrollRect scroll;
-        RectTransform content;
+        RectTransform content { get { if (!scroll) return null; return scroll.content; } }
         float scrollValue;
 
         [Header("Debug")]
         [SerializeField] int topVisibleIndex;
         [SerializeField] int bottomVisibleIndex;
+
+        private bool m_initialized = false;
         private void Awake()
         {
+            Initialize();
+        }
+        private void Initialize()
+        {
+            if (m_initialized) return;
             scroll = GetComponent<ScrollRect>();
-            content = scroll.content;
-            
+            m_initialized = true;
         }
         private void OnEnable()
         {
@@ -61,6 +67,7 @@ namespace TUFF
 
         public void UpdateScroll()
         {
+            Initialize();
             int visibleColumns = uiMenu.GetVisibleColumnsCount();
             int cursorValue = uiMenu.highlightY;
             if (cursorValue == 0)
@@ -103,6 +110,7 @@ namespace TUFF
         }
         void SetScroll(float value)
         {
+            if (!content) { Debug.LogWarning("No content!", this); return; }
             content.anchoredPosition = new Vector2(content.anchoredPosition.x, value);
         }
         public void UpdateArrows()
