@@ -25,8 +25,11 @@ namespace TUFF
         public int highlightY = 0;
 
         [Header("References")]
-        [Tooltip("Reference to the transition handler component. Optional. If not empty, will play Appear and Dissapear transitions when opening/closing the menu.")]
+        [Tooltip("Optional. Reference to the Scroll Rect For UI Menu component. If not empty, UI Menu's contents will scroll automatically when navigating the menu.")]
+        public ScrollRectForUIMenu scrollRect = null;
+        [Tooltip("Optional. Reference to the transition handler component. If not empty, will play Appear and Dissapear transitions when opening/closing the menu.")]
         public BoxTransitionHandler transitionHandler = null;
+        
 
         [Header("Parameters")]
         [Tooltip("If true, highlightX and highlightY will be remembered when closing the menu. Otherwise both return to 0.")]
@@ -213,6 +216,7 @@ namespace TUFF
             ignoreInput = true;
             if (openSFX != null) PlaySound(openSFX);
             onOpenMenu?.Invoke();
+            scrollRect?.UpdateScroll();
             transitionHandler?.Appear();
             HighlightCurrent(); //Highlight two times in case elements are changed.
             CallElementsOnOpenMenu();
@@ -316,6 +320,7 @@ namespace TUFF
             if (!HighlightInUIMenuIsValid(this)) return;
             HighlightElement(highlightX, highlightY);
             DisplayText(UIElements[highlightY][highlightX].highlightDisplayText);
+            scrollRect?.UpdateScroll();
         }
         protected void HighlightElement(int x, int y)
         {

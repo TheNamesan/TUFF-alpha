@@ -51,7 +51,7 @@ namespace TUFF
         }
         public string GetFullName()
         {
-            return TUFFTextParser.ParseText(nameKey);
+            return TUFFTextParser.ParseText(fullNameKey);
         }
     }
 }

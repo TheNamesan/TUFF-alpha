@@ -98,6 +98,10 @@ namespace TUFF
         {
             return unitRef.GetName();
         }
+        public string GetFullName()
+        {
+            return unitRef.GetFullName();
+        }
         public override int GetLevel()
         {
             return level;

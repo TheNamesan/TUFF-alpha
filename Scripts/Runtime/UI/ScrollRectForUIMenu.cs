@@ -61,12 +61,13 @@ namespace TUFF
                     }
                 }
             }
-            uiMenu.onOpenMenu.AddListener(UpdateScroll);
+            //uiMenu.onOpenMenu.AddListener(UpdateScroll);
             UpdateArrows();
         }
 
         public void UpdateScroll()
         {
+            Debug.Log("UpdateScroll");
             Initialize();
             int visibleColumns = uiMenu.GetVisibleColumnsCount();
             int cursorValue = uiMenu.highlightY;
