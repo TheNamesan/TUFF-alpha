@@ -3967,7 +3967,7 @@ MonoBehaviour:
     - {fileID: 72684549462449713}
   highlightX: 0
   highlightY: 0
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 1011506250015800168}
   transitionHandler: {fileID: 1710015920228193372}
   rememberHighlight: 0
   closeMenuWithCancel: 1
@@ -13104,7 +13104,7 @@ MonoBehaviour:
   UIElementContainers: []
   highlightX: 0
   highlightY: 0
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 2467056711976773513}
   transitionHandler: {fileID: 4121232581394717353}
   rememberHighlight: 0
   closeMenuWithCancel: 1
@@ -16973,7 +16973,7 @@ MonoBehaviour:
   UIElementContainers: []
   highlightX: 0
   highlightY: 0
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 6336779718802356875}
   transitionHandler: {fileID: 3268018854815913287}
   rememberHighlight: 0
   closeMenuWithCancel: 1
@@ -19533,7 +19533,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 83.2
+  m_fontSize: 72.8
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -25014,6 +25014,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0763090c2c3315a4ca1e16ad3db36f76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8536258588644468617 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8242895424807460663, guid: f6afb735b88d13b4e8399ade02a34390, type: 3}
+  m_PrefabInstance: {fileID: 293371979267881150}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468f8edfc20075546985720c1ebd25d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &363649827766105197
@@ -33271,6 +33282,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686baeabe9aa83e4a8e1325bbe9ee3f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2467056711976773513 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4491806967629078066, guid: e734efcfbc07d064491a64cdebd90b04, type: 3}
+  m_PrefabInstance: {fileID: 2047631093099248059}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468f8edfc20075546985720c1ebd25d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2684049230643924099 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4131222718614385976, guid: e734efcfbc07d064491a64cdebd90b04, type: 3}
@@ -37246,6 +37268,17 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 1139674561668201386, guid: f6afb735b88d13b4e8399ade02a34390, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f6afb735b88d13b4e8399ade02a34390, type: 3}
+--- !u!114 &6694122565134535996 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8242895424807460663, guid: f6afb735b88d13b4e8399ade02a34390, type: 3}
+  m_PrefabInstance: {fileID: 3351496944816099851}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468f8edfc20075546985720c1ebd25d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8868512759256454844 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6165887396074357943, guid: f6afb735b88d13b4e8399ade02a34390, type: 3}
@@ -37535,7 +37568,7 @@ MonoBehaviour:
   UIElementContainers: []
   highlightX: 0
   highlightY: 0
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 6694122565134535996}
   transitionHandler: {fileID: 0}
   rememberHighlight: 0
   closeMenuWithCancel: 1
@@ -39091,6 +39124,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4131222718614385976, guid: e734efcfbc07d064491a64cdebd90b04, type: 3}
   m_PrefabInstance: {fileID: 3485659874734417242}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1011506250015800168 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4491806967629078066, guid: e734efcfbc07d064491a64cdebd90b04, type: 3}
+  m_PrefabInstance: {fileID: 3485659874734417242}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468f8edfc20075546985720c1ebd25d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4099611764454854081 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 629151676979783835, guid: e734efcfbc07d064491a64cdebd90b04, type: 3}
@@ -42205,7 +42249,7 @@ MonoBehaviour:
   UIElementContainers: []
   highlightX: 0
   highlightY: 0
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 5650641285557553276}
   transitionHandler: {fileID: 0}
   rememberHighlight: 0
   closeMenuWithCancel: 1
@@ -42411,7 +42455,7 @@ MonoBehaviour:
   UIElementContainers: []
   highlightX: 0
   highlightY: 0
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 8536258588644468617}
   transitionHandler: {fileID: 0}
   rememberHighlight: 0
   closeMenuWithCancel: 1
@@ -43187,6 +43231,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 348195918301442809, guid: f6afb735b88d13b4e8399ade02a34390, type: 3}
   m_PrefabInstance: {fileID: 4327882245060155211}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5650641285557553276 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8242895424807460663, guid: f6afb735b88d13b4e8399ade02a34390, type: 3}
+  m_PrefabInstance: {fileID: 4327882245060155211}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468f8edfc20075546985720c1ebd25d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7610546894054740988 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6165887396074357943, guid: f6afb735b88d13b4e8399ade02a34390, type: 3}
@@ -50884,7 +50939,7 @@ MonoBehaviour:
   - UIElements: []
   highlightX: 0
   highlightY: 0
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 7081509197049534065}
   transitionHandler: {fileID: 0}
   rememberHighlight: 0
   closeMenuWithCancel: 1
@@ -56014,6 +56069,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4131222718614385976, guid: e734efcfbc07d064491a64cdebd90b04, type: 3}
   m_PrefabInstance: {fileID: 7613011054359667897}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6336779718802356875 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4491806967629078066, guid: e734efcfbc07d064491a64cdebd90b04, type: 3}
+  m_PrefabInstance: {fileID: 7613011054359667897}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468f8edfc20075546985720c1ebd25d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6998007961725586466 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 629151676979783835, guid: e734efcfbc07d064491a64cdebd90b04, type: 3}
@@ -59831,7 +59897,7 @@ MonoBehaviour:
   UIElementContainers: []
   highlightX: 0
   highlightY: 0
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 8538154340898531175}
   transitionHandler: {fileID: 0}
   rememberHighlight: 0
   closeMenuWithCancel: 1

@@ -226,9 +226,9 @@ MonoBehaviour:
   uiMenu: {fileID: 1139674561668201386}
   scrollRect: {fileID: 8242895424807460663}
   columns: 3
-  battleHUD: {fileID: 0}
-  submenuElements: []
+  elements: []
   commandRef: {fileID: 0}
+  battleHUD: {fileID: 0}
 --- !u!114 &1139674561668201386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +245,7 @@ MonoBehaviour:
   - UIElements: []
   highlightX: 0
   highlightY: 0
+  scrollRect: {fileID: 8242895424807460663}
   transitionHandler: {fileID: 0}
   rememberHighlight: 0
   closeMenuWithCancel: 0

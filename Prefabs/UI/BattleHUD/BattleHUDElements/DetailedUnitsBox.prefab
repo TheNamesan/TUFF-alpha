@@ -1462,6 +1462,7 @@ MonoBehaviour:
   UIElementContainers: []
   highlightX: 0
   highlightY: 0
+  scrollRect: {fileID: 4491806967629078066}
   transitionHandler: {fileID: 0}
   rememberHighlight: 0
   closeMenuWithCancel: 1

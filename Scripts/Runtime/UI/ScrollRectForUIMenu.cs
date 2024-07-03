@@ -15,8 +15,8 @@ namespace TUFF
         public float UIElementsHeight;
         public float layoutSpaceValue;
         ScrollRect scroll;
-        RectTransform content { get { if (!scroll) return null; return scroll.content; } }
-        float scrollValue;
+        private RectTransform content { get { if (!scroll) return null; return scroll.content; } }
+        private float scrollValue { get { return UIElementsHeight + layoutSpaceValue; } } 
 
         [Header("Debug")]
         [SerializeField] int topVisibleIndex;
@@ -36,35 +36,7 @@ namespace TUFF
         private void OnEnable()
         {
             UpdateScroll();
-            //int cursorValue = uiMenu.highlightY;
-            //SetScroll(cursorValue);
         }
-        void Start()
-        {
-            SetupScroll();
-        }
-
-        public void SetupScroll()
-        {
-            scrollValue = UIElementsHeight + layoutSpaceValue;
-            topVisibleIndex = uiMenu.highlightY;
-            if(UIMenu.CheckIfUIMenuHasElements(uiMenu))
-            {
-                if (uiMenu.UIElements.Length < maxVisibleElements) bottomVisibleIndex = uiMenu.UIElements.Length - 1;
-                else bottomVisibleIndex = maxVisibleElements - 1;
-
-                for (int i = 0; i < uiMenu.UIElements.Length; i++)
-                {
-                    for(int j = 0; j < uiMenu.UIElements[i].Length; j++)
-                    {
-                        uiMenu.UIElements[i][j].onHighlight.AddListener(UpdateScroll);
-                    }
-                }
-            }
-            //uiMenu.onOpenMenu.AddListener(UpdateScroll);
-            UpdateArrows();
-        }
-
         public void UpdateScroll()
         {
             Debug.Log("UpdateScroll");
@@ -116,7 +88,12 @@ namespace TUFF
         }
         public void UpdateArrows()
         {
-            if (!UIMenu.CheckIfUIMenuHasElements(uiMenu)) return;
+            if (!UIMenu.CheckIfUIMenuHasElements(uiMenu))
+            {
+                if (upArrow != null) upArrow?.SetActive(false);
+                if (downArrow != null) downArrow?.SetActive(false);
+                return; 
+            }
             int visibleColumns = uiMenu.GetVisibleColumnsCount();
             if (visibleColumns < maxVisibleElements)
             {

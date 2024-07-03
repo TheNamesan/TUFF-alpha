@@ -76,7 +76,6 @@ namespace TUFF
             if (scrollRect)
             {
                 scrollRect.uiMenu = uiMenu;
-                scrollRect.SetupScroll();
             }
             elementAdded = false;
         }
