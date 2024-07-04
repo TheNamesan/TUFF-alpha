@@ -13,6 +13,11 @@ namespace TUFF
         public GameObject arrowParent;
         public bool hideIfNoChanges = false;
 
+        public void UpdateInfo(int value)
+        {
+            if (oldValueText) oldValueText.text = LISAUtility.IntToString(value);
+            DisplayChanges(value, value);
+        }
         public void UpdateInfo(int oldValue, int newValue)
         {
             if (oldValueText) oldValueText.text = LISAUtility.IntToString(oldValue);

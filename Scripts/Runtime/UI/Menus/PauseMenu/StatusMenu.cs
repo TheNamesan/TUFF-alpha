@@ -9,6 +9,9 @@ namespace TUFF
     public class StatusMenu : MonoBehaviour
     {
         public DetailedUnitsMenu detailedUnitsMenu;
+        public DetailedUnitHUD selectedDetailedUnitHUD;
+        public MemberEquipmentMenu memberEquipment;
+        public MemberBioHUD memberBioHUD;
         public UIMenu uiMenu;
         [System.NonSerialized] public PartyMember selectedMember;
 
@@ -16,13 +19,22 @@ namespace TUFF
         public TMP_Text fullNameText;
         public TMP_Text jobNameText;
         public Image portrait;
-        public TMP_Text descriptionText;
+
+        [Header("Stats")]
+        public StatChangeElement ATKElement;
+        public StatChangeElement DEFElement;
+        public StatChangeElement SATKElement;
+        public StatChangeElement SDEFElement;
+        public StatChangeElement AGIElement;
+        public StatChangeElement LUCKElement;
 
         public void OnOpenMenu()
         {
             detailedUnitsMenu.uiMenu = uiMenu;
             detailedUnitsMenu?.UpdateUnits();
             selectedMember = null;
+            UpdateLabels();
+            memberBioHUD?.UpdateLabels();
         }
         public void DetailedUnitsOnCreate(UIButton button, PartyMember member)
         {
@@ -40,7 +52,28 @@ namespace TUFF
             if (fullNameText) fullNameText.text = selectedMember.GetFullName();
             if (jobNameText) jobNameText.text = selectedMember.GetJob().GetName();
             if (portrait) portrait.sprite = selectedMember.GetPortraitSprite();
-            if (descriptionText) descriptionText.text = selectedMember.GetJob().GetDescription();
+            if (selectedDetailedUnitHUD)
+                selectedDetailedUnitHUD.UpdateInfo(selectedMember, true);
+            if (memberEquipment) memberEquipment.UpdateInfo(selectedMember);
+
+            ATKElement?.UpdateInfo(selectedMember.GetATK());
+            DEFElement?.UpdateInfo(selectedMember.GetDEF());
+            SATKElement?.UpdateInfo(selectedMember.GetSATK());
+            SDEFElement?.UpdateInfo(selectedMember.GetSDEF());
+            AGIElement?.UpdateInfo(selectedMember.GetAGI());
+            LUCKElement?.UpdateInfo(selectedMember.GetLUK());
+
+            memberBioHUD?.UpdateInfo(selectedMember);
+        }
+
+        public void UpdateLabels()
+        {
+            ATKElement?.UpdateLabel(TUFFSettings.ATKShortText);
+            DEFElement?.UpdateLabel(TUFFSettings.DEFShortText);
+            SATKElement?.UpdateLabel(TUFFSettings.SATKShortText);
+            SDEFElement?.UpdateLabel(TUFFSettings.SDEFShortText);
+            AGIElement?.UpdateLabel(TUFFSettings.AGIShortText);
+            LUCKElement?.UpdateLabel(TUFFSettings.LUKShortText);
         }
     }
 }

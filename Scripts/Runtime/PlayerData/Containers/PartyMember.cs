@@ -161,10 +161,20 @@ namespace TUFF
         }
         public static float GetNextLevelProgress(int level, Job job, int exp)
         {
-            if (level == 100) return 0f; //Replace with level cap
+            if (level >= 100) return 0f; //Replace with level cap
             int currentLevelExp = job.LevelToStat(level, LevelToStatType.EXP);
             int nextLevelExp = job.LevelToStat(level + 1, LevelToStatType.EXP);
             return Mathf.Lerp(0f, 1f, Mathf.InverseLerp(currentLevelExp, nextLevelExp, exp));
+        }
+        public int GetEXPtoNextLevel()
+        {
+            if (level >= 100) return 0; //Replace with level cap
+            int nextLevelExp = job.LevelToStat(level + 1, LevelToStatType.EXP);
+            return nextLevelExp - exp;
+        }
+        public int GetTotalEXP()
+        {
+            return exp;
         }
         public override Job GetJob() {
             Debug.Log(job);
