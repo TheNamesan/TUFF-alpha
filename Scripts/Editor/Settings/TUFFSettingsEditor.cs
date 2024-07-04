@@ -139,6 +139,15 @@ namespace TUFF.TUFFEditor
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_cancelTermKey", TUFFSettings.cancelText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_saveFilePromptTermKey", TUFFSettings.saveFilePromptText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_loadFilePromptTermKey", TUFFSettings.loadFilePromptText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_currentExpTermKey", TUFFSettings.currentExpText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_toNextLevelTermKey", TUFFSettings.toNextLevelText);
+
+            EditorGUILayout.LabelField("Character Bio", EditorStyles.boldLabel);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_fightingArtTermKey", TUFFSettings.fightingArtText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_pastOccupationTermKey", TUFFSettings.pastOccupationText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_likesTermKey", TUFFSettings.likesText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_favoriteFoodTermKey", TUFFSettings.favoriteFoodText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_mostHatedThingTermKey", TUFFSettings.mostHatedThingText);
 
             EditorGUILayout.LabelField("Basic Status", EditorStyles.boldLabel);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_levelTermKey", TUFFSettings.levelText);

@@ -120,6 +120,14 @@ namespace TUFF
         public static string cancelText { get => ParseText(Instance.m_cancelTermKey); }
         public static string saveFilePromptText { get => ParseText(Instance.m_saveFilePromptTermKey); }
         public static string loadFilePromptText { get => ParseText(Instance.m_loadFilePromptTermKey); }
+        public static string currentExpText { get => ParseText(Instance.m_currentExpTermKey); }
+        public static string toNextLevelText { get => ParseText(Instance.m_toNextLevelTermKey); }
+        // Character Bio
+        public static string fightingArtText { get => ParseText(Instance.m_fightingArtTermKey); }
+        public static string pastOccupationText { get => ParseText(Instance.m_pastOccupationTermKey); }
+        public static string likesText { get => ParseText(Instance.m_likesTermKey); }
+        public static string favoriteFoodText { get => ParseText(Instance.m_favoriteFoodTermKey); }
+        public static string mostHatedThingText { get => ParseText(Instance.m_mostHatedThingTermKey); }
         // Terms
         public static string levelText { get => ParseText(Instance.m_levelTermKey); }
         public static string levelShortText { get => ParseText(Instance.m_levelShortTermKey); }
@@ -325,6 +333,14 @@ namespace TUFF
         public string m_cancelTermKey = "";
         public string m_saveFilePromptTermKey = "Save to which file?";
         public string m_loadFilePromptTermKey = "Load which file?";
+        public string m_currentExpTermKey = "Current Exp";
+        public string m_toNextLevelTermKey = "To Next Level";
+
+        public string m_fightingArtTermKey = "Fighting Art";
+        public string m_pastOccupationTermKey = "Past Occupation";
+        public string m_likesTermKey = "Likes";
+        public string m_favoriteFoodTermKey = "Favorite Food";
+        public string m_mostHatedThingTermKey = "Most Hated Thing";
 
         public string m_levelTermKey = "";
         public string m_levelShortTermKey = "";

@@ -45,6 +45,9 @@ namespace TUFF
         public CharacterQuotes levelUpQuotes = new CharacterQuotes();
         public CharacterQuotes dropsQuotes = new CharacterQuotes();
 
+        [Header("Character Bio")]
+        public CharacterBio bio = new CharacterBio();
+
         public override string GetName()
         {
             return TUFFTextParser.ParseText(nameKey);

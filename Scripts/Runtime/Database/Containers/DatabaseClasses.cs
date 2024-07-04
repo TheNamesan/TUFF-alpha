@@ -60,6 +60,20 @@ namespace TUFF
         }
     }
     [System.Serializable]
+    public class CharacterBio
+    {
+        public string fightingArtKey = "";
+        public string pastOccupationKey = "";
+        public string likesKey = "";
+        public string favoriteFoodKey = "";
+        public string mostHatedThingKey = "";
+        public string GetFightingArt() => TUFFTextParser.ParseText(fightingArtKey);
+        public string GetPastOccupation() => TUFFTextParser.ParseText(pastOccupationKey);
+        public string GetLikes() => TUFFTextParser.ParseText(likesKey);
+        public string GetFavoriteFood() => TUFFTextParser.ParseText(favoriteFoodKey);
+        public string GetMostHatedThing() => TUFFTextParser.ParseText(mostHatedThingKey);
+    }
+    [System.Serializable]
     public class CombatGraphics
     {
         public Sprite defaultFaceGraphic;

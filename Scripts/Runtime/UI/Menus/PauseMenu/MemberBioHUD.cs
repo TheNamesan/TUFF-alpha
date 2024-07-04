@@ -25,22 +25,23 @@ namespace TUFF
 
         public void UpdateLabels()
         {
-            if (fightingArtLabel) fightingArtLabel.text = "Fighting Art";
-            if (pastOccupationLabel) pastOccupationLabel.text = "Past Occupation";
-            if (likesLabel) likesLabel.text = "Likes";
-            if (favoriteFoodLabel) favoriteFoodLabel.text = "Favorite Food";
-            if (mostHatedThingLabel) mostHatedThingLabel.text = "Most Hated Thing";
+            if (fightingArtLabel) fightingArtLabel.text = TUFFSettings.fightingArtText;
+            if (pastOccupationLabel) pastOccupationLabel.text = TUFFSettings.pastOccupationText;
+            if (likesLabel) likesLabel.text = TUFFSettings.likesText;
+            if (favoriteFoodLabel) favoriteFoodLabel.text = TUFFSettings.favoriteFoodText;
+            if (mostHatedThingLabel) mostHatedThingLabel.text = TUFFSettings.mostHatedThingText;
         }
         public void UpdateInfo(PartyMember member)
         {
             if (member == null) return;
+            var bio = member.unitRef.bio;
             if (descriptionText) descriptionText.text = member.GetJob().GetDescription();
 
-            if (fightingStyleText) fightingStyleText.text = "Fighting Art";
-            if (pastOccupationText) pastOccupationText.text = "Past Occupation";
-            if (likesText) likesText.text = "Likes";
-            if (favoriteFoodText) favoriteFoodText.text = "Favorite Food";
-            if (mostHatedThingText) mostHatedThingText.text = "Most Hated Thing";
+            if (fightingStyleText) fightingStyleText.text = bio.GetFightingArt();
+            if (pastOccupationText) pastOccupationText.text = bio.GetPastOccupation();
+            if (likesText) likesText.text = bio.GetLikes();
+            if (favoriteFoodText) favoriteFoodText.text = bio.GetFavoriteFood();
+            if (mostHatedThingText) mostHatedThingText.text = bio.GetMostHatedThing();
         }
     }
 }

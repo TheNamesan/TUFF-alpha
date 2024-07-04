@@ -33,9 +33,9 @@ namespace TUFF
             AGIDisplay.UpdateInfo(member.GetAGI(), Color.white, true, TUFFSettings.AGIShortText);
             LUKDisplay.UpdateInfo(member.GetLUK(), Color.white, true, TUFFSettings.LUKShortText);
             if (currentExpDisplay)
-                currentExpDisplay.UpdateInfo(member.GetTotalEXP(), Color.white, true, "Current Exp");
+                currentExpDisplay.UpdateInfo(member.GetTotalEXP(), Color.white, true, TUFFSettings.currentExpText);
             if (toNextLevelDisplay)
-                toNextLevelDisplay.UpdateInfo(member.GetEXPtoNextLevel(), Color.white, true, "To Next Level");
+                toNextLevelDisplay.UpdateInfo(member.GetEXPtoNextLevel(), Color.white, true, TUFFSettings.toNextLevelText);
         }
     }
 }

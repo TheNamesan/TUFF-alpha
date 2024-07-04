@@ -43,6 +43,8 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("levelUpQuotes"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("dropsQuotes"));
 
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("bio"));
+
             EditorGUILayout.PropertyField(serializedObject.FindProperty("notes"));
 
             serializedObject.ApplyModifiedProperties();
