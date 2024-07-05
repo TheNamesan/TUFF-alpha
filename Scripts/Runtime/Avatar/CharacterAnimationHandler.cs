@@ -203,29 +203,32 @@ namespace TUFF
                     if (c.moveV == 0)
                     {
                         if (animationInWait) return lastStateName;
-                        if (lastStateName == "ClimbingRight" && c.moveH <= 0)
+                        if (!PlayerData.instance.charProperties.disableRopeJump)
                         {
-                            if (lastStateName != "ClimbingReturnRight")
-                                SetAnimationWait();
-                            return "ClimbingReturnRight";
-                        }
-                        if (lastStateName == "ClimbingLeft" && c.moveH >= 0)
-                        {
-                            if (lastStateName != "ClimbingReturnLeft")
-                                SetAnimationWait();
-                            return "ClimbingReturnLeft";
-                        }
-                        if (c.moveH > 0)
-                        {
-                            if (lastStateName != "ClimbingRight")
-                                SetAnimationWait();
-                            return "ClimbingRight";
-                        }
-                        if (c.moveH < 0)
-                        {
-                            if (lastStateName != "ClimbingLeft")
-                                SetAnimationWait();
-                            return "ClimbingLeft";
+                            if (lastStateName == "ClimbingRight" && c.moveH <= 0)
+                            {
+                                if (lastStateName != "ClimbingReturnRight")
+                                    SetAnimationWait();
+                                return "ClimbingReturnRight";
+                            }
+                            if (lastStateName == "ClimbingLeft" && c.moveH >= 0)
+                            {
+                                if (lastStateName != "ClimbingReturnLeft")
+                                    SetAnimationWait();
+                                return "ClimbingReturnLeft";
+                            }
+                            if (c.moveH > 0)
+                            {
+                                if (lastStateName != "ClimbingRight")
+                                    SetAnimationWait();
+                                return "ClimbingRight";
+                            }
+                            if (c.moveH < 0)
+                            {
+                                if (lastStateName != "ClimbingLeft")
+                                    SetAnimationWait();
+                                return "ClimbingLeft";
+                            }
                         }
                     }
                     return "ClimbingNeutral";
