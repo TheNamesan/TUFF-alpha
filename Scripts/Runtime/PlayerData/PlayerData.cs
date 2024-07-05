@@ -38,6 +38,14 @@ namespace TUFF
         {
             return SaveDataConverter.LoadPlayerData(file);
         }
+        public static bool CheckAnySaveFileExists()
+        {
+            for (int i = 0; i < TUFFSettings.maxSaveFileSlots; i++)
+            {
+                if (SaveDataConverter.CheckSaveExistsAtIndex(i)) return true;
+            }
+            return false;
+        }
 
         public void StartPlayerData()
         {
