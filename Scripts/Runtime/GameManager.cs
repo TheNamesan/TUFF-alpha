@@ -22,7 +22,9 @@ namespace TUFF
         public bool stopPlaytime = false;
         [Tooltip("Index of the last opened or loaded save file ingame.")]
         public int lastLoadedFile = -1;
-        
+
+        private bool m_holdingSkip = false;
+
 
         private static bool m_disablePlayerInput = false;
         public static bool disablePlayerInput
@@ -150,6 +152,29 @@ namespace TUFF
             DUI = m_disableUIInput;
             DPAM = !inputManager.playerActionMap.enabled;
             DUIAM = !inputManager.uiActionMap.enabled;
+            FastForwardEvents();
+        }
+
+        private void FastForwardEvents()
+        {
+            if (TUFF.CommonEventManager.interactableEventPlaying && !BattleManager.instance.InBattle)
+            {
+                if (TUFF.UIController.instance.skipButtonHold)
+                {
+                    Time.timeScale = 10f;
+                    m_holdingSkip = true;
+                }
+                else
+                {
+                    Time.timeScale = 1f;
+                    m_holdingSkip = false;
+                }
+            }
+            else if (m_holdingSkip)
+            {
+                Time.timeScale = 1f;
+                m_holdingSkip = false;
+            }
         }
 
         public void DisablePlayerInput(bool input)
