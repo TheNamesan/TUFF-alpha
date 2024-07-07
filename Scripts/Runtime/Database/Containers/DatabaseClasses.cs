@@ -16,6 +16,7 @@ namespace TUFF
         public bool CanBeUsed(Targetable user)
         {
             if (user == null) return false;
+
             if (learnType == LearnType.Level && user.GetLevel() >= levelLearnedAt) return true;
             if (learnType == LearnType.None) return true;
             return false;

@@ -555,6 +555,8 @@ namespace TUFF
         {
             if (id < 0 || id >= learnedSkills.Length) return false;
             if (TUFFSettings.DebugIgnoreLearnedSkills()) return true;
+            var addSkillFeatures = GetAllFeaturesOfType(FeatureType.AddSkill);
+            if (addSkillFeatures.Find(e => e.skill && e.skill.id == id) != null) return true;
             return learnedSkills[id];
         }
         public virtual bool HasWeaponEquipped(Weapon weapon)
