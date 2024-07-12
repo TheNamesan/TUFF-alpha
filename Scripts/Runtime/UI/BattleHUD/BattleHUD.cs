@@ -78,6 +78,7 @@ namespace TUFF
             commandSubmenuHUD = submenu;
             submenu.InitializeSubmenuHUD(this);
 
+            commandList.AssignBattleHUD(this);
             for (int i = 0; i < PlayerData.activePartyMaxSize; i++)
             {
                 break;

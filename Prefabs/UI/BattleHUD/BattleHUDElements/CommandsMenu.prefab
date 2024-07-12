@@ -379,6 +379,7 @@ MonoBehaviour:
   uiMenu: {fileID: 6428758636971290158}
   defaultCommands:
   - {fileID: 11400000, guid: eddecd4c928e42642bbe6f6d34f6a1c5, type: 2}
+  - {fileID: 11400000, guid: c4bd62399601d9947b382af4a737286c, type: 2}
   elements: []
   battleHUD: {fileID: 0}
 --- !u!114 &6428758636971290158

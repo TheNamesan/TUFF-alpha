@@ -169,7 +169,8 @@ namespace TUFF
     {
         Single = 0,
         Group = 1,
-        Items = 2
+        Items = 2,
+        Escape = 3
     }
 
     public enum DropType
