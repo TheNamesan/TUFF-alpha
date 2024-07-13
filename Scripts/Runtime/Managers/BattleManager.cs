@@ -244,6 +244,11 @@ namespace TUFF
             if (queuedSkills.Count <= 1) return;
             queuedSkills.Sort((skl1, skl2) => skl2.attackSpeed.CompareTo(skl1.attackSpeed));
         }
+        public void EscapeBattle()
+        {
+            battleState = BattleState.ESCAPED;
+            EndBattle();
+        }
         public void RunBattleActions()
         {
             QueueEnemyActions();
@@ -255,6 +260,7 @@ namespace TUFF
         IEnumerator RunBattleActionsCoroutine() //Need to optimize some code here...
         {
             yield return new WaitForSeconds(1f);
+            // Play all the queued invocations
             for (queuedSkillsIndex = 0; queuedSkillsIndex < queuedSkills.Count; queuedSkillsIndex++)
             {
                 yield return StartCoroutine(queuedSkills[queuedSkillsIndex].InvokeSkill());
@@ -267,15 +273,18 @@ namespace TUFF
                 CheckWin();
                 yield return CheckActEndEvents();
                 UncheckBattleConditionsPlayedState(SpanType.OncePerAct);
-                if (CheckBattleEnd()) break;
+                if (CheckBattleEnd()) break; 
             }
+            // If battle ended from party KO or Enemy KO, end battle
             if (CheckBattleEnd())
             {
                 EndBattle();
                 yield break;
             }
+            // Remove states and apply HP, SP and TP regens
             CheckTargetablesTurnEndStatesDuration();
             ApplyTargetablesRegens();
+            // Check if enemies or party died from negative HP regens
             if (CheckGameOver() || CheckWin() || CheckBattleEnd())
             {
                 yield return CheckActEndEvents();
@@ -830,27 +839,40 @@ namespace TUFF
         {
             if (battleState == BattleState.WON)
             {
-                GetEnemyRewards();
-                StartCoroutine(EndBattleFade());
+                StartCoroutine(OnBattleWon());
             }
             if (battleState == BattleState.LOST)
             {
                 GameManager.instance.GameOver();
                 StartCoroutine(WaitForGameOverFadeOut());
             }
+            if (battleState == BattleState.ESCAPED)
+            {
+                StartCoroutine(OnBattleEscape());
+            }
         }
         private IEnumerator EndBattleFade()
         {
-            yield return new WaitForSeconds(1f);
-            //hud.ShowAll();
-            yield return StartCoroutine(hud.ShowResults()); //Show Rewards and EXP
-            UIController.instance.fadeScreen.TriggerFadeOut(0.25f);
             CheckBattleEndStateRemovals();
+            UIController.instance.fadeScreen.TriggerFadeOut(0.25f);
             yield return new WaitForSeconds(0.25f);
             if (eventCallback != null) eventCallback.isFinished = true;
             UnloadBattle();
             AudioManager.instance.RestoreAmbienceVolume();
             UIController.instance.fadeScreen.TriggerFadeIn(0.25f);
+        }
+        private IEnumerator OnBattleWon()
+        {
+            GetEnemyRewards();
+            yield return new WaitForSeconds(1f);
+            yield return StartCoroutine(hud.ShowResults()); //Show Rewards and EXP
+            StartCoroutine(EndBattleFade());
+        }
+        private IEnumerator OnBattleEscape()
+        {
+            AudioManager.instance.PlaySFX(TUFFSettings.escapeSFX);
+            yield return new WaitForSeconds(1f);
+            StartCoroutine(EndBattleFade());
         }
         public void AddEnemyRewards(Enemy enemy)
         {
@@ -883,7 +905,7 @@ namespace TUFF
         private void PlayWinAudio()
         {
             AudioManager.instance.StopMusic(1f); //Change with FadeOut only
-            AudioManager.instance.PlaySFX(TUFFSettings.battleVictorySFX, 1f, 1f);
+            AudioManager.instance.PlaySFX(TUFFSettings.battleVictorySFX);
         }
         protected IEnumerator WaitForGameOverFadeOut()
         {

@@ -420,7 +420,6 @@ namespace TUFF
                 UIButton button = CreateTargetMenuButton(0);
                 button.highlightDisplayText = GetLocalizedScopeName(skill.ScopeData.scopeType);
                 int menuIndex = commandMenuIndex;
-                button.onHighlight = new UnityEvent();
                 button.onHighlight.AddListener(() =>
                 {
                     foreach (Targetable target in validTargets)
@@ -430,7 +429,6 @@ namespace TUFF
                             ShowEnemyHPBar(target as EnemyInstance, true);
                     }
                 });
-                button.onUnhighlight = new UnityEvent();
                 button.onUnhighlight.AddListener(() =>
                 {
                     foreach (Targetable target in validTargets)
@@ -440,7 +438,6 @@ namespace TUFF
                             RemoveEnemyHPBar(target as EnemyInstance);
                     }
                 });
-                button.onSelect = new UnityEvent();
                 button.onSelect.AddListener(() =>
                 {
                     foreach (Targetable target in validTargets)
@@ -616,6 +613,11 @@ namespace TUFF
         {
             Skill skill; //If command is Single, go to next List, or, goto pick target menu and then goto next List. If group, open that command group.
             if (command.commandType == CommandType.Single) skill = command.skills[0].skill;
+            else if (command.commandType == CommandType.Escape)
+            {
+                EscapeBattle();
+                return;
+            }
             else if (command.IsSubmenuType())
             {
                 OpenCommandSubmenu(command, user);
@@ -712,13 +714,27 @@ namespace TUFF
             if(commandMenuIndex < GameManager.instance.playerData.GetActivePartySize()) 
                 SetCommandListMenu(commandMenuIndex);
         }
+        private void EscapeBattle()
+        {
+            ResetCommandListUI();
+            HideAll();
+            BattleManager.instance.EscapeBattle();
+        }
         private void EndPlayerActions()
         {
+            ResetCommandListUI();
+            BattleManager.instance.RunBattleActions();
+        }
+
+        private void ResetCommandListUI()
+        {
+            commandList.uiMenu.CloseMenu();
+            commandList.memberRef.HighlightImageRef(false);
             DisplayWindow(secondaryWindow, false);
             ToggleStatusHUD(false);
             ShowDescriptionDisplay(false);
-            BattleManager.instance.RunBattleActions();
         }
+
         private void GoToPrevCommandMenu()
         {
             PreviousCommandList();

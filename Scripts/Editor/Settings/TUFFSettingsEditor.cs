@@ -89,9 +89,11 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_selectSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_cancelSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_disabledSFX"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_equipSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_saveSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_loadSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_battleStartSFX"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_escapeSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_battleVictorySFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_unitDamageSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_unitKOSFX"), new GUIContent("Unit KO SFX"));
@@ -104,7 +106,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_levelUpSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_shopSFX"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_useItemSFX"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_equipSFX"));
+            
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_startingSceneName"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_startingScenePosition"));

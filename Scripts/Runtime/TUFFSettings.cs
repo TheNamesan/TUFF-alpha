@@ -74,10 +74,12 @@ namespace TUFF
         public static SFX selectSFX { get => Instance.m_selectSFX; }
         public static SFX cancelSFX { get => Instance.m_cancelSFX; }
         public static SFX disabledSFX { get => Instance.m_disabledSFX; }
+        public static SFX equipSFX { get => Instance.m_equipSFX; }
         public static SFX saveSFX { get => Instance.m_saveSFX; }
         public static SFX loadSFX { get => Instance.m_loadSFX; }
         public static SFX battleStartSFX { get => Instance.m_battleStartSFX; }
-        public static AudioClip battleVictorySFX { get => Instance.m_battleVictorySFX; }
+        public static SFX escapeSFX { get => Instance.m_escapeSFX; }
+        public static SFX battleVictorySFX { get => Instance.m_battleVictorySFX; }
         public static SFX unitDamageSFX { get => Instance.m_unitDamageSFX; }
         public static SFX unitKOSFX { get => Instance.m_unitKOSFX; }
         public static SFX enemyDamageSFX { get => Instance.m_enemyDamageSFX; }
@@ -89,7 +91,7 @@ namespace TUFF
         public static SFX levelUpSFX { get => Instance.m_levelUpSFX; }
         public static SFX shopSFX { get => Instance.m_shopSFX; }
         public static SFX useItemSFX { get => Instance.m_useItemSFX; }
-        public static SFX equipSFX { get => Instance.m_equipSFX; }
+        
         //New Game Load
         public static string startingSceneName { get => Instance.m_startingSceneName; }
         public static Vector2 startingScenePosition { get => Instance.m_startingScenePosition; }
@@ -278,26 +280,28 @@ namespace TUFF
         [SerializeField] private BGMPlayData m_gameOverBGM = new BGMPlayData();
 
         [Header("SFX")]
-        [SerializeField] private SFX m_highlightSFX;
-        [SerializeField] private SFX m_selectSFX;
-        [SerializeField] private SFX m_cancelSFX;
-        [SerializeField] private SFX m_disabledSFX;
-        [SerializeField] private SFX m_saveSFX;
-        [SerializeField] private SFX m_loadSFX;
-        [SerializeField] private SFX m_battleStartSFX;
-        [SerializeField] private AudioClip m_battleVictorySFX;
-        [SerializeField] private SFX m_unitDamageSFX;
-        [SerializeField] private SFX m_unitKOSFX;
-        [SerializeField] private SFX m_enemyDamageSFX;
-        [SerializeField] private SFX m_enemyKOSFX;
-        [SerializeField] private SFX m_critDamageSFX;
-        [SerializeField] private SFX m_recoverySFX;
-        [SerializeField] private SFX m_missSFX;
-        [SerializeField] private SFX m_EXPTickSFX;
-        [SerializeField] private SFX m_levelUpSFX;
-        [SerializeField] private SFX m_shopSFX;
-        [SerializeField] private SFX m_useItemSFX;
-        [SerializeField] private SFX m_equipSFX;
+        [SerializeField] private SFX m_highlightSFX = new();
+        [SerializeField] private SFX m_selectSFX = new();
+        [SerializeField] private SFX m_cancelSFX = new();
+        [SerializeField] private SFX m_disabledSFX = new();
+        [SerializeField] private SFX m_equipSFX = new();
+        [SerializeField] private SFX m_saveSFX = new();
+        [SerializeField] private SFX m_loadSFX = new();
+        [SerializeField] private SFX m_battleStartSFX = new();
+        [SerializeField] private SFX m_escapeSFX = new();
+        [SerializeField] private SFX m_battleVictorySFX = new();
+        [SerializeField] private SFX m_unitDamageSFX = new();
+        [SerializeField] private SFX m_unitKOSFX = new();
+        [SerializeField] private SFX m_enemyDamageSFX = new();
+        [SerializeField] private SFX m_enemyKOSFX = new();
+        [SerializeField] private SFX m_critDamageSFX = new();
+        [SerializeField] private SFX m_recoverySFX = new();
+        [SerializeField] private SFX m_missSFX = new();
+        [SerializeField] private SFX m_EXPTickSFX = new();
+        [SerializeField] private SFX m_levelUpSFX = new();
+        [SerializeField] private SFX m_shopSFX = new();
+        [SerializeField] private SFX m_useItemSFX = new();
+        
 
         [Header("New Game Load")]
         [Tooltip("The Scene to load on New Game.")]
