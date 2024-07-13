@@ -54,6 +54,11 @@ namespace TUFF
         }
         public void InitiateBattle(Battle battle, EventAction evtCallback = null)
         {
+            if (battle == null) { 
+                Debug.LogWarning("Battle is null!"); 
+                if (evtCallback != null) evtCallback.isFinished = true;
+                return; 
+            }
             UIController.instance.TriggerBattleStart();
             StartCoroutine(LoadBattle(battle, evtCallback));
         }
@@ -870,6 +875,7 @@ namespace TUFF
         }
         private IEnumerator OnBattleEscape()
         {
+            AudioManager.instance.StopMusic(1f);
             AudioManager.instance.PlaySFX(TUFFSettings.escapeSFX);
             yield return new WaitForSeconds(1f);
             StartCoroutine(EndBattleFade());
@@ -904,7 +910,7 @@ namespace TUFF
         }
         private void PlayWinAudio()
         {
-            AudioManager.instance.StopMusic(1f); //Change with FadeOut only
+            AudioManager.instance.StopMusic(1f); 
             AudioManager.instance.PlaySFX(TUFFSettings.battleVictorySFX);
         }
         protected IEnumerator WaitForGameOverFadeOut()

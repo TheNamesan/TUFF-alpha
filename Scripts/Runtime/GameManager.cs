@@ -25,6 +25,8 @@ namespace TUFF
 
         private bool m_holdingSkip = false;
 
+        public string test;
+
 
         private static bool m_disablePlayerInput = false;
         public static bool disablePlayerInput
@@ -329,6 +331,13 @@ namespace TUFF
             yield return new WaitForSecondsRealtime(1f);
             ChangeTimeScale(1);
             SceneLoaderManager.instance.LoadSceneWithFadeIn("GameOver", 0.5f, disableActionMap: true, enablePlayerInputAction: false) ;
+        }
+
+        public void TestBattle(Battle battle)
+        {
+            Debug.Log(test);
+            BattleManager.instance.InitiateBattle(battle);
+            AudioManager.instance.PlaySFX(TUFFSettings.equipSFX);
         }
     }
 }

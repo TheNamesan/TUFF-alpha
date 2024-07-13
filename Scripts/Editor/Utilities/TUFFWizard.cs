@@ -173,5 +173,29 @@ namespace TUFF.TUFFEditor
                     }};
             return data;
         }
+
+        [MenuItem("TUFF/Play Game")]
+        public static void PlayGame()
+        {
+            //EditorPrefs.SetString("Test", "Hello World");
+            EditorApplication.EnterPlaymode();
+        }
+
+        public static void TestBattle(Battle battle)
+        {
+            if (!battle) return;
+
+            if (Application.isPlaying)
+            {
+                GameManager.instance.TestBattle(battle);
+            }
+            else
+            {
+                string path = AssetDatabase.GetAssetPath(battle);
+                Debug.Log(path);
+                if (!string.IsNullOrEmpty(path)) EditorPrefs.SetString("Test Battle Path", path);
+                EditorApplication.EnterPlaymode();
+            }
+        }
     }
 }
