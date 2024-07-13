@@ -862,6 +862,8 @@ namespace TUFF
             UIController.instance.fadeScreen.TriggerFadeOut(0.25f);
             yield return new WaitForSeconds(0.25f);
             if (eventCallback != null) eventCallback.isFinished = true;
+            else if (!CommonEventManager.interactableEventPlaying) GameManager.instance.DisablePlayerInput(false);
+
             UnloadBattle();
             AudioManager.instance.RestoreAmbienceVolume();
             UIController.instance.fadeScreen.TriggerFadeIn(0.25f);
