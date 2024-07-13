@@ -176,7 +176,13 @@ namespace TUFF
             {
                 if (activeMenus.Count > 0) activeMenus.RemoveAt(0);
             }
-            else activeMenus.Insert(0, uiMenu);
+            else
+            {
+                int existingIndex = activeMenus.IndexOf(uiMenu);
+                if (existingIndex < 0)
+                    activeMenus.Insert(0, uiMenu);
+                else LISAUtility.ListMoveItemToFront(activeMenus, existingIndex);
+            }
             CheckActiveMenusCount();
         }
 
