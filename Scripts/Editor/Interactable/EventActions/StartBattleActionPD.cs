@@ -17,6 +17,8 @@ namespace TUFF.TUFFEditor
             DatabaseDropdownDrawer.DrawBattlesDropdown(ref popupValue, battleTarget);
             GUIContent content = new GUIContent(battleTarget.displayName, battleTarget.tooltip);
             EditorGUILayout.PropertyField(battleTarget);
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("canEscape"));
         }
         public override void SummaryGUI(Rect position)
         {
@@ -26,7 +28,9 @@ namespace TUFF.TUFFEditor
         {
             var action = targetObject as StartBattleAction;
             if (action.battle == null) return "No Battle set";
-            return $"Start '{action.battle.name}' Battle";
+            string canEscape = "";
+            if (action.canEscape) canEscape = " (Can Escape)";
+            return $"Start '{action.battle.name}' Battle{canEscape}";
         }
     }
 }

@@ -181,6 +181,10 @@ namespace TUFF
                     var skill = command.skills[0].skill;
                     if (!BattleManager.instance.CanUseSkill(skill, memberRef, false)) button.disabled = true;
                 }
+                else if (command.commandType == CommandType.Escape)
+                {
+                    button.disabled = !BattleManager.instance.CanEscape;
+                }
                 button.highlightDisplayText = command.GetDescription();
             }
         }

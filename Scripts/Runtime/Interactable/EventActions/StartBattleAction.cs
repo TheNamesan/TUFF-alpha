@@ -9,14 +9,16 @@ namespace TUFF
     {
         [Tooltip("Battle prefab to trigger.")]
         public Battle battle;
+
+        public bool canEscape = false;
         public StartBattleAction()
         {
             eventName = "Start Battle";
-            eventColor = new Color(0.5f, 1f, 0.95f, 1f);
+            eventColor = EventGUIColors.scene;
         }
         public override void Invoke()
         {
-            if (battle != null) BattleManager.instance.InitiateBattle(battle, this);
+            if (battle != null) BattleManager.instance.InitiateBattle(battle, canEscape, this);
             else
             {
                 Debug.LogWarning($"No Battle set for {eventName} event.");

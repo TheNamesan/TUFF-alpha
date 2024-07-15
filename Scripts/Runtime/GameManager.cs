@@ -336,7 +336,7 @@ namespace TUFF
         public void TestBattle(Battle battle)
         {
             Debug.Log(test);
-            BattleManager.instance.InitiateBattle(battle);
+            BattleManager.instance.TestBattle(battle);
             AudioManager.instance.PlaySFX(TUFFSettings.equipSFX);
         }
     }

@@ -40,6 +40,8 @@ namespace TUFF
 
         public bool InBattle { get => m_inBattle; }
         private bool m_inBattle = false;
+        public bool CanEscape { get => m_canEscape; }
+        private bool m_canEscape = false;
         public void Awake()
         {
             if (instance != null)
@@ -52,7 +54,11 @@ namespace TUFF
                 DontDestroyOnLoad(gameObject);
             }
         }
-        public void InitiateBattle(Battle battle, EventAction evtCallback = null)
+        public void TestBattle(Battle battle)
+        {
+            InitiateBattle(battle, true);
+        }
+        public void InitiateBattle(Battle battle, bool canEscape = false, EventAction evtCallback = null)
         {
             if (battle == null) { 
                 Debug.LogWarning("Battle is null!"); 
@@ -60,11 +66,13 @@ namespace TUFF
                 return; 
             }
             UIController.instance.TriggerBattleStart();
-            StartCoroutine(LoadBattle(battle, evtCallback));
+            StartCoroutine(LoadBattle(battle, evtCallback, canEscape));
         }
-        private IEnumerator LoadBattle(Battle battle, EventAction evtCallback)
+        private IEnumerator LoadBattle(Battle battle, EventAction evtCallback, bool canEscape)
         {
             m_inBattle = true;
+            m_canEscape = canEscape;
+
             if (battle.autoPlayBGM) AudioManager.instance.PlayMusic(battle.bgm);
             //Move To BattleHUD
             eventCallback = evtCallback;
@@ -828,6 +836,7 @@ namespace TUFF
         public void UnloadBattle()
         {
             m_inBattle = false;
+            m_canEscape = false;
             if (battle != null) Destroy(battle.gameObject);
             turn = 0;
             rewards.Clear();
