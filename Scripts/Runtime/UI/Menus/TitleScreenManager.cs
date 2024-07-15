@@ -10,6 +10,7 @@ namespace TUFF
         private void Start()
         {
             GameManager.gameOver = false;
+            UIController.instance.fadeScreen.TriggerFadeIn(2f);
         }
 
         public void NewGameButton()
