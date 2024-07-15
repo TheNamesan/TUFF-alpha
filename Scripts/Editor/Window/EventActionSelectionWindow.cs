@@ -230,6 +230,10 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new ChangeLight2DAction(), eventList, eventListPDs);
             }
+            if (GUILayout.Button(new GUIContent("Play Animation", "Plays an animation from an Animator component in the scene.")))
+            {
+                AddEvent(new PlayAnimationAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Change Animation Pack", "Swaps the animation pack for a Scene Character or a Follower Instance.")))
             {
                 AddEvent(new ChangeAnimationPackAction(), eventList, eventListPDs);
