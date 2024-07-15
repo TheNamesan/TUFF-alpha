@@ -39,35 +39,41 @@ namespace TUFF
         }
         public void UpdateScroll()
         {
-            Debug.Log("UpdateScroll");
+            Debug.Log("UpdateScroll", this);
             Initialize();
             int visibleColumns = uiMenu.GetVisibleColumnsCount();
+            //Debug.Log("Visible columns: " + visibleColumns);
             int cursorValue = uiMenu.highlightY;
-            if (cursorValue == 0)
+            if (visibleColumns > 0)
             {
-                topVisibleIndex = uiMenu.highlightY;
-                bottomVisibleIndex = maxVisibleElements - 1;
-                SetScroll(0);
-            }
-            else if (cursorValue == Mathf.Max(maxVisibleElements, visibleColumns - 1))
-            {
-                topVisibleIndex = uiMenu.highlightY - maxVisibleElements + 1;
-                bottomVisibleIndex = uiMenu.highlightY;
-                SetScroll((visibleColumns - maxVisibleElements) * scrollValue);
-            }
-            else if (cursorValue > bottomVisibleIndex)
-            {
-                int valueDiff = cursorValue - bottomVisibleIndex;
-                topVisibleIndex += valueDiff;
-                bottomVisibleIndex += valueDiff;
-                ScrollDown(valueDiff);
-            }
-            else if (cursorValue < topVisibleIndex)
-            {
-                int valueDiff = Mathf.Abs(cursorValue - topVisibleIndex);
-                topVisibleIndex -= valueDiff;
-                bottomVisibleIndex -= valueDiff;
-                ScrollUp(valueDiff);
+                // If first element on menu on highlighted
+                if (cursorValue == 0)
+                {
+                    topVisibleIndex = uiMenu.highlightY;
+                    bottomVisibleIndex = maxVisibleElements - 1;
+                    SetScroll(0);
+                }
+                // If last element on menu on highlighted
+                else if (cursorValue == Mathf.Max(maxVisibleElements, visibleColumns - 1))
+                {
+                    topVisibleIndex = uiMenu.highlightY - maxVisibleElements + 1;
+                    bottomVisibleIndex = uiMenu.highlightY;
+                    SetScroll((visibleColumns - maxVisibleElements) * scrollValue);
+                }
+                else if (cursorValue > bottomVisibleIndex)
+                {
+                    int valueDiff = cursorValue - bottomVisibleIndex;
+                    topVisibleIndex += valueDiff;
+                    bottomVisibleIndex += valueDiff;
+                    ScrollDown(valueDiff);
+                }
+                else if (cursorValue < topVisibleIndex)
+                {
+                    int valueDiff = Mathf.Abs(cursorValue - topVisibleIndex);
+                    topVisibleIndex -= valueDiff;
+                    bottomVisibleIndex -= valueDiff;
+                    ScrollUp(valueDiff);
+                }
             }
             UpdateArrows();
         }
