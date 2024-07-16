@@ -46,7 +46,6 @@ namespace TUFF.TUFFEditor
                 // By default, try to put assets in a folder next to the currently active
                 // scene file. If the user isn't a scene, put them in root instead.
                 var obj = targetProperty.serializedObject.targetObject;
-                Debug.Log(obj.GetType());
                 var targetName = $"{obj.name} {targetObject.eventName}";
                 var rootGameObject = (obj as InteractableObject).gameObject;
                 
@@ -134,18 +133,6 @@ namespace TUFF.TUFFEditor
                     var profilePath = scenePath + Path.DirectorySeparatorChar + extPath;
 
                     LISAEditorUtility.CreateFolderForScene(scene);
-                    //if (!AssetDatabase.IsValidFolder(profilePath))
-                    //{
-                    //    var directories = profilePath.Split(Path.DirectorySeparatorChar);
-                    //    string rootPath = "";
-                    //    foreach (var directory in directories)
-                    //    {
-                    //        var newPath = rootPath + directory;
-                    //        if (!AssetDatabase.IsValidFolder(newPath))
-                    //            AssetDatabase.CreateFolder(rootPath.TrimEnd(Path.DirectorySeparatorChar), directory);
-                    //        rootPath = newPath + Path.DirectorySeparatorChar;
-                    //    }
-                    //}
 
                     path = profilePath + Path.DirectorySeparatorChar;
                 }
