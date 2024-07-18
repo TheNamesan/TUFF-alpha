@@ -11,6 +11,9 @@ namespace TUFF
         public Battle battle;
 
         public bool canEscape = false;
+
+        public ActionList winActionList = new();
+        public ActionList escapeActionList = new();
         public StartBattleAction()
         {
             eventName = "Start Battle";
@@ -24,6 +27,20 @@ namespace TUFF
                 Debug.LogWarning($"No Battle set for {eventName} event.");
                 isFinished = true;
             }
+        }
+        public void OnBattleEnd(BattleState endBattleState)
+        {
+            if (!UsesBranches()) { isFinished = true; return; }
+            if (endBattleState == BattleState.ESCAPED)
+            {
+                CommonEventManager.instance.TriggerEventActionBranch(this, escapeActionList);
+            }
+            else
+                CommonEventManager.instance.TriggerEventActionBranch(this, winActionList);
+        }
+        public bool UsesBranches()
+        {
+            return canEscape;
         }
     }
 }

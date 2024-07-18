@@ -870,7 +870,14 @@ namespace TUFF
             CheckBattleEndStateRemovals();
             UIController.instance.fadeScreen.TriggerFadeOut(0.25f);
             yield return new WaitForSeconds(0.25f);
-            if (eventCallback != null) eventCallback.isFinished = true;
+            if (eventCallback != null)
+            { 
+                if (eventCallback is StartBattleAction startBattleAction)
+                {
+                    startBattleAction.OnBattleEnd(battleState);
+                }
+                else eventCallback.isFinished = true; 
+            }
             else if (!CommonEventManager.interactableEventPlaying) GameManager.instance.DisablePlayerInput(false);
 
             UnloadBattle();
