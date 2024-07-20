@@ -10,10 +10,14 @@ namespace TUFF
         [Tooltip("Battle prefab to trigger.")]
         public Battle battle;
 
+        [Tooltip("Allows the user to use Escape commands and adds a branch If Escape.")]
         public bool canEscape = false;
+        [Tooltip("Adds a branch when the party is wiped.")]
+        public bool continueOnLose = false;
 
         public ActionList winActionList = new();
         public ActionList escapeActionList = new();
+        public ActionList loseActionList = new();
         public StartBattleAction()
         {
             eventName = "Start Battle";
@@ -31,16 +35,20 @@ namespace TUFF
         public void OnBattleEnd(BattleState endBattleState)
         {
             if (!UsesBranches()) { isFinished = true; return; }
-            if (endBattleState == BattleState.ESCAPED)
+            if (endBattleState == BattleState.ESCAPED && canEscape)
             {
                 CommonEventManager.instance.TriggerEventActionBranch(this, escapeActionList);
+            }
+            else if (endBattleState == BattleState.LOST  && continueOnLose)
+            {
+                CommonEventManager.instance.TriggerEventActionBranch(this, loseActionList);
             }
             else
                 CommonEventManager.instance.TriggerEventActionBranch(this, winActionList);
         }
         public bool UsesBranches()
         {
-            return canEscape;
+            return canEscape || continueOnLose;
         }
     }
 }

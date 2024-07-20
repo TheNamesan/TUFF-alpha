@@ -857,8 +857,7 @@ namespace TUFF
             }
             if (battleState == BattleState.LOST)
             {
-                GameManager.instance.GameOver();
-                StartCoroutine(WaitForGameOverFadeOut());
+                StartCoroutine(OnBattleLost());
             }
             if (battleState == BattleState.ESCAPED)
             {
@@ -890,6 +889,27 @@ namespace TUFF
             yield return new WaitForSeconds(1f);
             yield return StartCoroutine(hud.ShowResults()); //Show Rewards and EXP
             StartCoroutine(EndBattleFade());
+        }
+        private IEnumerator OnBattleLost()
+        {
+            if (eventCallback != null && eventCallback is StartBattleAction startBattleAction)
+            {
+                if (startBattleAction.continueOnLose)
+                {
+                    AudioManager.instance.StopMusic(1f);
+                    yield return new WaitForSeconds(1f);
+                    PlayerData.instance.RecoverAllFromKO();
+                    StartCoroutine(EndBattleFade());
+                    yield break;
+                }
+            }
+            GameManager.instance.GameOver();
+            while (GameManager.gameOver)
+            {
+                yield return null;
+            }
+            CheckBattleEndStateRemovals();
+            UnloadBattle();
         }
         private IEnumerator OnBattleEscape()
         {
@@ -930,15 +950,6 @@ namespace TUFF
         {
             AudioManager.instance.StopMusic(1f); 
             AudioManager.instance.PlaySFX(TUFFSettings.battleVictorySFX);
-        }
-        protected IEnumerator WaitForGameOverFadeOut()
-        {
-            while (GameManager.gameOver)
-            {
-                yield return null;
-            }
-            CheckBattleEndStateRemovals();
-            UnloadBattle();
         }
         public void DisplayHit(BattleAnimationEvent hitInfo, int value, int targetIndex, bool isCrit = false)
         {

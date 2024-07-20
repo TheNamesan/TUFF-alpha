@@ -12,6 +12,7 @@ namespace TUFF.TUFFEditor
         int popupValue = 0;
         private List<EventActionPD> m_winDrawer = new List<EventActionPD>();
         private List<EventActionPD> m_escapeDrawer = new List<EventActionPD>();
+        private List<EventActionPD> m_loseDrawer = new List<EventActionPD>();
         private static bool queueReset = false;
         public override void InspectorGUIContent()
         {
@@ -23,6 +24,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(battleTarget);
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("canEscape"));
+            EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("continueOnLose"));
         }
         public override void SummaryGUI(Rect position)
         {
@@ -74,6 +76,13 @@ namespace TUFF.TUFFEditor
                     $"=== If Escape", $"{action.eventName} If Escape", 
                     contentProp, action.escapeActionList, ref m_escapeDrawer);
             }
+            if (action.continueOnLose)
+            {
+                contentProp = targetProperty.FindPropertyRelative("loseActionList.content");
+                position = DrawBranch(position, targetProperty,
+                    $"=== If Lose", $"{action.eventName} If Lose",
+                    contentProp, action.loseActionList, ref m_loseDrawer);
+            }
         }
         private static Rect DrawBranch(Rect position, SerializedProperty targetProperty, string labelText, string selectionPanelTitle, SerializedProperty contentProp, ActionList list, ref List<EventActionPD> drawers)
         {
@@ -99,6 +108,11 @@ namespace TUFF.TUFFEditor
             {
                 height += 20f;
                 height += EventActionListWindow.GetListHeight(targetProperty.propertyPath, action.escapeActionList.content);
+            }
+            if (action.continueOnLose)
+            {
+                height += 20f;
+                height += EventActionListWindow.GetListHeight(targetProperty.propertyPath, action.loseActionList.content);
             }
 
             return height;

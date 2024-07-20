@@ -189,6 +189,14 @@ namespace TUFF
             this.mags = mags;
             if (this.mags < 0) this.mags = 0;
         }
+        public void RecoverAllFromKO()
+        {
+            var playerParty = GetAllPartyMembers();
+            for (int i = 0; i < playerParty.Count; i++)
+            {
+                playerParty[i].RemoveKO();
+            }
+        }
         public void AddToInventory(InventoryItem invItem, int amount)
         {
             if (invItem is Item) AddToInventory(invItem as Item, amount);
