@@ -300,6 +300,10 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new FadeScreenAction(), eventList, eventListPDs);
             }
+            if (GUILayout.Button(new GUIContent("Tint Screen", "Changes the color of the screen.")))
+            {
+                AddEvent(new TintScreenAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Modify Global Volume", "Changes the global volume override properties.")))
             {
                 AddEvent(new ModifyGlobalVolumeAction(), eventList, eventListPDs);
