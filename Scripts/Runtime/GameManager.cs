@@ -327,7 +327,7 @@ namespace TUFF
             UIController.instance.SetMenu(null);
             AudioManager.instance.StopAmbience();
             AudioManager.instance.PlayGameOverMusic();
-            UIController.instance.fadeScreen.TriggerFadeOut(1f);
+            UIController.instance.UIFadeScreen.FadeOut(1f);
             yield return new WaitForSecondsRealtime(1f);
             ChangeTimeScale(1);
             SceneLoaderManager.instance.LoadSceneWithFadeIn("GameOver", 0.5f, disableActionMap: true, enablePlayerInputAction: false) ;

@@ -10,7 +10,7 @@ namespace TUFF
         private void Start()
         {
             GameManager.gameOver = false;
-            UIController.instance.fadeScreen.TriggerFadeIn(2f);
+            UIController.instance.UIFadeScreen.FadeIn(2f);
         }
 
         public void NewGameButton()
@@ -31,7 +31,7 @@ namespace TUFF
         protected IEnumerator NewGame()
         {
             UIController.instance.SetMenu(null);
-            UIController.instance.fadeScreen.TriggerFadeOut(1f);
+            UIController.instance.UIFadeScreen.FadeOut(1f);
             AudioManager.instance.FadeOutVolume(1f);
             GameManager.instance.StartNewGame();
             yield return new WaitForSeconds(2f);

@@ -304,7 +304,7 @@ namespace TUFF
                 yield return null;
             }
             UIController.instance.TriggerLoadingIcon(false);
-            UIController.instance.fadeScreen.TriggerFadeIn(fadeDuration, () =>
+            UIController.instance.UIFadeScreen.FadeIn(fadeDuration, () =>
             {
                 if (disableActionMap) GameManager.instance.DisableActionMaps(false);
                 if (enablePlayerInput) GameManager.instance.DisablePlayerInput(false);

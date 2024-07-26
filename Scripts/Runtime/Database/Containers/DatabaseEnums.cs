@@ -241,4 +241,9 @@ namespace TUFF
         None = 0,
         UserName = 1
     }
+    public enum FadeType
+    {
+        FadeOut = 0,
+        FadeIn = 1
+    }
 }

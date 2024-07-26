@@ -34,8 +34,10 @@ namespace TUFF
         [SerializeField] protected RectTransform loadingIcon;
         public DialogueManager textbox;
         public DialogueManager dimTextbox;
+        public TintScreenTrigger tintScreen;
         public FlashImageHandler flashScreen;
         public FadeScreenTrigger fadeScreen;
+        public FadeScreenTrigger UIFadeScreen;
         [SerializeField] private BattleStartTrigger battleStartTrigger;
 
         public bool triggerFadeInOnStart = false;
@@ -93,25 +95,13 @@ namespace TUFF
 
         public void Start()
         {
-            if (fadeScreen != null && triggerFadeInOnStart)
+            if (UIFadeScreen != null && triggerFadeInOnStart)
             {
-                fadeScreen.SetAlpha(1f);
-                fadeScreen.TriggerFadeIn(1f);
+                UIFadeScreen.SetAlpha(1f);
+                UIFadeScreen.FadeIn(1f);
             }
         }
 
-        /*public void RefreshParty(List<Character> input)
-        {
-            for (int i = 0; i < DisplaySlots; i++)
-            {
-                if (i < input.Count)
-                {
-                    HP[i].localScale = new Vector3(input[i].CurrentHP / (float)input[i].HP, HP[i].localScale.y, HP[i].localScale.z);
-                    SP[i].localScale = new Vector3(input[i].CurrentSP / (float)input[i].SP, SP[i].localScale.y, SP[i].localScale.z);
-                    Names[i].text = input[i].title;
-                }
-            }
-        }*/
         public void GetCanvasCamera()
         {
             if (cameraCanvas == null) return;
@@ -271,6 +261,18 @@ namespace TUFF
         public bool BattleStartIsFinished()
         {
             return battleStartTrigger.isFinished;
+        }
+        public void TintScreen(Color color, float duration)
+        {
+            tintScreen.Tint(color, duration);
+        }
+        public void FadeInScreen(float duration)
+        {
+            fadeScreen.FadeIn(duration);
+        }
+        public void FadeOutScreen(float duration)
+        {
+            fadeScreen.FadeOut(duration);
         }
         public void FlashScreen(Color color, float duration)
         {

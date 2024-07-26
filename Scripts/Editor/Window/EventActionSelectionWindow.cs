@@ -296,6 +296,10 @@ namespace TUFF.TUFFEditor
             GUI.backgroundColor = EventGUIColors.screenEffects;
             EditorGUILayout.BeginVertical("box");
             GUILayout.Label("Screen Effects", EditorStyles.boldLabel);
+            if (GUILayout.Button(new GUIContent("Fade Screen", "Brightens or darkens the screen.")))
+            {
+                AddEvent(new FadeScreenAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Modify Global Volume", "Changes the global volume override properties.")))
             {
                 AddEvent(new ModifyGlobalVolumeAction(), eventList, eventListPDs);
