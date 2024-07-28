@@ -25,8 +25,6 @@ namespace TUFF
 
         private bool m_holdingSkip = false;
 
-        public string test;
-
 
         private static bool m_disablePlayerInput = false;
         public static bool disablePlayerInput
@@ -228,12 +226,6 @@ namespace TUFF
             return false;
         }
 
-        /*public bool DealDamage(Character target, int input)
-        {
-            target.CurrentHP -= input;
-            return false;
-        }*/
-
         public void GameOver()
         {
             if (!gameOver)
@@ -335,7 +327,6 @@ namespace TUFF
 
         public void TestBattle(Battle battle)
         {
-            Debug.Log(test);
             BattleManager.instance.TestBattle(battle);
             AudioManager.instance.PlaySFX(TUFFSettings.equipSFX);
         }
