@@ -25,6 +25,7 @@ namespace TUFF
         List<TextMeshProUGUI> Names;
         [SerializeField]
         int DisplaySlots;
+        
         [Header("Menus")]
         [SerializeField] protected PauseMenuHUD pauseMenu;
         [SerializeField] protected ChoicesMenu choicesMenu;
@@ -38,7 +39,11 @@ namespace TUFF
         public FlashImageHandler flashScreen;
         public FadeScreenTrigger fadeScreen;
         public FadeScreenTrigger UIFadeScreen;
-        [SerializeField] private BattleStartTrigger battleStartTrigger;
+        public BattleStartTrigger battleStartTrigger;
+        public TMP_Text fpsCounter;
+
+        private float fps = 0;
+        private int fpsSamples = 0;
 
         public bool triggerFadeInOnStart = false;
         [Tooltip("If the vertical or horizontal input is held for this amount of seconds, the button will autofire.")]
@@ -100,6 +105,7 @@ namespace TUFF
                 UIFadeScreen.SetAlpha(1f);
                 UIFadeScreen.FadeIn(1f);
             }
+            StartCoroutine(UpdateFPSText());
         }
 
         public void GetCanvasCamera()
@@ -125,6 +131,21 @@ namespace TUFF
         public void Update()
         {
             CheckButtonHold();
+            fps += (1 / Time.unscaledDeltaTime);
+            fpsSamples++;
+            
+        }
+        private IEnumerator UpdateFPSText()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(0.5f);
+                if (fpsSamples > 0) fps = fps / fpsSamples;
+                else fps = 0;
+                if (fpsCounter) fpsCounter.text = $"{fps.ToString("F1")} FPS";
+                fps = 0;
+                fpsSamples = 0;
+            }
         }
 
         private void CheckButtonHold()
