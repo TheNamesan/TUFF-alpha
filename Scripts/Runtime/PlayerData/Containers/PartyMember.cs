@@ -545,13 +545,13 @@ namespace TUFF
             if (id < 0 || id >= learnedSkills.Length) return;
             learnedSkills[id] = learn;
         }
-        public virtual bool KnowsSkill(Skill skill)
+        public override bool KnowsSkill(Skill skill)
         {
             if (skill == null) return false;
             if (TUFFSettings.DebugIgnoreLearnedSkills()) return true;
             return KnowsSkill(skill.id);
         }
-        public virtual bool KnowsSkill(int id)
+        public override bool KnowsSkill(int id)
         {
             if (id < 0 || id >= learnedSkills.Length) return false;
             if (TUFFSettings.DebugIgnoreLearnedSkills()) return true;

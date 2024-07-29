@@ -892,6 +892,15 @@ namespace TUFF
             GetStatesFeaturesOfType(states, featureType, features);
             return features;
         }
+        public virtual bool KnowsSkill(Skill skill)
+        {
+            if (skill == null) return false;
+            return KnowsSkill(skill.id);
+        }
+        public virtual bool KnowsSkill(int id)
+        {
+            return true;
+        }
         public static void AddFeaturesOfTypeFrom(List<Feature> fromFeatureList, FeatureType featureType, List<Feature> featuresRef)
         {
             if (fromFeatureList == null) return;

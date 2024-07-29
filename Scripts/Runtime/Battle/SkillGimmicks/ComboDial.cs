@@ -191,6 +191,7 @@ namespace TUFF
             if (skillLearned.skill == null) return false;
             if (skillLearned.skill.comboDialMove == "") return false;
             if (!skillLearned.CanBeUsed(skillAnim.callRef.user)) return false;
+            if (!skillAnim.callRef.user.KnowsSkill(skillLearned.skill)) return false;
             
             return true;
         }
