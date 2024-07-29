@@ -867,7 +867,7 @@ namespace TUFF
         private IEnumerator EndBattleFade()
         {
             CheckBattleEndStateRemovals();
-            UIController.instance.UIFadeScreen.FadeOut(0.25f);
+            UIController.instance.FadeOutUI(0.25f);
             yield return new WaitForSeconds(0.25f);
             if (eventCallback != null)
             { 
@@ -881,7 +881,7 @@ namespace TUFF
 
             UnloadBattle();
             AudioManager.instance.RestoreAmbienceVolume();
-            UIController.instance.UIFadeScreen.FadeIn(0.25f);
+            UIController.instance.FadeInUI(0.25f);
         }
         private IEnumerator OnBattleWon()
         {

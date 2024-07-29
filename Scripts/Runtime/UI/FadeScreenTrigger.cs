@@ -22,26 +22,34 @@ namespace TUFF
         }
         public void FadeIn(float duration)
         {
-            FadeIn(duration, null);
+            FadeIn(duration, false, null);
+        }
+        public void FadeIn(float duration, bool useUnscaledTime)
+        {
+            FadeIn(duration, useUnscaledTime, null);
         }
 
-        public void FadeIn(float duration, Action onComplete)
+        public void FadeIn(float duration, bool useUnscaledTime, Action onComplete)
         {
             fadeTween?.Pause();
             fadeTween?.Kill();
-            fadeTween = img.DOFade(0f, duration).From(1f).SetAutoKill(false).SetUpdate(true)
+            fadeTween = img.DOFade(0f, duration).From(1f).SetAutoKill(false).SetUpdate(useUnscaledTime)
                 .OnComplete(() => { onComplete?.Invoke(); });
         }
 
         public void FadeOut(float duration)
         {
-            FadeOut(duration, null);
+            FadeOut(duration, false, null);
         }
-        public void FadeOut(float duration, Action onComplete)
+        public void FadeOut(float duration, bool useUnscaledTime)
+        {
+            FadeOut(duration, useUnscaledTime, null);
+        }
+        public void FadeOut(float duration, bool useUnscaledTime, Action onComplete)
         {
             fadeTween?.Pause();
             fadeTween?.Kill();
-            fadeTween = img.DOFade(1f, duration).From(0f).SetAutoKill(false).SetUpdate(true)
+            fadeTween = img.DOFade(1f, duration).From(0f).SetAutoKill(false).SetUpdate(useUnscaledTime)
                 .OnComplete(() => onComplete?.Invoke());
         }
     }

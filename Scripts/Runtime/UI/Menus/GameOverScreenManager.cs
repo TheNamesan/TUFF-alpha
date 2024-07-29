@@ -20,7 +20,7 @@ namespace TUFF
         IEnumerator Continue()
         {
             UIController.instance.SetMenu(null);
-            UIController.instance.UIFadeScreen.FadeOut(0.125f);
+            UIController.instance.FadeOutUI(0.125f);
             AudioManager.instance.FadeOutVolume(1f);
             bool loaded = GameManager.instance.LoadSaveData(GameManager.instance.lastLoadedFile); // Load Last Loaded Save
             GameManager.instance.stopPlaytime = true;
@@ -42,7 +42,7 @@ namespace TUFF
         IEnumerator ToTitle()
         {
             UIController.instance.SetMenu(null);
-            UIController.instance.UIFadeScreen.FadeOut(1f);
+            UIController.instance.FadeOutUI(1f);
             AudioManager.instance.FadeOutVolume(1f);
             yield return new WaitForSeconds(1.5f);
             SceneLoaderManager.instance.LoadSceneWithFadeIn(titleScreenSceneName, 1f);

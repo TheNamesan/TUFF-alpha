@@ -145,7 +145,7 @@ namespace TUFF
             //UIController.instance.SetMenu(null);
             AudioManager.instance.PlaySFX(TUFFSettings.loadSFX);
             GameManager.instance.DisableUIInput(true);
-            UIController.instance.UIFadeScreen.FadeOut(1f);
+            UIController.instance.FadeOutUI(1f);
             AudioManager.instance.FadeOutVolume(1f);
             yield return new WaitForSeconds(2f);
             UIController.instance.CloseAllMenus();

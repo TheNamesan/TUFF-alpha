@@ -103,7 +103,7 @@ namespace TUFF
             if (UIFadeScreen != null && triggerFadeInOnStart)
             {
                 UIFadeScreen.SetAlpha(1f);
-                UIFadeScreen.FadeIn(1f);
+                FadeInUI(1f);
             }
             StartCoroutine(UpdateFPSText());
         }
@@ -287,9 +287,17 @@ namespace TUFF
         {
             tintScreen.Tint(color, duration);
         }
+        public void FadeInUI(float duration, System.Action action = null)
+        {
+            UIFadeScreen.FadeIn(duration, true, action);
+        }
         public void FadeInScreen(float duration)
         {
             fadeScreen.FadeIn(duration);
+        }
+        public void FadeOutUI(float duration, System.Action action = null)
+        {
+            UIFadeScreen.FadeOut(duration, true, action);
         }
         public void FadeOutScreen(float duration)
         {

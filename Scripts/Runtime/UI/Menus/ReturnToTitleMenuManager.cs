@@ -15,7 +15,7 @@ namespace TUFF
         IEnumerator ToTitle()
         {
             GameManager.instance.DisableUIInput(true);
-            UIController.instance.UIFadeScreen.FadeOut(1f);
+            UIController.instance.FadeOutUI(1f);
             AudioManager.instance.FadeOutVolume(1f);
             yield return new WaitForSeconds(1.5f);
             UIController.instance.CloseAllMenus();
