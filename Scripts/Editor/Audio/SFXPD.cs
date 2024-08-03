@@ -16,7 +16,7 @@ namespace TUFF.TUFFEditor
                 return (EditorGUIUtility.singleLineHeight - EditorGUIUtility.standardVerticalSpacing) +
                 (EditorGUIUtility.standardVerticalSpacing) + 2f;
             }
-            int lines = 3;
+            int lines = 4;
             float audioClipsHeight = 0f;
             var audioClipMode = property.FindPropertyRelative("audioClipMode");
             if (audioClipMode.intValue == 0) lines += 1;
@@ -73,6 +73,12 @@ namespace TUFF.TUFFEditor
                     GameObject.FindWithTag("AudioManager")?.GetComponent<AudioManager>()?.PlaySFX(data);
                 }
                 position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+                if (GUI.Button(new Rect(position.x, position.y, position.width, 20f), "Stop All"))
+                {
+                    TUFFWizard.StopSFXs();
+                }
+                position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+
                 position.width += 15f;
             }
             position.x = orgX;

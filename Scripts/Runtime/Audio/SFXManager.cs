@@ -38,6 +38,16 @@ namespace TUFF
             sources[sources.Count - 1].outputAudioMixerGroup = sfxMixerGroup;
         }
 
+        public void StopSFXs()
+        {
+            for (int i = 0; i < sources.Count; i++)
+            {
+                sources[i].Stop();
+                sources[i].clip = null;
+            }
+            StopAllCoroutines();
+        }
+
         private void SetClipToSource(int idx, AudioClip clip, float volume, float pitch)
         {
             sources[idx].pitch = pitch;

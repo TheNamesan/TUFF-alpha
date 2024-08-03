@@ -264,6 +264,10 @@ namespace TUFF
             StopClips();
             currentBGM = null;
         }
+        public void StopSFXs()
+        {
+            sfxManager?.StopSFXs();
+        }
         public void StopAmbience()
         {
             StopAmbienceClips();

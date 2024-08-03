@@ -39,10 +39,15 @@ namespace TUFF.TUFFEditor
         {
             CreateItem(TUFFSettings.overworldCharacterPrefab, FindSceneProperties());
         }
-        [MenuItem("TUFF/Stop Preview BGM")]
-        public static void StopPreviewBGM()
+        [MenuItem("TUFF/Stop BGM")]
+        public static void StopBGM()
         {
             GameObject.FindWithTag("AudioManager")?.GetComponent<AudioManager>()?.StopMusic();
+        }
+        [MenuItem("TUFF/Stop All SFXs")]
+        public static void StopSFXs()
+        {
+            GameObject.FindWithTag("AudioManager")?.GetComponent<AudioManager>()?.StopSFXs();
         }
         public static void CreateItem(Object item, Transform parent = null)
         {

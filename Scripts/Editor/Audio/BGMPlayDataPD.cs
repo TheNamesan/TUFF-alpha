@@ -49,7 +49,7 @@ namespace TUFF.TUFFEditor
                 position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
                 if (GUI.Button(new Rect(position.x, position.y, position.width, 20f), "Stop"))
                 {
-                    TUFFWizard.StopPreviewBGM();
+                    TUFFWizard.StopBGM();
                 }
                 position.width += 15f;
             }
