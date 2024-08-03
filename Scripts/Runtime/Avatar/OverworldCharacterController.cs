@@ -407,6 +407,7 @@ namespace TUFF
                 if (grounded && m_touchingWalkable != collider)
                 {
                     Debug.Log(collider + " (" + collision.collider + ")," + slopeFound + "," + touchingWalkableNormal);
+                    SnapToGround(closestContactPoint, DCOMultiplier, collider, point);
                     SetTouchingWalkable(collider);
                     boxColor = Color.yellow;
                 }
