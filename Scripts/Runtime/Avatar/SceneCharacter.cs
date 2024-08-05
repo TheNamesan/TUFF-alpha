@@ -26,6 +26,10 @@ namespace TUFF
             if (lightSource) lightSource.SetActive(enable);
             onLightToggle?.Invoke(enabled);
         }
+        public virtual void ChangeAnimationPack(AnimationPack animationPack, bool keepAlt = true)
+        {
+            charAnim?.LoadAnimationPack(animationPack, keepAlt);
+        }
         public virtual void ChangeAnimationPack(AnimationPack animationPack)
         {
             charAnim?.LoadAnimationPack(animationPack);

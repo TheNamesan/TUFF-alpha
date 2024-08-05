@@ -261,24 +261,26 @@ namespace TUFF
             animationInWait = false;
             //Debug.Log($"done: {duration}");
         }
-
-        public void LoadAnimationPack(AnimationPack newpack)
+        public void LoadAnimationPack(AnimationPack newpack, bool keepAlt = true)
         {
             if (overrideControl == null || clipOverrides == null) Initialize();
             OverrideAnimationClips(newpack);
             pack = newpack;
-            alt = -1;
+            if (keepAlt)
+            {
+                UsePackAlt(alt);
+            }
+            else alt = -1;
             Debug.Log("===Override Animator===");
         }
+
         public void UsePackAlt(int index)
         {
             if (overrideControl == null || clipOverrides == null) Initialize();
             if (pack == null) { Debug.LogWarning("No Pack assigned"); return; }
-            if (index >= pack.altPacks.Count) return;
             AnimationPack targetPack = null;
-            if (index < 0) targetPack = pack;
-            else targetPack = pack.altPacks[index];
-            alt = index;
+            if (index < 0 || index >= pack.altPacks.Count) { targetPack = pack; alt = -1; }
+            else { targetPack = pack.altPacks[index]; alt = index; }
             OverrideAnimationClips(targetPack);
         }
 

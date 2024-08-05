@@ -42,6 +42,13 @@ namespace TUFF
             if (propertiesData.overrideClimbMode)
                 collision.ChangeClimbMode(propertiesData.climbMode);
         }
+        public void OnExit(OverworldCharacterController collision)
+        {
+            if (collision == null) return;
+            if (propertiesData == null) return;
+            if (propertiesData.changeAnimationPackAlt) // If stepping on this changes the animation pack alt
+                collision.animHandler.UsePackAlt(-1); // Assign Alt
+        }    
         public void Step(Vector3 position)
         {
             Step(position, new Vector3Int(0, 0, 0));

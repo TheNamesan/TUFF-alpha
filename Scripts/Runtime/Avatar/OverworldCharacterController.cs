@@ -1088,7 +1088,7 @@ namespace TUFF
             //}
         }
 
-        void ClimbHandler()
+        private void ClimbHandler()
         {
             if (climbing)
             {
@@ -1180,8 +1180,8 @@ namespace TUFF
             fellAfterClimbing = true;
             disableClimbableCollision = true;
             climbDetect.SetLastPoints();
+            climbDetect?.terrainProperties?.OnExit(this);
             enableVerticalVelocity = false;
-            
             SetupFall();
         }
 
@@ -1579,7 +1579,7 @@ namespace TUFF
         {
             //Debug.Log("Land");
             Debug.Log("Landed Time: " + (Time.realtimeSinceStartup - timeJump));
-            if (climbing) SetFallStart();
+            if (climbing) { climbDetect?.terrainProperties?.OnExit(this); SetFallStart(); }
             falling = false;
             enableVerticalVelocity = true;
             disableClimbableCollision = false;
@@ -1616,6 +1616,7 @@ namespace TUFF
             }
             else
             {
+                touchingWalkableProperties?.OnExit(this);
                 touchingWalkableProperties = null;
                 touchingWalkableNormal = Vector2.zero;
                 touchingWalkablePerp = Vector2.zero;
