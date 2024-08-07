@@ -347,7 +347,8 @@ namespace TUFF
                     CheckClimb();
                     break;
                 case QueuedAction.Interaction:
-                    CheckInteractable();
+                    FindInteractable(out InteractableObject interactableObject);
+                    TryTriggerInteractable(interactableObject);
                     break;
                 case QueuedAction.Pause:
                     CheckPause();
@@ -686,9 +687,13 @@ namespace TUFF
             StopRunMomentum();
             runCanceled = false;
         }
-
-        private bool CheckInteractable()
+        private bool FindInteractable()
         {
+            return FindInteractable(out InteractableObject obj);
+        }
+        private bool FindInteractable(out InteractableObject obj)
+        {
+            obj = null;
             if (GameManager.disablePlayerInput) return false;
             if (hardLanded) return false;
             //Debug.Log($"{gameObject.name}: Check interactable");
@@ -709,17 +714,17 @@ namespace TUFF
                         TriggerType type = interactable.GetCurrentIndexType();
                         if (type == TriggerType.ActionButton)
                         {
-                            if (interactable.TriggerInteractable()) return true;
+                            if (interactable.CanBeTriggered()) { obj = interactable; return true; }
                         }
                         else if (type == TriggerType.ActionFaceUp)
                         {
                             if (m_faceDirection == FaceDirections.North)
-                                if (interactable.TriggerInteractable()) return true;
+                                if (interactable.CanBeTriggered()) { obj = interactable; return true; }
                         }
                         else if (type == TriggerType.ActionFaceDown)
                         {
                             if (m_faceDirection == FaceDirections.South)
-                                if (interactable.TriggerInteractable()) return true;
+                                if (interactable.CanBeTriggered()) { obj = interactable; return true; }
                         }
                         //return true;
                     }
@@ -1237,14 +1242,16 @@ namespace TUFF
         private void JumpCheck()
         {
             if (jumping || climbing || !grounded) return;
-            if (CheckInteractable()) return;
+            FindInteractable(out InteractableObject obj);
             Vector2 closestContactPoint = col.ClosestPoint(rb.position - new Vector2(0, characterHeight));
             Vector2 size = new Vector2(col.bounds.size.x, Physics2D.defaultContactOffset * 0.1F);
-            if (WallCheck(size, Vector2.up, jumpDetectionRange)) return;
+            if (WallCheck(size, Vector2.up, jumpDetectionRange)) { TryTriggerInteractable(obj); return; }
             RaycastHit2D hit = Physics2D.BoxCast(transform.position, size, 0, Vector2.up, jumpDetectionRange, ~ignoredLayersAtJumpCheck);
             if (hit.collider != null)
             {
-                if (((1 << hit.collider.gameObject.layer) & walkableLayers) == 0) return;
+                if (((1 << hit.collider.gameObject.layer) & walkableLayers) == 0) { TryTriggerInteractable(obj); return; }
+                if (CheckInteractableHasPriorityOverJump(obj, false)) { TryTriggerInteractable(obj); return; }
+
                 jumpDirection = 0;
                 ChangeFaceDirection(FaceDirections.North);
                 SetJumping(true, jumpDirection);
@@ -1262,8 +1269,33 @@ namespace TUFF
             else
             {
                 Debug.DrawRay(transform.position, Vector3.up * jumpDetectionRange, Color.white, 10);
+                TryTriggerInteractable(obj);
             }
         }
+        /// <summary>
+        /// If the player is in the way of an Interactable Object and a valid Platform Jump at the same time, if the player is holding up or down then the Jump takes priority. 
+        /// </summary>
+        /// <returns>Returns true if the Interactable takes priority over Jump</returns>
+        private bool CheckInteractableHasPriorityOverJump(InteractableObject obj, bool jumpingDown)
+        {
+            // If the player is in the way of an Interactable Object and a
+            // valid Platform Jump at the same time, if the player is holding up or down 
+            // then the Jump takes priority.
+            if (!obj) return false;
+            if (jumpingDown)
+            {
+                return !(input.verticalInput < 0);
+            }
+            else
+            {
+                return !(input.verticalInput > 0);
+            }
+        }
+        private bool TryTriggerInteractable(InteractableObject interactableObject)
+        {
+            if (!interactableObject) return false;
+            return interactableObject.TriggerInteractable();
+        }    
         //protected IEnumerator JumpDownTransition()
         //{
         //    yield return new WaitForSeconds(0.03f);
@@ -1272,15 +1304,16 @@ namespace TUFF
         private void JumpDownCheck()
         {
             if (jumping || climbing || !grounded) return;
-            if (CheckInteractable()) return;
+            FindInteractable(out InteractableObject obj);
             Vector2 closestContactPoint = col.ClosestPoint(rb.position - new Vector2(0, characterHeight));
             Vector2 rayOrigin = transform.position + Vector3.down * (characterHeight * 0.5f) + Vector3.down;
             Vector2 size = new Vector2(col.bounds.size.x, Physics2D.defaultContactOffset * 0.1F);
-            if (WallCheck(size, Vector2.down, transform.position.y - rayOrigin.y - 0.01f)) return;
+            if (WallCheck(size, Vector2.down, transform.position.y - rayOrigin.y - 0.01f)) { TryTriggerInteractable(obj); return; }
             RaycastHit2D hit = Physics2D.BoxCast(rayOrigin, size, 0, Vector2.down, jumpDownDetectionRange, ~ignoredLayersAtJumpCheck);
             if (hit.collider != null)
             {
-                if (((1 << hit.collider.gameObject.layer) & walkableLayers) == 0) return;
+                if (((1 << hit.collider.gameObject.layer) & walkableLayers) == 0) { TryTriggerInteractable(obj); return; }
+                if (CheckInteractableHasPriorityOverJump(obj, true)) { TryTriggerInteractable(obj); return; }
                 jumpDirection = 1;
                 ChangeFaceDirection(FaceDirections.South);
                 SetJumping(true, jumpDirection);
@@ -1298,6 +1331,7 @@ namespace TUFF
             else
             {
                 Debug.DrawRay(transform.position + Vector3.down * (characterHeight * 0.5f) + Vector3.down, Vector3.down * jumpDownDetectionRange, Color.white, 10);
+                TryTriggerInteractable(obj);
             }
         }
 

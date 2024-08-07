@@ -104,30 +104,7 @@ namespace TUFF
         {
             GameManager.instance.playerData.AssignSwitchToPersistentID(persistentID, currentSwitch);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>If Interactable was triggered successfully.</returns>
-        public bool TriggerInteractable(bool queue = false)
-        {
-            if (triggerEvents.Length <= 0) {
-                Debug.Log("Trigger Events List is empty");
-                return false;
-            }
-            if (m_index < 0)
-            {
-                Debug.LogWarning("Index is less than zero");
-                return false;
-            }
-            if (m_index >= triggerEvents.Length)
-            {
-                Debug.LogWarning("Index is out of range");
-                return false;
-            }
-            CommonEventManager.instance.TriggerInteractableEvent(triggerEvents[m_index], queue);
-            return true;
-        }
-        public bool TriggerParallelProcess()
+        public bool CanBeTriggered()
         {
             if (triggerEvents.Length <= 0)
             {
@@ -144,6 +121,21 @@ namespace TUFF
                 //Debug.LogWarning("Index is out of range");
                 return false;
             }
+            return true;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>If Interactable was triggered successfully.</returns>
+        public bool TriggerInteractable(bool queue = false)
+        {
+            if (!CanBeTriggered()) return false;
+            CommonEventManager.instance.TriggerInteractableEvent(triggerEvents[m_index], queue);
+            return true;
+        }
+        public bool TriggerParallelProcess()
+        {
+            if (!CanBeTriggered()) return false;
             CommonEventManager.instance.TriggerParallelProcessEvent(triggerEvents[m_index]);
             return true;
         }
