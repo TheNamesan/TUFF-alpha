@@ -42,6 +42,8 @@ namespace TUFF
         private bool m_inBattle = false;
         public bool CanEscape { get => m_canEscape; }
         private bool m_canEscape = false;
+        public bool CanLose { get => m_canLose; }
+        private bool m_canLose = false;
         public void Awake()
         {
             if (instance != null)
@@ -58,7 +60,7 @@ namespace TUFF
         {
             InitiateBattle(battle, true);
         }
-        public void InitiateBattle(Battle battle, bool canEscape = false, EventAction evtCallback = null)
+        public void InitiateBattle(Battle battle, bool canEscape = false, bool canLose = false, EventAction evtCallback = null)
         {
             if (battle == null) { 
                 Debug.LogWarning("Battle is null!"); 
@@ -66,12 +68,13 @@ namespace TUFF
                 return; 
             }
             UIController.instance.TriggerBattleStart();
-            StartCoroutine(LoadBattle(battle, evtCallback, canEscape));
+            StartCoroutine(LoadBattle(battle, evtCallback, canEscape, canLose));
         }
-        private IEnumerator LoadBattle(Battle battle, EventAction evtCallback, bool canEscape)
+        private IEnumerator LoadBattle(Battle battle, EventAction evtCallback, bool canEscape, bool canLose)
         {
             m_inBattle = true;
             m_canEscape = canEscape;
+            m_canLose = canLose;
 
             if (battle.autoPlayBGM) AudioManager.instance.PlayMusic(battle.bgm);
             //Move To BattleHUD
@@ -837,6 +840,7 @@ namespace TUFF
         {
             m_inBattle = false;
             m_canEscape = false;
+            m_canLose = false;
             if (battle != null) Destroy(battle.gameObject);
             turn = 0;
             rewards.Clear();
@@ -866,9 +870,10 @@ namespace TUFF
         }
         private IEnumerator EndBattleFade()
         {
-            CheckBattleEndStateRemovals();
             UIController.instance.FadeOutUI(0.25f);
             yield return new WaitForSeconds(0.25f);
+            CheckBattleEndStateRemovals();
+            if (m_canLose) PlayerData.instance.RecoverAllFromKO();
             if (eventCallback != null)
             { 
                 eventCallback.EndEvent(battleState);
@@ -888,16 +893,12 @@ namespace TUFF
         }
         private IEnumerator OnBattleLost()
         {
-            if (eventCallback != null && eventCallback is StartBattleAction startBattleAction)
+            if (m_canLose)
             {
-                if (startBattleAction.continueOnLose)
-                {
-                    AudioManager.instance.StopMusic(1f);
-                    yield return new WaitForSeconds(1f);
-                    PlayerData.instance.RecoverAllFromKO();
-                    StartCoroutine(EndBattleFade());
-                    yield break;
-                }
+                AudioManager.instance.StopMusic(1f);
+                yield return new WaitForSeconds(1f);
+                StartCoroutine(EndBattleFade());
+                yield break;
             }
             GameManager.instance.GameOver();
             while (GameManager.gameOver)

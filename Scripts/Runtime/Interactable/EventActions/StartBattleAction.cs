@@ -25,7 +25,7 @@ namespace TUFF
         }
         public override void Invoke()
         {
-            if (battle != null) BattleManager.instance.InitiateBattle(battle, canEscape, this);
+            if (battle != null) BattleManager.instance.InitiateBattle(battle, canEscape, continueOnLose, this);
             else
             {
                 Debug.LogWarning($"No Battle set for {eventName} event.");
