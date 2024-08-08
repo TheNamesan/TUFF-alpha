@@ -21,7 +21,7 @@ namespace TUFF
             {
                 CameraShake.InvokeShake(cameraShake, targetCamera, this);
             }
-            else isFinished = true;
+            else EndEvent();
         }
     }
 }

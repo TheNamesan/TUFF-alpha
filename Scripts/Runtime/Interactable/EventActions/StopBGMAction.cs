@@ -17,7 +17,7 @@ namespace TUFF
         public override void Invoke()
         {
             AudioManager.instance.StopMusic(fadeOutDuration);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace TUFF
         {
             if (branches.Count <= 0)
             {
-                isFinished = true;
+                EndEvent();
                 Debug.Log("Count is 0");
                 return;
             }
@@ -40,7 +40,7 @@ namespace TUFF
                 }
                 else
                 {
-                    isFinished = true;
+                    EndEvent();
                 }
                 return;
             }

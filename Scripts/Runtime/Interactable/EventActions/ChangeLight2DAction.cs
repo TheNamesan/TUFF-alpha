@@ -42,7 +42,7 @@ namespace TUFF
                     light2D.intensity = intensity;
                 }
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

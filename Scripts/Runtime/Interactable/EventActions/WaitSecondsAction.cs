@@ -23,7 +23,7 @@ namespace TUFF
         {
             float waitTime = (seconds < 0 ? 0 : seconds);
             yield return new WaitForSeconds(waitTime);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

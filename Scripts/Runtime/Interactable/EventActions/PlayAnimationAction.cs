@@ -17,7 +17,7 @@ namespace TUFF
         public override void Invoke()
         {
             animator?.Play(animationName, -1, 0);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

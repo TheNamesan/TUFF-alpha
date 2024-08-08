@@ -11,7 +11,7 @@ namespace TUFF
         public void PlayMoveRoute(MoveRoute route, EventAction actionCallback)
         {
             if (route == null) return;
-            if (playing) { if (actionCallback != null) actionCallback.isFinished = true; return; }
+            if (playing) { if (actionCallback != null) actionCallback.EndEvent(); return; }
             playing = true;
             Debug.Log("Playing Move Route");
             StartCoroutine(PlayMoveRouteCoroutine(route, actionCallback));
@@ -26,7 +26,7 @@ namespace TUFF
                 if (element == null) continue;
                 yield return element.PlayElement(controller);
             }
-            if (actionCallback != null) actionCallback.isFinished = true;
+            if (actionCallback != null) actionCallback.EndEvent();
             playing = false;
             Debug.Log("Stopped Move Route");
             yield break;

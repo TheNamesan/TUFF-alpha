@@ -18,6 +18,7 @@ namespace TUFF
         public EventAction actionCallback = null;
 
         protected bool initialized = false;
+        protected bool m_savedFile = false;
         private void Awake()
         {
             Initialize();
@@ -39,6 +40,7 @@ namespace TUFF
         public void OpenFileSelectMenu(FileSelectMenuMode openMode, EventAction actionCallback = null)
         {
             mode = openMode;
+            m_savedFile = false;
             this.actionCallback = actionCallback;
             Initialize();
             UpdateSaveFileHUDs();
@@ -137,6 +139,7 @@ namespace TUFF
             {
                 GameManager.instance.SavePlayerData(file);
                 AudioManager.instance.PlaySFX(TUFFSettings.saveSFX);
+                m_savedFile = true;
                 uiMenu?.CloseMenu();
             }
         }
@@ -159,7 +162,7 @@ namespace TUFF
         }
         private void OnCloseMenu()
         {
-            if (actionCallback != null) actionCallback.isFinished = true;
+            if (actionCallback != null) actionCallback.EndEvent();
         }
 
         private void UpdatePromptText()

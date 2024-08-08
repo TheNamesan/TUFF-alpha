@@ -26,7 +26,7 @@ namespace TUFF
         {
             var faceDir = faceDirection;
             if (retainFacing) faceDir = FollowerInstance.player.controller.faceDirection;
-            SceneLoaderManager.instance.LoadScene(sceneToLoad, position, faceDir, hideLoadingIcon, false, false, () => isFinished = true);
+            SceneLoaderManager.instance.LoadScene(sceneToLoad, position, faceDir, hideLoadingIcon, false, false, () => EndEvent());
         }
         public override void OnStart()
         {

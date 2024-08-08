@@ -28,7 +28,7 @@ namespace TUFF
                 if (targetAnimationHandler != null)
                     targetAnimationHandler.ChangeSprite(sprite);
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

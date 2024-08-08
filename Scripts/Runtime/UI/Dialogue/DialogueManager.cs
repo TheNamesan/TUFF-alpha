@@ -320,7 +320,7 @@ namespace TUFF
                 {
                     if (!ChoicesIsNext()) CloseTextbox(); // Change this to buffer
                     else {
-                        if (actionCallback != null) actionCallback.isFinished = true;
+                        if (actionCallback != null) actionCallback.EndEvent();
                         textboxInitiated = false;
                         Debug.Log("Choices is next!"); 
                     }
@@ -362,7 +362,7 @@ namespace TUFF
             dialogue.onDialogueEnd?.Invoke();
             if (uiMenu != null) UIController.instance.SetMenu(null);
             BattleManager.instance.hud.ShowWindowsDynamic(true);
-            if (actionCallback != null) actionCallback.isFinished = true;
+            if (actionCallback != null) actionCallback.EndEvent();
             if (transition != null)
             {
                 if (DialogueIsNext()) // Change this to buffer

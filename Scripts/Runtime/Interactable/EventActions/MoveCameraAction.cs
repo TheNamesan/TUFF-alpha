@@ -21,7 +21,7 @@ namespace TUFF
             {
                 CameraMove.InvokeMovement(cameraMove, targetCamera, this);
             }
-            else isFinished = true;
+            else EndEvent();
         }
     }
 }

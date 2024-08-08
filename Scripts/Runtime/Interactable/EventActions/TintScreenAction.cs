@@ -22,12 +22,12 @@ namespace TUFF
         {
             UIController.instance.TintScreen(tint, duration);
             if (waitForCompletion) GameManager.instance.StartCoroutine(WaitForCompletion(duration));
-            else isFinished = true;
+            else EndEvent();
         }
         private IEnumerator WaitForCompletion(float duration)
         {
             yield return new WaitForSeconds(duration);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

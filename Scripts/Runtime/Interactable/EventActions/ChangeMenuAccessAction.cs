@@ -15,7 +15,7 @@ namespace TUFF
         public override void Invoke()
         {
             PlayerData.instance.charProperties.disableMenuAccess = !enable;
-            isFinished = true;
+            EndEvent();
         }
     }
 

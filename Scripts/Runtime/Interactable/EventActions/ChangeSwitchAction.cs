@@ -19,7 +19,7 @@ namespace TUFF
         public override void Invoke()
         {
             if (target != null) target.currentSwitch = newSwitch;
-            isFinished = true;
+            EndEvent();
         }
         
     }

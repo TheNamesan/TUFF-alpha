@@ -79,7 +79,7 @@ namespace TUFF
                 }
                 else
                 {
-                    isFinished = true;
+                    EndEvent();
                     return;
                 }
             }
@@ -91,24 +91,24 @@ namespace TUFF
                 if (!keepMaterial) spriteRenderer.material = material;
                 if (keepColor)
                 {
-                    isFinished = true;
+                    EndEvent();
                     return;
                 }
                 if (colorFadeDuration <= 0)
                 {
                     if (!changeOnlyTransparency) spriteRenderer.color = color;
                     else spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, color.a);
-                    isFinished = true;
+                    EndEvent();
                 }
                 else
                 {
                     KillTween();
-                    if (!changeOnlyTransparency) tween = spriteRenderer.DOColor(color, colorFadeDuration).OnComplete(() => { if (waitForFade) isFinished = true; });
-                    else tween = spriteRenderer.DOFade(color.a, colorFadeDuration).OnComplete(() => { if (waitForFade) isFinished = true; });
-                    if (!waitForFade) isFinished = true;
+                    if (!changeOnlyTransparency) tween = spriteRenderer.DOColor(color, colorFadeDuration).OnComplete(() => { if (waitForFade) EndEvent(); });
+                    else tween = spriteRenderer.DOFade(color.a, colorFadeDuration).OnComplete(() => { if (waitForFade) EndEvent(); });
+                    if (!waitForFade) EndEvent();
                 }
             }
-            else isFinished = true;
+            else EndEvent();
         }
         
         private void KillTween()

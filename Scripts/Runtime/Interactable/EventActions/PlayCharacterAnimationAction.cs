@@ -27,7 +27,7 @@ namespace TUFF
             {
                 targetSceneCharacter?.PlayAnimation(clip);
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

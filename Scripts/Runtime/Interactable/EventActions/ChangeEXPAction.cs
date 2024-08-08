@@ -35,11 +35,11 @@ namespace TUFF
             }
             else if (scope == PartyScope.OnePartyMember)
             {
-                if (unit == null) { isFinished = true; return; }
+                if (unit == null) { EndEvent(); return; }
                 var member = PlayerData.instance.GetPartyMember(unit);
                 CalculateValue(member, value);
             }
-            isFinished = true;
+            EndEvent();
         }
         private void CalculateValue(PartyMember member, int value)
         {

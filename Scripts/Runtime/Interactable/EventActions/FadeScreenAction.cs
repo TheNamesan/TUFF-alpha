@@ -23,12 +23,12 @@ namespace TUFF
             if (fadeType == FadeType.FadeOut) UIController.instance.FadeOutScreen(duration);
             else UIController.instance.FadeInScreen(duration);
             if (waitForCompletion) GameManager.instance.StartCoroutine(WaitForCompletion(duration));
-            else isFinished = true;
+            else EndEvent();
         }
         private IEnumerator WaitForCompletion(float duration)
         {
             yield return new WaitForSeconds(duration);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

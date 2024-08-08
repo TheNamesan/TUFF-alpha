@@ -19,7 +19,7 @@ namespace TUFF
         public override void Invoke()
         {
             colorAdjustmentsMods.ApplyChanges(volumeProfile);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

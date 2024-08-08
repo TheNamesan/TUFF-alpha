@@ -31,7 +31,7 @@ namespace TUFF
             else if (dropType == DropType.KeyItem) GameManager.instance.playerData.AddToInventory(keyItem, value);
             else if (dropType == DropType.Weapon) GameManager.instance.playerData.AddToInventory(weapon, value);
             else if (dropType == DropType.Armor) GameManager.instance.playerData.AddToInventory(armor, value);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

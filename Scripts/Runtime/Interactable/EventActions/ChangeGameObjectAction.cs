@@ -44,7 +44,7 @@ namespace TUFF
                     gameObject.tag = newTag;
                 }
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 

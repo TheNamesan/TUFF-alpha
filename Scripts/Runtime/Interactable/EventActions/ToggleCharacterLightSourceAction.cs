@@ -24,7 +24,7 @@ namespace TUFF
             {
                 sceneCharacter?.EnableLightSource(enable);
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

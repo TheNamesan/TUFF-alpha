@@ -21,7 +21,7 @@ namespace TUFF
             {
                 enemyInstance.ChangeGraphic(graphic);
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

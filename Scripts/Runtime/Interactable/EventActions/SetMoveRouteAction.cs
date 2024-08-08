@@ -21,13 +21,13 @@ namespace TUFF
             var handler = sceneMoveRouteHandler;
             if (originType == FieldOriginType.FromPersistentInstance)
             {
-                if (FollowerInstance.player == null) { isFinished = true; return; }
-                if (FollowerInstance.player.moveRouteHandler == null) { isFinished = true; return; }
+                if (FollowerInstance.player == null) { EndEvent(); return; }
+                if (FollowerInstance.player.moveRouteHandler == null) { EndEvent(); return; }
                 handler = FollowerInstance.player.moveRouteHandler;
             }
             if (handler) handler.PlayMoveRoute(moveRoute, (waitForCompletion ? this : null));
-            else isFinished = true;
-            if (!waitForCompletion) isFinished = true;
+            else EndEvent();
+            if (!waitForCompletion) EndEvent();
         }
     }
 }

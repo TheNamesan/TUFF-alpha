@@ -31,11 +31,11 @@ namespace TUFF
             }
             else if (scope == PartyScope.OnePartyMember)
             {
-                if (unit == null) { isFinished = true; return; }
+                if (unit == null) { EndEvent(); return; }
                 var member = PlayerData.instance.GetPartyMember(unit);
                 member.LearnSkill(skill, learn);
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

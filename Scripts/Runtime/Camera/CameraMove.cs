@@ -35,7 +35,7 @@ namespace TUFF
             {
                 UnityAction action = null;
                 action = () => {
-                    commandCallback.isFinished = true;
+                    commandCallback.EndEvent();
                     cameraMove.onMovementEnd.RemoveListener(action);
                 };
                 cameraMove.onMovementEnd.AddListener(action);

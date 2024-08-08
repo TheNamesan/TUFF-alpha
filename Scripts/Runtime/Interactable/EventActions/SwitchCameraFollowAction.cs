@@ -22,7 +22,7 @@ namespace TUFF
             {
                 targetCamera.DisableCameraFollow(disableCameraFollow);
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

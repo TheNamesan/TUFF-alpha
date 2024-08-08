@@ -32,7 +32,7 @@ namespace TUFF
             {
                 UnityAction action = null;
                 action = () => {
-                    commandCallback.isFinished = true;
+                    commandCallback.EndEvent();
                     cameraShake.onShakeEnd.RemoveListener(action);
                 };
                 cameraShake.onShakeEnd.AddListener(action);

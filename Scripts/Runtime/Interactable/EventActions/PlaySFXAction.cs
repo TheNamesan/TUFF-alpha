@@ -17,7 +17,7 @@ namespace TUFF
         {
             foreach(SFX sfx in sfxs)
                 AudioManager.instance.PlaySFX(sfx);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

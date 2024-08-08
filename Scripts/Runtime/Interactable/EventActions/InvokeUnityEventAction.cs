@@ -17,7 +17,7 @@ namespace TUFF
         public override void Invoke()
         {
             unityEvent?.Invoke();
-            isFinished = true;
+            EndEvent();
         }
     }
 }

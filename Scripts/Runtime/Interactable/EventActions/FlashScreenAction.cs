@@ -17,12 +17,12 @@ namespace TUFF
         {
             UIController.instance.FlashScreen(flashData.flashColor, flashData.flashDuration);
             if (waitForCompletion) GameManager.instance.StartCoroutine(WaitForCompletion(flashData.flashDuration));
-            else isFinished = true;
+            else EndEvent();
         }
         private IEnumerator WaitForCompletion(float duration)
         {
             yield return new WaitForSeconds(duration);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

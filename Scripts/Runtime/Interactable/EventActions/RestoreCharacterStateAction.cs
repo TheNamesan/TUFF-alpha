@@ -26,7 +26,7 @@ namespace TUFF
                 //if (targetAnimationHandler != null) // Change this to be Scene Character
                 //    targetAnimationHandler.RestoreState();
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

@@ -213,11 +213,7 @@ namespace TUFF
             if (uiMenu.IsOpen) uiMenu.CloseMenu();
             
             yield return new WaitForEndOfFrame(); // Little hack so it doesn't automatically skip text when this ends, fix later?
-            if (actionCallback is ShowChoicesAction showChoices)
-            {
-                showChoices.PickOption(index);
-            }
-            else if (actionCallback != null) actionCallback.isFinished = true;
+            actionCallback?.EndEvent(index);
             m_inUse = false;
             yield break;
         }

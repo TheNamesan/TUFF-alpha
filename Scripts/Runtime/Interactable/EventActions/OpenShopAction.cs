@@ -14,7 +14,7 @@ namespace TUFF
         }
         public override void Invoke()
         {
-            if (shopData == null) { isFinished = true; return; }
+            if (shopData == null) { EndEvent(); return; }
             UIController.instance.OpenShop(shopData, this);
         }
     }

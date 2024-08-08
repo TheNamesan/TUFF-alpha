@@ -202,7 +202,7 @@ namespace TUFF
         public void CloseShop()
         {
             SetSelection(null, 0);
-            if (actionCallback != null) actionCallback.isFinished = true;
+            if (actionCallback != null) actionCallback.EndEvent();
         }
     }
 }

@@ -29,10 +29,22 @@ namespace TUFF
             else
             {
                 Debug.LogWarning($"No Battle set for {eventName} event.");
-                isFinished = true;
+                EndEvent();
             }
         }
-        public void OnBattleEnd(BattleState endBattleState)
+        public override void EndEvent(params object[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] is BattleState state)
+                {
+                    OnBattleEnd(state);
+                    return;
+                }
+            }
+            isFinished = true;
+        }
+        private void OnBattleEnd(BattleState endBattleState)
         {
             if (!UsesBranches()) { isFinished = true; return; }
             if (endBattleState == BattleState.ESCAPED && canEscape)

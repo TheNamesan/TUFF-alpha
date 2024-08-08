@@ -62,7 +62,7 @@ namespace TUFF
         {
             if (battle == null) { 
                 Debug.LogWarning("Battle is null!"); 
-                if (evtCallback != null) evtCallback.isFinished = true;
+                if (evtCallback != null) evtCallback.EndEvent();
                 return; 
             }
             UIController.instance.TriggerBattleStart();
@@ -871,11 +871,7 @@ namespace TUFF
             yield return new WaitForSeconds(0.25f);
             if (eventCallback != null)
             { 
-                if (eventCallback is StartBattleAction startBattleAction)
-                {
-                    startBattleAction.OnBattleEnd(battleState);
-                }
-                else eventCallback.isFinished = true; 
+                eventCallback.EndEvent(battleState);
             }
             else if (!CommonEventManager.interactableEventPlaying) GameManager.instance.DisablePlayerInput(false);
 

@@ -40,7 +40,7 @@ namespace TUFF
                 if (!keepClip) audioSource.clip = clip;
                 if (!keepVolume) volumeFadeTween = audioSource.DOFade(volume, volumeFadeDuration);
             }
-            isFinished = true;
+            EndEvent();
         }
         private void KillTweens()
         {

@@ -31,7 +31,7 @@ namespace TUFF
             object value = GetValue(this);
             if (assignType == GameVariableAssignType.Random) value = GetRandomValue(this);
             PlayerData.instance.AssignGameVariableValue(variableIndex, value);
-            isFinished = true;
+            EndEvent();
         }
         public static object GetValue(ChangeGameVariableAction action)
         {

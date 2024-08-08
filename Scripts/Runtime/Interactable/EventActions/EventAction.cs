@@ -23,6 +23,10 @@ namespace TUFF
         }
         public virtual void Invoke()
         {
+            EndEvent();
+        }
+        public virtual void EndEvent(params object[] args)
+        {
             isFinished = true;
         }
         public virtual void OnInstantiate()

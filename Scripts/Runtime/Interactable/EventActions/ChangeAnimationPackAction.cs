@@ -31,7 +31,7 @@ namespace TUFF
                 if (targetAnimationHandler != null)
                     targetAnimationHandler.LoadAnimationPack(pack);
             }    
-            isFinished = true;
+            EndEvent();
         }
     }
 }

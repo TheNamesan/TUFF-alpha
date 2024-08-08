@@ -19,10 +19,10 @@ namespace TUFF
         }
         public override void Invoke()
         {
-            if (unit == null) { isFinished = true; return; }
+            if (unit == null) { EndEvent(); return; }
             if (operation == OperationType.Add) GameManager.instance.playerData.AddToParty(unit.id, initialize);
             else if (operation == OperationType.Remove) GameManager.instance.playerData.RemoveFromParty(unit.id);
-            isFinished = true;
+            EndEvent();
         }
     }
 }

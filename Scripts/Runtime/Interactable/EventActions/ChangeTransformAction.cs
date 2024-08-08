@@ -45,7 +45,7 @@ namespace TUFF
                     transform.localScale = scale;
                 }
             }
-            isFinished = true;
+            EndEvent();
         }
     }
 }

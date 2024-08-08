@@ -26,8 +26,8 @@ namespace TUFF
         public override void Invoke()
         {
             if (choices == null || choices.Count <= 0) { 
-                Debug.LogWarning("No choices assigned!"); 
-                isFinished = true; 
+                Debug.LogWarning("No choices assigned!");
+                EndEvent();
                 return; 
             }
 
@@ -39,16 +39,28 @@ namespace TUFF
             bool closeWithCancel = !(cancelBehaviour == ChoicesCancelBehaviour.Disallow);
             UIController.instance.ShowChoices(this, texts, closeWithCancel, CancelOption);
         }
-        public void PickOption(int index)
+        public override void EndEvent(params object[] args)
         {
-            Debug.Log("Picked option: " + index);
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] is int index)
+                {
+                    PickOption(index);
+                    return;
+                }
+            }
+            isFinished = true;
+        }
+        private void PickOption(int index)
+        {
+            //Debug.Log("Picked option: " + index);
             if (index >= 0 && index < choices.Count)
             {
                 CommonEventManager.instance.TriggerEventActionBranch(this, choices[index].actionList);
             }
             else {
                 Debug.LogWarning($"Index {index} is out of bounds!");
-                isFinished = true;
+                EndEvent();
             }
         }
         public void CancelOption()

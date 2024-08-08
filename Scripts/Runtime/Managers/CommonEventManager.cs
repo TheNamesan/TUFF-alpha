@@ -134,7 +134,7 @@ namespace TUFF
             actionList.index = 0;
             yield return GameManager.instance.StartCoroutine(actionList.PlayActions());
             actionList.index = 0;
-            eventAction.isFinished = true;
+            eventAction.EndEvent();
         }
     }
 }

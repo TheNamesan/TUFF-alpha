@@ -19,7 +19,7 @@ namespace TUFF
         public override void Invoke()
         {
             AudioManager.instance.PlayMusic(bgmPlayData, fadeInDuration);
-            isFinished = true;
+            EndEvent();
         }
         
     }
