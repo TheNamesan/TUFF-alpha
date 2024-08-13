@@ -104,12 +104,6 @@ namespace TUFF.TUFFEditor
                 SerializedProperty actionListContentProp = branches.GetArrayElementAtIndex(i).FindPropertyRelative("actionList.content");
                 ActionList list = showChoicesAction.choices[i].actionList;
 
-                if (m_branchesDrawers[i] == null || m_branchesDrawers[i].Count != list.content.Count)
-                {
-                    m_branchesDrawers[i] = new List<EventActionPD>();
-                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_branchesDrawers[i]); // Important!
-                }
-
                 position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_branchesDrawers[i], labelText, selectionPanelTitle, actionListContentProp, list);
                 if (EventActionListWindow.eventDeleted) { Debug.LogWarning("Event Deleted!"); return; };
             }
@@ -119,11 +113,6 @@ namespace TUFF.TUFFEditor
                 string selectionPanelTitle = $"{showChoicesAction.eventName} When Cancel";
                 SerializedProperty actionListContentProp = targetProperty.FindPropertyRelative("cancelActionList.content");
                 ActionList list = showChoicesAction.cancelActionList;
-                if (m_cancelDrawer == null || m_cancelDrawer.Count != list.content.Count)
-                {
-                    m_cancelDrawer = new List<EventActionPD>();
-                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_cancelDrawer); // Important!
-                }
                 position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_cancelDrawer, labelText, selectionPanelTitle, actionListContentProp, list);
             }
         }

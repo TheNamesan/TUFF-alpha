@@ -996,6 +996,12 @@ namespace TUFF.TUFFEditor
         }
         public static Rect DrawBranch(Rect position, string parentPropertyPath, List<EventActionPD> drawer, string labelText, string selectionPanelTitle, SerializedProperty actionListContentProp, ActionList list)
         {
+            if (drawer == null || drawer.Count != list.content.Count)
+            {
+                if (drawer == null) drawer = new List<EventActionPD>();
+                UpdatePDs(actionListContentProp, list.content, drawer); // Important!
+            }
+
             EditorGUI.LabelField(position, labelText, EditorStyles.boldLabel);
             position.y += 20f;
             position.x += 10;

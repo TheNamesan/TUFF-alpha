@@ -57,7 +57,7 @@ namespace TUFF.TUFFEditor
             var action = targetObject as StartBattleAction;
             if (!action.UsesBranches()) return;
 
-            if (m_winDrawer == null || m_escapeDrawer == null || queueReset)
+            if (m_winDrawer == null || m_escapeDrawer == null || m_loseDrawer == null || queueReset)
             {
                 ResetEventEditorsList(action);
                 if (queueReset) queueReset = false;
@@ -65,34 +65,31 @@ namespace TUFF.TUFFEditor
 
             
             SerializedProperty contentProp = targetProperty.FindPropertyRelative("winActionList.content");
-            position = DrawBranch(position, targetProperty,
-                $"=== If Win", $"{action.eventName} If Win",
-                contentProp, action.winActionList, ref m_winDrawer);
+            string labelText = $"=== If Win";
+            string selectionPanelTitle = $"{action.eventName} If Win";
+
+            position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_winDrawer,
+                labelText, selectionPanelTitle,
+                contentProp, action.winActionList);
             
             if (action.canEscape)
             {
+                labelText = $"=== If Escape";
+                selectionPanelTitle = $"{action.eventName} If Escape";
                 contentProp = targetProperty.FindPropertyRelative("escapeActionList.content");
-                position = DrawBranch(position, targetProperty, 
-                    $"=== If Escape", $"{action.eventName} If Escape", 
-                    contentProp, action.escapeActionList, ref m_escapeDrawer);
+                position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_escapeDrawer,
+                    labelText, selectionPanelTitle,
+                    contentProp, action.escapeActionList);
             }
             if (action.continueOnLose)
             {
+                labelText = $"=== If Lose";
+                selectionPanelTitle = $"{action.eventName} If Lose";
                 contentProp = targetProperty.FindPropertyRelative("loseActionList.content");
-                position = DrawBranch(position, targetProperty,
-                    $"=== If Lose", $"{action.eventName} If Lose",
-                    contentProp, action.loseActionList, ref m_loseDrawer);
+                position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_loseDrawer,
+                    labelText, selectionPanelTitle,
+                    contentProp, action.loseActionList);
             }
-        }
-        private static Rect DrawBranch(Rect position, SerializedProperty targetProperty, string labelText, string selectionPanelTitle, SerializedProperty contentProp, ActionList list, ref List<EventActionPD> drawers)
-        {
-            if (drawers == null || drawers.Count != list.content.Count)
-            {
-                drawers = new List<EventActionPD>();
-                EventActionListWindow.UpdatePDs(contentProp, list.content, drawers); // Important!
-            }
-            position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, drawers, labelText, selectionPanelTitle, contentProp, list);
-            return position;
         }
         private float GetBranchesHeight()
         {
@@ -122,6 +119,7 @@ namespace TUFF.TUFFEditor
         {
             m_winDrawer = new List<EventActionPD>(action.winActionList.content.Count);
             m_escapeDrawer = new List<EventActionPD>(action.escapeActionList.content.Count);
+            m_loseDrawer = new List<EventActionPD>(action.escapeActionList.content.Count);
         }
     }
 }

@@ -102,13 +102,6 @@ namespace TUFF.TUFFEditor
                 SerializedProperty actionListContentProp = branches.GetArrayElementAtIndex(i).FindPropertyRelative("actionList.content");
                 ActionList list = conditionalBranchAction.branches[i].actionList;
 
-                if (m_branchesDrawers[i] == null || m_branchesDrawers[i].Count != list.content.Count)
-                {
-                    m_branchesDrawers[i] = new List<EventActionPD>();
-                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_branchesDrawers[i]); // Important!
-                }
-                //EditorGUILayout.BeginVertical("box");
-
                 position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_branchesDrawers[i], labelText, selectionPanelTitle, actionListContentProp, list);
             }
             if (conditionalBranchAction.addBranchWhenNoConditionsApply)
@@ -117,11 +110,6 @@ namespace TUFF.TUFFEditor
                 string selectionPanelTitle = $"{conditionalBranchAction.eventName} Else Branch";
                 SerializedProperty actionListContentProp = targetProperty.FindPropertyRelative("elseActionList.content");
                 ActionList list = conditionalBranchAction.elseActionList;
-                if (m_elseDrawer == null || m_elseDrawer.Count != list.content.Count)
-                {
-                    m_elseDrawer = new List<EventActionPD>();
-                    EventActionListWindow.UpdatePDs(actionListContentProp, list.content, m_elseDrawer); // Important!
-                }
                 position = EventActionListWindow.DrawBranch(position, targetProperty.propertyPath, m_elseDrawer, labelText, selectionPanelTitle, actionListContentProp, list);
             }
             GUILayout.EndVertical();
