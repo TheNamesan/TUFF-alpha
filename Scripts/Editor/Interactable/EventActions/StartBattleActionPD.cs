@@ -51,7 +51,7 @@ namespace TUFF.TUFFEditor
             return 20f + GetBranchesHeight();
         }
 
-        // Branch Stuff
+        // Branches
         private void DrawBranches(Rect position)
         {
             var action = targetObject as StartBattleAction;
@@ -119,7 +119,7 @@ namespace TUFF.TUFFEditor
         {
             m_winDrawer = new List<EventActionPD>(action.winActionList.content.Count);
             m_escapeDrawer = new List<EventActionPD>(action.escapeActionList.content.Count);
-            m_loseDrawer = new List<EventActionPD>(action.escapeActionList.content.Count);
+            m_loseDrawer = new List<EventActionPD>(action.loseActionList.content.Count);
         }
     }
 }

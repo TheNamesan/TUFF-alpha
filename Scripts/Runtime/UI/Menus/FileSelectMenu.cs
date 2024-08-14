@@ -162,7 +162,7 @@ namespace TUFF
         }
         private void OnCloseMenu()
         {
-            if (actionCallback != null) actionCallback.EndEvent();
+            if (actionCallback != null) actionCallback.EndEvent(m_savedFile);
         }
 
         private void UpdatePromptText()

@@ -103,6 +103,9 @@ namespace TUFF
             SetPosition();
             SetVoicebank();
             openBoxes.Add(this);
+            yield return new WaitForEndOfFrame(); // Small buffer to avoid textboxes from skipping
+                                                  // the first sentence if displayed after a menu is closed.
+            textboxInitiated = true;
             yield break;
         }
         private void SetPosition()
@@ -308,7 +311,7 @@ namespace TUFF
         public void StartDialogue()
         {
             InitialValues();
-            textboxInitiated = true;
+            
             DisplayNextSentence();
         }
 
