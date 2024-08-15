@@ -38,6 +38,14 @@ namespace TUFF.TUFFEditor
             {
                 SingleField(position, property, orgLabelWidth, totalWidth, "facing", new GUIContent("?"));
             }
+            if (ins == MoveRouteInstruction.TryVerticalJump)
+            {
+                SingleField(position, property, orgLabelWidth, totalWidth, "tryJumpDirection", new GUIContent("?"));
+            }
+            if (ins == MoveRouteInstruction.ForceJump)
+            {
+                DoubleFieldVectorFirst(position, property, orgLabelWidth, totalWidth, "jumpForceDirection", "hardFallBehaviour", new GUIContent("?"), new GUIContent("?"));
+            }
 
             EditorGUIUtility.labelWidth = orgLabelWidth;
             property.serializedObject.ApplyModifiedProperties();
@@ -60,6 +68,29 @@ namespace TUFF.TUFFEditor
 
             EditorGUIUtility.labelWidth = 7f;
             EditorGUI.PropertyField(position, firstField, firstGUIContent);
+            EditorGUIUtility.labelWidth = orgLabelWidth;
+
+            position.x += totalWidth * 0.34f; //0.65
+            position.width = totalWidth * 0.35f;
+            var secondField = property.FindPropertyRelative(secondFieldName);
+            EditorGUIUtility.labelWidth = 7f;
+            EditorGUI.PropertyField(position, secondField, secondGUIContent);
+            EditorGUIUtility.labelWidth = orgLabelWidth;
+        }
+        private static void DoubleFieldVectorFirst(Rect position, SerializedProperty property, float orgLabelWidth, float totalWidth, string firstFieldName, string secondFieldName, GUIContent firstGUIContent, GUIContent secondGUIContent)
+        {
+            position.x += totalWidth * 0.31f; //0.31
+            position.width = totalWidth * 0.33f;
+            var firstField = property.FindPropertyRelative(firstFieldName);
+
+            EditorGUIUtility.labelWidth = 7f;
+            EditorGUI.LabelField(position, firstGUIContent);
+
+            position.x += 7f;
+            position.width -= 7f;
+            EditorGUI.PropertyField(position, firstField, new GUIContent(""));
+            position.x -= 7f;
+            position.width += 7f;
             EditorGUIUtility.labelWidth = orgLabelWidth;
 
             position.x += totalWidth * 0.34f; //0.65

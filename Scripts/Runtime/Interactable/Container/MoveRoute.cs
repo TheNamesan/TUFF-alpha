@@ -8,7 +8,9 @@ namespace TUFF
     {
         WaitForSeconds = 0,
         MoveHorizontal = 1,
-        ChangeFacing = 2
+        ChangeFacing = 2,
+        TryVerticalJump = 3,
+        ForceJump = 4
     }
     [System.Serializable]
     public class MoveRoute
@@ -21,7 +23,10 @@ namespace TUFF
         public MoveRouteInstruction instruction = MoveRouteInstruction.WaitForSeconds;
         public float duration = 0;
         public CharacterHorizontalDirection moveDirectionH = CharacterHorizontalDirection.Right;
+        public CharacterVerticalJumpDirection tryJumpDirection = CharacterVerticalJumpDirection.Up;
         public FaceDirections facing = FaceDirections.East;
+        public Vector2 jumpForceDirection = new Vector2();
+        public HardFallBehaviour hardFallBehaviour = HardFallBehaviour.Default;
 
         public IEnumerator PlayElement(OverworldCharacterController controller)
         {
@@ -40,6 +45,16 @@ namespace TUFF
                     break;
                 case MoveRouteInstruction.ChangeFacing:
                     controller.ChangeFaceDirection(facing);
+                    break;
+                case MoveRouteInstruction.TryVerticalJump:
+                    var tryJumpDir = (tryJumpDirection == CharacterVerticalJumpDirection.Up ? 
+                        OverworldCharacterController.QueuedAction.JumpUp : OverworldCharacterController.QueuedAction.JumpDown);
+                    controller.QueueAction(tryJumpDir);
+                    yield return new WaitForFixedUpdate();
+                    yield return new WaitForFixedUpdate();
+                    break;
+                case MoveRouteInstruction.ForceJump:
+                    controller.ForceFall(jumpForceDirection, hardFallBehaviour);
                     break;
             }
             yield break;

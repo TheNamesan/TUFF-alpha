@@ -11,6 +11,8 @@ namespace TUFF
     public enum CharacterRunMode { Default = 0, Prep = 1 }
     public enum CharacterClimbMode { Default = 0, Ladder = 1 }
     public enum CharacterHorizontalDirection { Right = 0, Left = 1 }
+    public enum CharacterVerticalJumpDirection { Up = 0, Down = 1 }
+    public enum HardFallBehaviour { Default = 0, ForceHardLanding = 1, IgnoreHardLanding = 2 }
     public class OverworldCharacterController : MonoBehaviour
     {
         [Header("References")]
@@ -80,6 +82,7 @@ namespace TUFF
         public bool wasGrounded;
         [Tooltip("Avatar is currently in the Hard Landing animation.")]
         public bool hardLanded = false;
+        private HardFallBehaviour m_nextHardFallBehaviour = HardFallBehaviour.Default;
         [Tooltip("Avatar's Hard Landing isn't finished.")]
         [SerializeField] bool inHardLandedAnimCD = false;
         [Tooltip("Avatar is currently jumping.")]
@@ -326,8 +329,7 @@ namespace TUFF
         }
 
         
-
-        private void QueueAction(QueuedAction actionToQueue)
+        public void QueueAction(QueuedAction actionToQueue)
         {
             queuedAction = actionToQueue;
         }
@@ -1485,14 +1487,10 @@ namespace TUFF
             EnableGravity(true);
         }
 
-        public void ForceFall(Vector2 force, bool forceHardLanding = false)
+        public void ForceFall(Vector2 force, HardFallBehaviour hardFallBehaviour = HardFallBehaviour.Default)
         {
             SetupFallConditions();
-            if (forceHardLanding)
-            {
-                fallStart = transform.position;
-                fallStart.y += fallDistanceTilDamage + force.y;
-            }
+            m_nextHardFallBehaviour = hardFallBehaviour;
             ignoreGroundCheck = true;
             ignoreFallCheck = true;
             Fall(force);
@@ -1623,14 +1621,8 @@ namespace TUFF
             hJumpDir = HJumpDir.None;
             rb.velocity = Vector2.zero;
             DisableWalkableLayersCollision(false);
-            if (fallStart.y - transform.position.y > fallDistanceTilDamage) //HardFall
-            {
-                GameManager.instance.DealDamageToParty((int)Mathf.Round(fallStart.y - transform.position.y) * fallDamagePerDistance);
-                PlaySFX(hardLanding, 0f);
-                SetHardLanded(true);
-            }
-            else if (!muteLandSound && !climbing) PlaySFX(land, 0f);
-            
+            CheckLandBehaviour();
+
             SetGrounded(true);
             muteLandSound = false;
             SetJumping(false, jumpDirection);
@@ -1638,6 +1630,23 @@ namespace TUFF
             EnableGravity(false);
             SetFallStart();
         }
+
+        private void CheckLandBehaviour()
+        {
+            bool hardFallen = false;
+            if (m_nextHardFallBehaviour == HardFallBehaviour.Default && fallStart.y - transform.position.y > fallDistanceTilDamage) hardFallen = true;
+            if (m_nextHardFallBehaviour == HardFallBehaviour.ForceHardLanding) hardFallen = true;
+            if (m_nextHardFallBehaviour == HardFallBehaviour.IgnoreHardLanding) hardFallen = false;
+            if (hardFallen) //Hard Fall
+            {
+                GameManager.instance.DealDamageToParty((int)Mathf.Round(fallStart.y - transform.position.y) * fallDamagePerDistance);
+                PlaySFX(hardLanding, 0f);
+                SetHardLanded(true);
+            }
+            else if (!muteLandSound && !climbing) PlaySFX(land, 0f);
+            m_nextHardFallBehaviour = HardFallBehaviour.Default;
+        }
+
         private void SetTouchingWalkable(Collider2D collider2D)
         {
             m_touchingWalkable = collider2D;
