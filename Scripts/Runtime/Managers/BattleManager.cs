@@ -1145,7 +1145,7 @@ namespace TUFF
         {
             if (user == null) return 1f;
             if (target == null) return 1f;
-            float value = ((user.GetLUK() - target.GetLUK()) * 0.001f) + 1f;
+            float value = Mathf.Max(((user.GetLUK() - target.GetLUK()) * 0.001f) + 1f, 0f);
             return value;
         }
         public static float GetTotalElementVulnerability(int elementIndex, Targetable user, Targetable target)
