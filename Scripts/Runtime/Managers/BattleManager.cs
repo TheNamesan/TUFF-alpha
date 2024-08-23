@@ -1129,10 +1129,24 @@ namespace TUFF
             if (target == null) return false;
             if (target.IsImmuneToState(state)) return false;
             float totalMultiplier = GetTotalStateVulnerability(state, user, target);
+            totalMultiplier *= GetLuckEffectRate(user, target);
             int chance = LISAUtility.Truncate(baseTriggerChance * totalMultiplier);
             Debug.Log("Chance: " + chance);
             if (RollChance(chance)) target.ApplyState(state);
             return true;
+        }
+        /// <summary>
+        /// Returns the luck effect bonus based on the user and target's LUK value difference.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static float GetLuckEffectRate(Targetable user, Targetable target)
+        {
+            if (user == null) return 1f;
+            if (target == null) return 1f;
+            float value = ((user.GetLUK() - target.GetLUK()) * 0.001f) + 1f;
+            return value;
         }
         public static float GetTotalElementVulnerability(int elementIndex, Targetable user, Targetable target)
         {
