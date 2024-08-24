@@ -11,7 +11,7 @@ namespace TUFF
         [System.NonSerialized] protected Unit m_unitRef;
         public Job job
         {
-            get => DatabaseLoader.instance.GetJobFromID(m_jobID);
+            get => DatabaseLoader.GetJobFromID(m_jobID);
             protected set { m_jobID = (value != null ? value.id : -1); }
         }
         [SerializeField] protected int m_jobID = -1;
@@ -23,37 +23,37 @@ namespace TUFF
         // Equipment
         public Weapon primaryWeapon
         {
-            get => DatabaseLoader.instance.GetWeaponFromID(m_primaryWeaponID);
+            get => DatabaseLoader.GetWeaponFromID(m_primaryWeaponID);
             set { m_primaryWeaponID = (value != null ? value.id : -1); }
         }
         [SerializeField] protected int m_primaryWeaponID = -1;
         public Weapon secondaryWeapon
         {
-            get => DatabaseLoader.instance.GetWeaponFromID(m_secondaryWeaponID);
+            get => DatabaseLoader.GetWeaponFromID(m_secondaryWeaponID);
             set { m_secondaryWeaponID = (value != null ? value.id : -1); }
         }
         [SerializeField] protected int m_secondaryWeaponID = -1;
         public Armor head
         {
-            get => DatabaseLoader.instance.GetArmorFromID(m_headID);
+            get => DatabaseLoader.GetArmorFromID(m_headID);
             set { m_headID = (value != null ? value.id : -1); }
         }
         [SerializeField] protected int m_headID = -1;
         public Armor body
         {
-            get => DatabaseLoader.instance.GetArmorFromID(m_bodyID);
+            get => DatabaseLoader.GetArmorFromID(m_bodyID);
             set { m_bodyID = (value != null ? value.id : -1); }
         }
         [SerializeField] protected int m_bodyID = -1;
         public Armor primaryAccessory
         {
-            get => DatabaseLoader.instance.GetArmorFromID(m_primaryAccessoryID);
+            get => DatabaseLoader.GetArmorFromID(m_primaryAccessoryID);
             set { m_primaryAccessoryID = (value != null ? value.id : -1); }
         }
         [SerializeField] protected int m_primaryAccessoryID = -1;
         public Armor secondaryAccessory
         {
-            get => DatabaseLoader.instance.GetArmorFromID(m_secondaryAccessoryID);
+            get => DatabaseLoader.GetArmorFromID(m_secondaryAccessoryID);
             set { m_secondaryAccessoryID = (value != null ? value.id : -1); }
         }
         [SerializeField] protected int m_secondaryAccessoryID = -1;
@@ -84,8 +84,7 @@ namespace TUFF
         }
         public void AllocateLearnedSkillsSize()
         {
-            if (DatabaseLoader.instance != null)
-                learnedSkills = new bool[DatabaseLoader.instance.skills.Length];
+            learnedSkills = new bool[DatabaseLoader.skills.Length];
         }
         public override void CapHP()
         {

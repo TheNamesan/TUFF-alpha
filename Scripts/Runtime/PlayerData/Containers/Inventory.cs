@@ -23,10 +23,10 @@ namespace TUFF
         }
         public void Initialize()
         {
-            items = new int[DatabaseLoader.instance.items.Length];
-            keyItems = new int[DatabaseLoader.instance.keyItems.Length];
-            weapons = new int[DatabaseLoader.instance.weapons.Length];
-            armors = new int[DatabaseLoader.instance.armors.Length];
+            items = new int[DatabaseLoader.items.Length];
+            keyItems = new int[DatabaseLoader.keyItems.Length];
+            weapons = new int[DatabaseLoader.weapons.Length];
+            armors = new int[DatabaseLoader.armors.Length];
 
             if (TUFFSettings.DebugStartWithMaxItems())
                 SetAmountToAll(INVENTORY_CAP);
@@ -37,7 +37,7 @@ namespace TUFF
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < items.Length; i++) {
-                var item = DatabaseLoader.instance.items[i];
+                var item = DatabaseLoader.items[i];
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
@@ -48,7 +48,7 @@ namespace TUFF
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < keyItems.Length; i++) {
-                var item = DatabaseLoader.instance.keyItems[i];
+                var item = DatabaseLoader.keyItems[i];
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
@@ -59,7 +59,7 @@ namespace TUFF
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < weapons.Length; i++) {
-                var item = DatabaseLoader.instance.weapons[i];
+                var item = DatabaseLoader.weapons[i];
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
@@ -71,7 +71,7 @@ namespace TUFF
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < weapons.Length; i++)
             {
-                var item = DatabaseLoader.instance.weapons[i];
+                var item = DatabaseLoader.weapons[i];
                 if (!IsMatchingWeaponType(item, wieldType, null)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
@@ -84,7 +84,7 @@ namespace TUFF
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < weapons.Length; i++)
             {
-                var item = DatabaseLoader.instance.weapons[i];
+                var item = DatabaseLoader.weapons[i];
                 if (!IsMatchingWeaponType(item, wieldType, weaponTypes)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
@@ -97,7 +97,7 @@ namespace TUFF
             IEquipable bestItem = null;
             for (int i = 0; i < weapons.Length; i++)
             {
-                Weapon item = DatabaseLoader.instance.weapons[i];
+                Weapon item = DatabaseLoader.weapons[i];
                 if (!IsMatchingWeaponType(item, wieldType, weaponTypes)) continue;
                 var amount = GetItemAmount(item);
                 if (amount <= 0) continue;
@@ -123,7 +123,7 @@ namespace TUFF
         {
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < armors.Length; i++) {
-                var item = DatabaseLoader.instance.armors[i];
+                var item = DatabaseLoader.armors[i];
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
                 baseDirectory.Add(item, amount);
@@ -135,7 +135,7 @@ namespace TUFF
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < armors.Length; i++)
             {
-                var item = DatabaseLoader.instance.armors[i];
+                var item = DatabaseLoader.armors[i];
                 if (!IsMatchingArmorType(item, equipType, null)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
@@ -148,7 +148,7 @@ namespace TUFF
             if (baseDirectory == null) baseDirectory = new Dictionary<InventoryItem, int>();
             for (int i = 0; i < armors.Length; i++)
             {
-                var item = DatabaseLoader.instance.armors[i];
+                var item = DatabaseLoader.armors[i];
                 if (!IsMatchingArmorType(item, equipType, armorTypes)) continue;
                 var amount = GetItemAmount(item);
                 if (!includeZero && amount <= 0) continue;
@@ -161,7 +161,7 @@ namespace TUFF
             IEquipable bestItem = null;
             for (int i = 0; i < armors.Length; i++)
             {
-                Armor item = DatabaseLoader.instance.armors[i];
+                Armor item = DatabaseLoader.armors[i];
                 if (!IsMatchingArmorType(item, equipType, armorTypes)) continue;
                 var amount = GetItemAmount(item);
                 if (amount <= 0) continue;

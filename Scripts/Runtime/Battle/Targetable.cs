@@ -14,7 +14,7 @@ namespace TUFF
         public virtual bool acted { get => m_acted; set { m_acted = value; } }
         protected bool m_acted = false;
         public List<ActiveState> states = new List<ActiveState>();
-        public GraphicHandler imageReference;
+        [System.NonSerialized] public GraphicHandler imageReference;
 
         public virtual void TakeHit(BattleAnimationEvent hitInfo, int targetIndex)
         {
@@ -428,7 +428,7 @@ namespace TUFF
         }
         public virtual void ApplyAllStatesOfType(StateType type, bool showDisplay = true)
         {
-            var statesOfType = DatabaseLoader.instance.GetAllStatesOfType(type);
+            var statesOfType = DatabaseLoader.GetAllStatesOfType(type);
             for (int i = 0; i < statesOfType.Count; i++)
             {
                 ApplyState(statesOfType[i], showDisplay, false, false);

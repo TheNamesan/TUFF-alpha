@@ -77,7 +77,7 @@ namespace TUFF
 
         public void InitPartyMembers()
         {
-            party = new PartyMember[DatabaseLoader.instance.units.Length];
+            party = new PartyMember[DatabaseLoader.units.Length];
             partyOrder = new List<sbyte>();
             for (int i = 0; i < party.Length; i++)
             {
@@ -112,7 +112,7 @@ namespace TUFF
         {
             for (int i = 0; i < party.Length; i++)
             {
-                party[i].unitRef = DatabaseLoader.instance.units[i];
+                party[i].unitRef = DatabaseLoader.units[i];
             }
         }
         public void Update()
@@ -379,7 +379,7 @@ namespace TUFF
         }
         public PartyMember InitiatePartyMember(int index)
         {
-            Unit unit = DatabaseLoader.instance.units[index];
+            Unit unit = DatabaseLoader.units[index];
             PartyMember initMember = new PartyMember();
             initMember.AllocateLearnedSkillsSize();
             initMember.unitRef = unit;

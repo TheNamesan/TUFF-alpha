@@ -100,7 +100,7 @@ namespace TUFF
             SetGameResolution(configData.resolutionWidth, configData.resolutionHeight, configData.refreshRate);
             UpdateGlobalVolume();
 
-            databaseLoader.InitializeDatabase();
+            DatabaseLoader.InitializeDatabase();
             //Load Dummy Save Data
             playerData.StartPlayerData();
             playerData.AddToParty(0); //dummy test

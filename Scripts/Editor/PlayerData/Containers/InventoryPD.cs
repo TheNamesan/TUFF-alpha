@@ -39,7 +39,7 @@ namespace TUFF.TUFFEditor
             var orgX = position.x;
 
             var inventory = LISAEditorUtility.GetTargetObjectOfProperty(property) as Inventory;
-            property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label, true);
+            property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label, true, EditorStyles.foldoutHeader);
             position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
             if (property.isExpanded)
             {
@@ -56,15 +56,16 @@ namespace TUFF.TUFFEditor
 
                 items.isExpanded = EditorGUI.Foldout(position, items.isExpanded, items.displayName, true);
                 position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
-                if(items.isExpanded)
+                if (items.isExpanded)
                 {
                     position.x += 15f;
                     position.width -= 15f;
                     for (int i = 0; i < items.arraySize; i++)
                     {
-                        if (DatabaseLoader.instance == null) break;
                         DrawIconPreview(position, itemIcons[i]);
-                        EditorGUI.PropertyField(position, items.GetArrayElementAtIndex(i), new GUIContent(DatabaseLoader.instance.items[i].GetName()));
+                        string name = "???";
+                        if (i < DatabaseLoader.items.Length) name = $"{i}: " + DatabaseLoader.items[i].GetName();
+                        EditorGUI.PropertyField(position, items.GetArrayElementAtIndex(i), new GUIContent(name));
                         position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
                     }
                     position.x -= 15f;
@@ -84,9 +85,10 @@ namespace TUFF.TUFFEditor
                     position.width -= 15f;
                     for (int i = 0; i < keyItems.arraySize; i++)
                     {
-                        if (DatabaseLoader.instance == null) break;
                         DrawIconPreview(position, keyItemIcons[i]);
-                        EditorGUI.PropertyField(position, keyItems.GetArrayElementAtIndex(i), new GUIContent(DatabaseLoader.instance.keyItems[i].GetName()));
+                        string name = "???";
+                        if (i < DatabaseLoader.keyItems.Length) name = $"{i}: " + DatabaseLoader.keyItems[i].GetName();
+                        EditorGUI.PropertyField(position, items.GetArrayElementAtIndex(i), new GUIContent(name));
                         position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
                     }
                     position.x -= 15f;
@@ -106,9 +108,10 @@ namespace TUFF.TUFFEditor
                     position.width -= 15f;
                     for (int i = 0; i < weapons.arraySize; i++)
                     {
-                        if (DatabaseLoader.instance == null) break;
                         DrawIconPreview(position, weaponIcons[i]);
-                        EditorGUI.PropertyField(position, weapons.GetArrayElementAtIndex(i), new GUIContent(DatabaseLoader.instance.weapons[i].GetName()));
+                        string name = "???";
+                        if (i < DatabaseLoader.weapons.Length) name = $"{i}: " + DatabaseLoader.weapons[i].GetName();
+                        EditorGUI.PropertyField(position, items.GetArrayElementAtIndex(i), new GUIContent(name));
                         position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
                     }
                     position.x -= 15f;
@@ -128,9 +131,10 @@ namespace TUFF.TUFFEditor
                     position.width -= 15f;
                     for (int i = 0; i < armors.arraySize; i++)
                     {
-                        if (DatabaseLoader.instance == null) break;
                         DrawIconPreview(position, armorIcons[i]);
-                        EditorGUI.PropertyField(position, armors.GetArrayElementAtIndex(i), new GUIContent(DatabaseLoader.instance.armors[i].GetName()));
+                        string name = "???";
+                        if (i < DatabaseLoader.armors.Length) name = $"{i}: " + DatabaseLoader.armors[i].GetName();
+                        EditorGUI.PropertyField(position, items.GetArrayElementAtIndex(i), new GUIContent(name));
                         position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
                     }
                     position.x -= 15f;
@@ -144,7 +148,6 @@ namespace TUFF.TUFFEditor
 
         private static void GetIconTextures(SerializedProperty property)
         {
-            if (DatabaseLoader.instance == null) return;
             if (itemIcons != null && keyItemIcons != null && weaponIcons != null && armorIcons != null) return;
             var items = property.FindPropertyRelative("items");
             var keyItems = property.FindPropertyRelative("keyItems");
@@ -157,19 +160,23 @@ namespace TUFF.TUFFEditor
 
             for (int i = 0; i < itemIcons.Length; i++)
             {
-                itemIcons[i] = AssetPreview.GetAssetPreview(DatabaseLoader.instance.items[i].icon);
+                if (i >= DatabaseLoader.items.Length) itemIcons[i] = null;
+                itemIcons[i] = AssetPreview.GetAssetPreview(DatabaseLoader.items[i].icon);
             }
             for (int i = 0; i < keyItemIcons.Length; i++)
             {
-                keyItemIcons[i] = AssetPreview.GetAssetPreview(DatabaseLoader.instance.keyItems[i].icon);
+                if (i >= DatabaseLoader.keyItems.Length) keyItemIcons[i] = null;
+                keyItemIcons[i] = AssetPreview.GetAssetPreview(DatabaseLoader.keyItems[i].icon);
             }
             for (int i = 0; i < weaponIcons.Length; i++)
             {
-                weaponIcons[i] = AssetPreview.GetAssetPreview(DatabaseLoader.instance.weapons[i].icon);
+                if (i >= DatabaseLoader.weapons.Length) weaponIcons[i] = null;
+                weaponIcons[i] = AssetPreview.GetAssetPreview(DatabaseLoader.weapons[i].icon);
             }
             for (int i = 0; i < armorIcons.Length; i++)
             {
-                armorIcons[i] = AssetPreview.GetAssetPreview(DatabaseLoader.instance.armors[i].icon);
+                if (i >= DatabaseLoader.armors.Length) armorIcons[i] = null;
+                armorIcons[i] = AssetPreview.GetAssetPreview(DatabaseLoader.armors[i].icon);
             }
         }
 

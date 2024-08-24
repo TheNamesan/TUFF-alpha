@@ -16,9 +16,8 @@ namespace TUFF.TUFFEditor
         public static AnimationDataWindowTab windowTab = AnimationDataWindowTab.ClipData;
         private static readonly Vector2 windowMinSize = new Vector2(100f, 200f);
         private static Vector2 scrollPos = new Vector2();
-        private const float upperPanelMinHeight = 54f;
 
-        public static AnimationClip clip;
+        public AnimationClip clip;
         public static float interval = 0.1f;
         public static TimeDisplayMode timeDisplayMode = TimeDisplayMode.TotalTime;
 
@@ -222,7 +221,7 @@ namespace TUFF.TUFFEditor
             Debug.Log("Keyframes assigned!");
         }
 
-        private static void LoadAnimClip()
+        private void LoadAnimClip()
         {
             if (windowTab != AnimationDataWindowTab.ClipData) return;
             clip = (AnimationClip)EditorGUILayout.ObjectField(new GUIContent("Animation Clip"), clip, typeof(AnimationClip), false);
@@ -399,7 +398,7 @@ namespace TUFF.TUFFEditor
             //}
         }
 
-        private static void AssignTimingsFromDurations(EditorCurveBinding binding, ObjectReferenceKeyframe[] keyframes, float[] durations)
+        private void AssignTimingsFromDurations(EditorCurveBinding binding, ObjectReferenceKeyframe[] keyframes, float[] durations)
         {
             float baseTime = durations[0];
             for (int i = 0; i < keyframes.Length; i++)
@@ -410,7 +409,7 @@ namespace TUFF.TUFFEditor
             }
             AnimationUtility.SetObjectReferenceCurve(clip, binding, keyframes);
         }
-        private static void AssignTimingsFromDurations(EditorCurveBinding binding, ObjectReferenceKeyframe[] keyframes, List<float> durations)
+        private void AssignTimingsFromDurations(EditorCurveBinding binding, ObjectReferenceKeyframe[] keyframes, List<float> durations)
         {
             AssignTimingsFromDurations(binding, keyframes, durations.ToArray());
         }

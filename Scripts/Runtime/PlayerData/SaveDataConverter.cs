@@ -15,10 +15,14 @@ namespace TUFF
         public static void SavePlayerData(PlayerData playerData, int file)
         {
             CheckSavePathExists();
-            string json = JsonUtility.ToJson(playerData, true);
             string path = SAVE_PATH + SAVE_FILE_NAME + file + SAVE_FILE_EXT;
-            File.WriteAllText(path, json);
+            SavePlayerDataToPath(playerData, path);
             Debug.Log($"Saved File #{file}");
+        }
+        public static void SavePlayerDataToPath(PlayerData playerData, string path)
+        {
+            string json = JsonUtility.ToJson(playerData, true);
+            File.WriteAllText(path, json);
         }
         public static void SaveConfigData(ConfigData config)
         {
@@ -33,12 +37,17 @@ namespace TUFF
             string path = SAVE_PATH + SAVE_FILE_NAME + file + SAVE_FILE_EXT;
             if (CheckSaveExistsAtIndex(file))
             {
-                string fileString = File.ReadAllText(path);
-                PlayerData load = JsonUtility.FromJson<PlayerData>(fileString);
+                PlayerData load = LoadPlayerDataFromPath(path);
                 Debug.Log($"Loaded File #{file}");
                 return load;
             }
             return null;
+        }
+        public static PlayerData LoadPlayerDataFromPath(string path)
+        {
+            string fileString = File.ReadAllText(path);
+            PlayerData load = JsonUtility.FromJson<PlayerData>(fileString);
+            return load;
         }
         public static bool CheckSaveExistsAtIndex(int index)
         {

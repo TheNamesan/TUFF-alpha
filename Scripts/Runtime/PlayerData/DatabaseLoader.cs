@@ -6,35 +6,33 @@ namespace TUFF
 {
     public class DatabaseLoader : MonoBehaviour
     {
-        public Unit[] units;
-        public Job[] jobs;
-        public Skill[] skills;
-        public Command[] commands;
-        public Item[] items;
-        public KeyItem[] keyItems;
-        public Weapon[] weapons;
-        public Armor[] armors;
-        public State[] states;
-        public BattleAnimation[] animations;
+        private static Unit[] m_units;
+        private static Job[] m_jobs;
+        private static Skill[] m_skills;
+        private static Command[] m_commands;
+        private static Item[] m_items;
+        private static KeyItem[] m_keyItems;
+        private static Weapon[] m_weapons;
+        private static Armor[] m_armors;
+        private static State[] m_states;
+        private static BattleAnimation[] m_animations;
+
+        public static Unit[] units { get { InitializeDatabase(); return m_units; } }
+        public static Job[] jobs { get { InitializeDatabase(); return m_jobs; } }
+        public static Skill[] skills { get { InitializeDatabase(); return m_skills; } }
+        public static Command[] commands { get { InitializeDatabase(); return m_commands; } }
+        public static Item[] items { get { InitializeDatabase(); return m_items; } }
+        public static KeyItem[] keyItems { get { InitializeDatabase(); return m_keyItems; } }
+        public static Weapon[] weapons { get { InitializeDatabase(); return m_weapons; } }
+        public static Armor[] armors { get { InitializeDatabase(); return m_armors; } }
+        public static State[] states { get { InitializeDatabase(); return m_states; } }
+        public static BattleAnimation[] animations { get { InitializeDatabase(); return m_animations; } }
         public static string battlePath = "Database/9Battles";
         public static string animationsPath = "Database/11Animations";
         public static string termsPath = "Database/12Terms/Terms";
-        public static DatabaseLoader instance
-        {
-            get
-            {
-                if (!GameManager.instance) return null;
-                return GameManager.instance.databaseLoader;
-                //if (m_instance == null)
-                //{
-                //    if (GameManager.instance == null) return null;
-                //    AssignInstance(GameManager.instance.GetComponentInChildren<DatabaseLoader>());
-                //}
 
-                //return m_instance;
-            }
-        }
-        private bool m_initialized = false;
+        private static bool m_initialized = false;
+        
         //protected static DatabaseLoader m_instance;
         public void Awake()
         {
@@ -49,21 +47,21 @@ namespace TUFF
             InitializeDatabase();
         }
 
-        public void InitializeDatabase()
+        public static void InitializeDatabase()
         {
             if (m_initialized) return;
-            units = Resources.LoadAll<Unit>("Database/0Units");
-            jobs = Resources.LoadAll<Job>("Database/1Jobs");
-            skills = Resources.LoadAll<Skill>("Database/2Skills");
-            commands = Resources.LoadAll<Command>("Database/3Commands");
-            items = Resources.LoadAll<Item>("Database/4Items");
-            keyItems = Resources.LoadAll<KeyItem>("Database/5KeyItems");
-            weapons = Resources.LoadAll<Weapon>("Database/6Weapons");
-            armors = Resources.LoadAll<Armor>("Database/7Armors");
-            states = Resources.LoadAll<State>("Database/10States");
-            animations = Resources.LoadAll<BattleAnimation>(animationsPath);
-            AssignIDs();
-            m_initialized = true;
+            m_units = Resources.LoadAll<Unit>("Database/0Units");
+            m_jobs = Resources.LoadAll<Job>("Database/1Jobs");
+            m_skills = Resources.LoadAll<Skill>("Database/2Skills");
+            m_commands = Resources.LoadAll<Command>("Database/3Commands");
+            m_items = Resources.LoadAll<Item>("Database/4Items");
+            m_keyItems = Resources.LoadAll<KeyItem>("Database/5KeyItems");
+            m_weapons = Resources.LoadAll<Weapon>("Database/6Weapons");
+            m_armors = Resources.LoadAll<Armor>("Database/7Armors");
+            m_states = Resources.LoadAll<State>("Database/10States");
+            m_animations = Resources.LoadAll<BattleAnimation>(animationsPath);
+            if (Application.isPlaying) AssignIDs();
+            if (Application.isPlaying) m_initialized = true;
         }
 
         //protected static void AssignInstance(DatabaseLoader target)
@@ -84,35 +82,35 @@ namespace TUFF
         //    m_instance.animations = Resources.LoadAll<BattleAnimation>(animationsPath);
         //    m_instance.AssignIDs();
         //}
-        protected void AssignIDs()
+        protected static void AssignIDs()
         {
-            for (int i = 0; i < units.Length; i++) { units[i].id = i; }
-            for (int i = 0; i < jobs.Length; i++) { jobs[i].id = i; }
-            for (int i = 0; i < skills.Length; i++) { skills[i].id = i; }
-            for (int i = 0; i < commands.Length; i++) { commands[i].id = i; }
-            for (int i = 0; i < items.Length; i++) { items[i].id = i; }
-            for (int i = 0; i < keyItems.Length; i++) { keyItems[i].id = i; }
-            for (int i = 0; i < weapons.Length; i++) { weapons[i].id = i; }
-            for (int i = 0; i < armors.Length; i++) { armors[i].id = i; }
-            for (int i = 0; i < states.Length; i++) { states[i].id = i; }
+            for (int i = 0; i < m_units.Length; i++) { m_units[i].id = i; }
+            for (int i = 0; i < m_jobs.Length; i++) { m_jobs[i].id = i; }
+            for (int i = 0; i < m_skills.Length; i++) { m_skills[i].id = i; }
+            for (int i = 0; i < m_commands.Length; i++) { m_commands[i].id = i; }
+            for (int i = 0; i < m_items.Length; i++) { m_items[i].id = i; }
+            for (int i = 0; i < m_keyItems.Length; i++) { m_keyItems[i].id = i; }
+            for (int i = 0; i < m_weapons.Length; i++) { m_weapons[i].id = i; }
+            for (int i = 0; i < m_armors.Length; i++) { m_armors[i].id = i; }
+            for (int i = 0; i < m_states.Length; i++) { m_states[i].id = i; }
         }
-        protected object GetFromArray(object[] array, int index)
+        protected static object GetFromArray(object[] array, int index)
         {
             if (index < 0 || index >= array.Length) return null;
             return array[index];
         }
-        public Unit GetUnitFromID(int index) => (Unit)GetFromArray(units, index);
-        public Job GetJobFromID(int index) => (Job)GetFromArray(jobs, index);
-        public Skill GetSkillFromID(int index) => (Skill)GetFromArray(skills, index);
-        public Command GetCommandFromID(int index) => (Command)GetFromArray(commands, index);
-        public Item GetItemFromID(int index) => (Item)GetFromArray(items, index);
-        public KeyItem GetKeyItemFromID(int index) => (KeyItem)GetFromArray(keyItems, index);
-        public Weapon GetWeaponFromID(int index) => (Weapon)GetFromArray(weapons, index);
-        public Armor GetArmorFromID(int index) => (Armor)GetFromArray(armors, index);
-        public State GetStateFromID(int index) => (State)GetFromArray(states, index);
+        public static Unit GetUnitFromID(int index) => (Unit)GetFromArray(units, index);
+        public static Job GetJobFromID(int index) => (Job)GetFromArray(jobs, index);
+        public static Skill GetSkillFromID(int index) => (Skill)GetFromArray(skills, index);
+        public static Command GetCommandFromID(int index) => (Command)GetFromArray(commands, index);
+        public static Item GetItemFromID(int index) => (Item)GetFromArray(items, index);
+        public static KeyItem GetKeyItemFromID(int index) => (KeyItem)GetFromArray(keyItems, index);
+        public static Weapon GetWeaponFromID(int index) => (Weapon)GetFromArray(weapons, index);
+        public static Armor GetArmorFromID(int index) => (Armor)GetFromArray(armors, index);
+        public static State GetStateFromID(int index) => (State)GetFromArray(states, index);
 
 
-        public List<State> GetAllStatesOfType(StateType type)
+        public static List<State> GetAllStatesOfType(StateType type)
         {
             var statesOfType = new List<State>();
             for (int i = 0; i < states.Length; i++)
