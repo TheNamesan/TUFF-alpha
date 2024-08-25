@@ -86,6 +86,11 @@ namespace TUFF
         {
             learnedSkills = new bool[DatabaseLoader.skills.Length];
         }
+        public void ValidateLearnedSkillsSize()
+        {
+            if (learnedSkills.Length != DatabaseLoader.skills.Length)
+                System.Array.Resize(ref learnedSkills, DatabaseLoader.skills.Length);
+        }
         public override void CapHP()
         {
             bool prevIsKOd = isKOd;

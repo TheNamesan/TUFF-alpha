@@ -31,7 +31,16 @@ namespace TUFF
             if (TUFFSettings.DebugStartWithMaxItems())
                 SetAmountToAll(INVENTORY_CAP);
         }
-        
+        public void ValidateInventory()
+        {
+            System.Array.Resize(ref items, DatabaseLoader.items.Length);
+            System.Array.Resize(ref keyItems, DatabaseLoader.keyItems.Length);
+            System.Array.Resize(ref weapons, DatabaseLoader.weapons.Length);
+            System.Array.Resize(ref armors, DatabaseLoader.armors.Length);
+
+            if (TUFFSettings.DebugStartWithMaxItems())
+                SetAmountToAll(INVENTORY_CAP);
+        }
 
         public Dictionary<InventoryItem, int> GetItemsAndAmount(Dictionary<InventoryItem, int> baseDirectory = null, bool includeZero = false)
         {

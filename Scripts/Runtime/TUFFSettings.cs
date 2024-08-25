@@ -20,6 +20,7 @@ namespace TUFF
         public static bool ignoreLearnedSkills { get => Instance.m_ignoreLearnedSkills; }
         public static bool overrideUnitInitLevel { get => Instance.m_overrideUnitInitLevel; }
         public static int overrideUnitInitLevelValue { get => Instance.m_overrideUnitInitLevelValue; }
+        public static PlayerData debugPlayerData { get => Instance.m_debugPlayerData; }
         // Player Data
         public static int maxSaveFileSlots { get => Mathf.Max(1, Instance.m_maxSaveFileSlots); }
         // Battle System
@@ -201,6 +202,8 @@ namespace TUFF
         [Tooltip("If true, all party members will join at the specified level.")]
         [SerializeField] private bool m_overrideUnitInitLevel = false;
         [SerializeField] private int m_overrideUnitInitLevelValue = 1;
+        [Tooltip("Player Data to use when initiating the game from the Editor.")]
+        public PlayerData m_debugPlayerData = new();
 
         [Header("Player Data")]
         [Tooltip("The amount of save files the player can save to. Minimum of 1.")]

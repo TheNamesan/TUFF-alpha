@@ -102,8 +102,9 @@ namespace TUFF
 
             DatabaseLoader.InitializeDatabase();
             //Load Dummy Save Data
-            playerData.StartPlayerData();
-            playerData.AddToParty(0); //dummy test
+            playerData = PlayerData.GetDummyPlayerData();
+            if (Application.isEditor) playerData = PlayerData.GetDebugPlayerData();
+            playerData.ValidatePlayerData();
         }
         public void SavePlayerData(int fileIndex)
         {
@@ -115,14 +116,13 @@ namespace TUFF
         public bool LoadSaveData(int fileIndex)
         {
             bool loaded = false;
-            playerData.StartPlayerData();
-            playerData.AddToParty(0); //test
+            //playerData.StartPlayerData();
+            //playerData.AddToParty(0); //test
             var load = PlayerData.LoadData(fileIndex);
             if (load != null)
             {
                 loaded = true;
-                load.CheckListSizes();
-                load.CheckUnitRefs();
+                load.ValidatePlayerData();
 
                 playerData = load;
                 lastLoadedFile = fileIndex;
@@ -306,9 +306,7 @@ namespace TUFF
         }
         public void StartNewGame()
         {
-            playerData.StartPlayerData();
-            playerData.AssignNewGameData();
-            playerData.AddToParty(0); //test
+            playerData = PlayerData.GetNewGamePlayerData();
         }
         IEnumerator SetGameOver()
         {

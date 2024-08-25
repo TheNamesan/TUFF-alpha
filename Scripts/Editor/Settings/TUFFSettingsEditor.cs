@@ -32,6 +32,19 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_overrideUnitInitLevel"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_overrideUnitInitLevelValue"));
             EditorGUILayout.EndHorizontal();
+            var debugPlayerDataProp = serializedObject.FindProperty("m_debugPlayerData");
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Import File"))
+            {
+                if (LISAEditorUtility.ImportFileTo(ref settings.m_debugPlayerData)) serializedObject.Update();
+            }
+            if (GUILayout.Button("Export File"))
+            {
+                if (LISAEditorUtility.ExportFileTo(settings.m_debugPlayerData)) serializedObject.Update();
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.PropertyField(debugPlayerDataProp);
+
 
             // Player Data
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_maxSaveFileSlots"));

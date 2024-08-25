@@ -22,7 +22,10 @@ namespace TUFF
         public GameVariable[] gameVariables = new GameVariable[0];
         public int[] persistentInteractableIDs = new int[0];
 
+        public PlayerData()
+        {
 
+        }
         public static PlayerData instance
         {
             get
@@ -47,7 +50,25 @@ namespace TUFF
             }
             return false;
         }
-
+        public static PlayerData GetDummyPlayerData()
+        {
+            PlayerData dummy = new PlayerData();
+            dummy.StartPlayerData();
+            dummy.AddToParty(0);
+            return dummy;
+        }
+        public static PlayerData GetNewGamePlayerData()
+        {
+            PlayerData newFile = new PlayerData();
+            newFile.StartPlayerData();
+            newFile.AssignNewGameData();
+            newFile.AddToParty(0); // Test
+            return newFile;
+        }
+        public static PlayerData GetDebugPlayerData()
+        {
+            return TUFFSettings.debugPlayerData;
+        }
         public void StartPlayerData()
         {
             InitPartyMembers(); // Always call when starting the game
@@ -55,6 +76,12 @@ namespace TUFF
             inventory.Initialize();
             InitGameVariables();
             persistentInteractableIDs = new int[PersistentInteractableList.GetPersistentIDLength()];
+        }
+        public void ValidatePlayerData()
+        {
+            CheckPartyMembers();
+            inventory.ValidateInventory();
+            CheckListSizes();
         }
         public void UpdateLoadedScene(string name)
         {
@@ -109,11 +136,16 @@ namespace TUFF
                 gameVariables[i].variableType = variableData[i].variableType;
             }
         }
-        public void CheckUnitRefs()
+        public void CheckPartyMembers()
         {
+            if (party.Length != DatabaseLoader.units.Length)
+                System.Array.Resize(ref party, DatabaseLoader.units.Length);
             for (int i = 0; i < party.Length; i++)
             {
                 party[i].unitRef = DatabaseLoader.units[i];
+                party[i].UpdateStates();
+                party[i].CapValues();
+                party[i].ValidateLearnedSkillsSize();
             }
         }
         public void Update()

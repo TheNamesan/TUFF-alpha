@@ -239,6 +239,27 @@ namespace TUFF.TUFFEditor
             }
             return addedFolder;
         }
+        public static bool ImportFileTo(ref PlayerData targetData)
+        {
+            string path = EditorUtility.OpenFilePanel("Select a valid save file", "", "sav");
+            if (!string.IsNullOrEmpty(path))
+            {
+                PlayerData load = SaveDataConverter.LoadPlayerDataFromPath(path);
+                targetData = load;
+                return true;
+            }
+            return false;
+        }
+        public static bool ExportFileTo(PlayerData targetData)
+        {
+            string path = EditorUtility.SaveFilePanel("Save file as", "", "exportedsave", "sav");
+            if (!string.IsNullOrEmpty(path))
+            {
+                SaveDataConverter.SavePlayerDataToPath(targetData, path);
+                return true;
+            }
+            return false;
+        }
 
         public static void DrawDatabaseParsedTextPreview(string label, string text, bool wrapText = false, string prefix = "")
         {

@@ -36,13 +36,11 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Import File"))
             {
-                string path = EditorUtility.OpenFilePanel("Select a valid save file", "", "sav");
-                if (!string.IsNullOrEmpty(path)) ImportFile(path);
+                if (LISAEditorUtility.ImportFileTo(ref data)) serializedData.Update();
             }
             if (GUILayout.Button("Export File"))
             {
-                string path = EditorUtility.SaveFilePanel("Save file as", "", "exportedsave", "sav");
-                if (!string.IsNullOrEmpty(path)) ExportFile(path);
+                if (LISAEditorUtility.ExportFileTo(data)) serializedData.Update();
             }
             EditorGUILayout.EndHorizontal();
 
@@ -50,17 +48,6 @@ namespace TUFF.TUFFEditor
             
             EditorGUILayout.EndScrollView();
             serializedData.ApplyModifiedProperties();
-        }
-        private void ImportFile(string path)
-        {
-            PlayerData load = SaveDataConverter.LoadPlayerDataFromPath(path);
-            data = load;
-            serializedData.Update();
-        }
-        private void ExportFile(string path)
-        {
-            SaveDataConverter.SavePlayerDataToPath(data, path);
-            serializedData.Update();
         }
     }
 }
