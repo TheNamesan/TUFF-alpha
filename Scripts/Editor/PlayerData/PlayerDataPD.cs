@@ -21,6 +21,9 @@ namespace TUFF.TUFFEditor
             {
                 for (int i = 0; i < variableNames.Length; i++)
                 {
+                    var prop = property.FindPropertyRelative(variableNames[i]);
+                    if (variableNames[i] == "partyOrder")
+                    { height += GetPartyOrderHeight(prop); continue; }
                     height += EditorGUI.GetPropertyHeight(property.FindPropertyRelative(variableNames[i]))
                         + EditorGUIUtility.standardVerticalSpacing;
                 }
@@ -40,6 +43,8 @@ namespace TUFF.TUFFEditor
                 for (int i = 0; i < variableNames.Length; i++)
                 {
                     var prop = property.FindPropertyRelative(variableNames[i]);
+                    if (variableNames[i] == "playtime")
+                        { position.y += DrawPlaytime(position, prop); continue; }
                     if (variableNames[i] == "partyOrder") 
                         { position.y += DrawPartyOrder(position, property, prop); continue; }
                     EditorGUI.PropertyField(position, prop);
@@ -81,7 +86,23 @@ namespace TUFF.TUFFEditor
             elements.isExpanded = EditorGUI.Foldout(position, elements.isExpanded, elements.displayName, true, EditorStyles.foldoutHeader);
             position.y += 20f;
             if (elements.isExpanded) partyOrderList.DoList(position);
-            return (elements.isExpanded ? partyOrderList.GetHeight() : 0f) + 20f;
+            return GetPartyOrderHeight(elements);
+        }
+        private float GetPartyOrderHeight(SerializedProperty elements)
+        {
+            if (elements == null) return 20f;
+            return (elements.isExpanded && partyOrderList != null ? partyOrderList.GetHeight() : 0f) + 20f;
+        }
+        private float DrawPlaytime(Rect position, SerializedProperty property)
+        {
+            float totalWidth = position.width;
+            position.width = totalWidth * 0.8f;
+            EditorGUI.PropertyField(position, property);
+            position.x += totalWidth * 0.82f;
+            position.width = totalWidth * 0.18f;
+            EditorGUI.LabelField(position, PlayerData.GetPlaytimeText(property.doubleValue), EditorStyles.boldLabel);
+
+            return 20f;
         }
     }
 }

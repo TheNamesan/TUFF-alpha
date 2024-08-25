@@ -84,15 +84,15 @@ namespace TUFF
         //}
         protected static void AssignIDs()
         {
-            for (int i = 0; i < m_units.Length; i++) { m_units[i].id = i; }
-            for (int i = 0; i < m_jobs.Length; i++) { m_jobs[i].id = i; }
-            for (int i = 0; i < m_skills.Length; i++) { m_skills[i].id = i; }
-            for (int i = 0; i < m_commands.Length; i++) { m_commands[i].id = i; }
-            for (int i = 0; i < m_items.Length; i++) { m_items[i].id = i; }
-            for (int i = 0; i < m_keyItems.Length; i++) { m_keyItems[i].id = i; }
-            for (int i = 0; i < m_weapons.Length; i++) { m_weapons[i].id = i; }
-            for (int i = 0; i < m_armors.Length; i++) { m_armors[i].id = i; }
-            for (int i = 0; i < m_states.Length; i++) { m_states[i].id = i; }
+            //for (int i = 0; i < m_units.Length; i++) { m_units[i].id = i; }
+            //for (int i = 0; i < m_jobs.Length; i++) { m_jobs[i].id = i; }
+            //for (int i = 0; i < m_skills.Length; i++) { m_skills[i].id = i; }
+            //for (int i = 0; i < m_commands.Length; i++) { m_commands[i].id = i; }
+            //for (int i = 0; i < m_items.Length; i++) { m_items[i].id = i; }
+            //for (int i = 0; i < m_keyItems.Length; i++) { m_keyItems[i].id = i; }
+            //for (int i = 0; i < m_weapons.Length; i++) { m_weapons[i].id = i; }
+            //for (int i = 0; i < m_armors.Length; i++) { m_armors[i].id = i; }
+            //for (int i = 0; i < m_states.Length; i++) { m_states[i].id = i; }
         }
         protected static object GetFromArray(object[] array, int index)
         {
@@ -109,6 +109,19 @@ namespace TUFF
         public static Armor GetArmorFromID(int index) => (Armor)GetFromArray(armors, index);
         public static State GetStateFromID(int index) => (State)GetFromArray(states, index);
 
+        public static int FindID(DatabaseElement databaseElement)
+        {
+            if (databaseElement is Unit unit) return System.Array.IndexOf(units, unit);
+            if (databaseElement is Job job) return System.Array.IndexOf(jobs, job);
+            if (databaseElement is Skill skill) return System.Array.IndexOf(skills, skill);
+            if (databaseElement is Command command) return System.Array.IndexOf(commands, command);
+            if (databaseElement is Item item) return System.Array.IndexOf(items, item);
+            if (databaseElement is KeyItem keyItem) return System.Array.IndexOf(keyItems, keyItem);
+            if (databaseElement is Weapon weapon) return System.Array.IndexOf(weapons, weapon);
+            if (databaseElement is Armor armor) return System.Array.IndexOf(armors, armor);
+            if (databaseElement is State state) return System.Array.IndexOf(states, state);
+            return -1;
+        }
 
         public static List<State> GetAllStatesOfType(StateType type)
         {

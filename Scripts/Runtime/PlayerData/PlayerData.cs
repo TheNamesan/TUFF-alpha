@@ -10,6 +10,7 @@ namespace TUFF
         public const int activePartyMaxSize = 4; // Move to TUFF Settings
 
         public double playtime = 0;
+        public const double PLAYTIME_CAP = 3599999d;
         [Tooltip("Data list of all Units")]
         public PartyMember[] party; //Save 
         public List<sbyte> partyOrder = new List<sbyte>(); //Save
@@ -124,13 +125,21 @@ namespace TUFF
                 charProperties.playerFacing = player.controller.faceDirection;
             }
             if (!GameManager.instance.stopPlaytime)
+            {
                 playtime += Time.unscaledDeltaTime;
+                if (playtime > PLAYTIME_CAP) playtime = PLAYTIME_CAP;
+            }
         }
         public string GetPlaytimeText()
         {
+            return PlayerData.GetPlaytimeText(playtime);
+        }
+        public static string GetPlaytimeText(double playtime)
+        {
+            if (playtime > PLAYTIME_CAP) playtime = PLAYTIME_CAP;
             System.TimeSpan timeSpan = System.TimeSpan.FromSeconds(playtime);
             var culture = System.Globalization.CultureInfo.InvariantCulture;
-            string hours = (timeSpan.Hours.ToString("00", culture));
+            string hours = ((timeSpan.Hours + (timeSpan.Days * 24)).ToString("00", culture));
             string minutes = (timeSpan.Minutes.ToString("00", culture));
             string seconds = (timeSpan.Seconds.ToString("00", culture));
 

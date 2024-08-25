@@ -190,7 +190,9 @@ namespace TUFF
             // Find graphic sprite for latest state
             for (int i = states.Count - 1; i >= 0; i--)
             {
+                if (!states[i].state) continue;
                 int id = states[i].state.id;
+                if (id < 0) continue;
                 // Safety check for out of bounds sprite
                 if (id >= job.faceGraphics.stateFaces.Count)
                 {
