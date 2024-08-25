@@ -181,6 +181,8 @@ namespace TUFF
         }
         public Sprite GetGraphic()
         {
+            if (!job) return null;
+            if (job.faceGraphics == null) return null;
             if (isKOd)
             {
                 Sprite sprite = job.faceGraphics.KOFaceGraphic;
