@@ -183,6 +183,7 @@ namespace TUFF.TUFFEditor
         private void DrawIconPreview(Rect position, Texture2D sprite)
         {
             var preview = sprite;
+            position.x -= 20f;
             if (preview != null) GUI.DrawTexture(new Rect(position.x - 2, position.y + 2, 18f, 18f), preview);
         }
     }
