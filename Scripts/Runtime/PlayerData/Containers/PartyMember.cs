@@ -181,8 +181,16 @@ namespace TUFF
             return exp;
         }
         public override Job GetJob() {
-            Debug.Log(job);
             return job;
+        }
+        public void SetJob(Job job)
+        {
+            this.job = job;
+        }
+        public void SetJob(int id)
+        {
+            if (id < 0) id = -1;
+            m_jobID = id;
         }
         public Sprite GetGraphic()
         {

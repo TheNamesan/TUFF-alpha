@@ -141,7 +141,7 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new RecoverFromKOAction(), eventList, eventListPDs);
             }
-            if (GUILayout.Button(new GUIContent("Recover All", "Clears the user's states, removes KO and recovers all HP, SP and TP.")))
+            if (GUILayout.Button(new GUIContent("Recover All", "Clears the Unit's states, removes KO and recovers all HP, SP and TP.")))
             {
                 AddEvent(new RecoverAllAction(), eventList, eventListPDs);
             }
@@ -156,6 +156,10 @@ namespace TUFF.TUFFEditor
             if (GUILayout.Button(new GUIContent("Change Skills", "Changes the Unit's learned skills.")))
             {
                 AddEvent(new ChangeSkillsAction(), eventList, eventListPDs);
+            }
+            if (GUILayout.Button(new GUIContent("Change Job", "Changes the Unit's current Job.")))
+            {
+                AddEvent(new ChangeJobAction(), eventList, eventListPDs);
             }
             EditorGUILayout.EndVertical();
             GUI.backgroundColor = oldColor;
