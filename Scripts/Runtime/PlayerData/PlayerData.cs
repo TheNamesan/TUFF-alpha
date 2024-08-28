@@ -67,7 +67,8 @@ namespace TUFF
         }
         public static PlayerData GetDebugPlayerData()
         {
-            return TUFFSettings.debugPlayerData;
+            PlayerData debugFile = LISAUtility.Copy(TUFFSettings.debugPlayerData) as PlayerData;
+            return debugFile;
         }
         public void StartPlayerData()
         {
