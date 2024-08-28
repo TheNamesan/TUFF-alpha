@@ -82,6 +82,7 @@ namespace TUFF
 
         public bool ShouldDisplayCount()
         {
+            if (!state) Debug.LogWarning("Active State has no State reference!");
             if (state.autoRemovalTiming == AutoRemovalTiming.None || remainingTurns <= 0 || isAutoState || !user.CanShowStatus())
                 return false;
             return true;

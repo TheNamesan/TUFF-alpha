@@ -348,6 +348,10 @@ namespace TUFF
         {
             UpdateAutoStates();
             UpdateStateImmunity();
+            for (int i = 0; i < states.Count; i++)
+            {
+                if (states[i] != null) states[i].user = this;
+            }
         }
 
         private void UpdateAutoStates()
