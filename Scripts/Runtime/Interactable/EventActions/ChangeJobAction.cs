@@ -21,7 +21,7 @@ namespace TUFF
             if (unit != null)
             {
                 var member = PlayerData.instance.GetPartyMember(unit);
-                member.SetJob(job);
+                member.AssignJob(job);
             }
             EndEvent();
         }

@@ -183,15 +183,13 @@ namespace TUFF
         public override Job GetJob() {
             return job;
         }
-        public void SetJob(Job job)
+
+        public void LearnSkillsAtCurrentLevel()
         {
-            this.job = job;
+            var skills = this.job?.GetSkillsToLearnAtLevel(level, 1);
+            foreach (Skill skl in skills) LearnSkill(skl);
         }
-        public void SetJob(int id)
-        {
-            if (id < 0) id = -1;
-            m_jobID = id;
-        }
+
         public Sprite GetGraphic()
         {
             if (!job) return null;
@@ -547,8 +545,7 @@ namespace TUFF
         {
             this.job = job;
             if (job == null) return;
-            var skills = job?.GetSkillsToLearnAtLevel(level, 1);
-            foreach (Skill skl in skills) LearnSkill(skl);
+            LearnSkillsAtCurrentLevel();
         }
 
         public virtual void LearnSkill(Skill skill, bool learn = true)
