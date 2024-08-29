@@ -207,8 +207,6 @@ namespace TUFF.TUFFEditor
             rect.x += rect.width;
             rect.width = totalWidth * 0.1f;
 
-            
-
             property.intValue = EditorGUI.IntField(rect, property.intValue);
         }
     }
