@@ -350,7 +350,10 @@ namespace TUFF
             UpdateStateImmunity();
             for (int i = 0; i < states.Count; i++)
             {
-                if (states[i] != null) states[i].user = this;
+                if (states[i] == null) continue;
+                if (states[i].state == null) 
+                    RemoveState(i, false, false);
+                states[i].user = this;
             }
         }
 
@@ -444,8 +447,9 @@ namespace TUFF
         {
             RemoveState(activeState, displayState, false);
         }
-        public virtual void RemoveState(int index, bool displayState = true, bool updateAutoStates = true)
+        public virtual bool RemoveState(int index, bool displayState = true, bool updateAutoStates = true)
         {
+            bool removed = false;
             State state = states[index].state;
             if (!BattleManager.instance.disableStateChanges)
             {
@@ -453,38 +457,42 @@ namespace TUFF
                 states.RemoveAt(index);
                 UpdatePrevHP();
                 if (updateAutoStates) UpdateAutoStates();
+                removed = true;
             }
             if (displayState) BattleManager.instance.DisplayState(this, state, true);
+            return removed;
         }
         /// <summary>
         /// Checks if user is inflicted with the state and removes it.
         /// </summary>
         /// <param name="state"></param>
         /// <param name="updateAutoStates"></param>
-        public virtual void RemoveState(State state, bool displayState = true, bool updateAutoStates = true)
+        public virtual bool RemoveState(State state, bool displayState = true, bool updateAutoStates = true)
         {
             int index = FindExistingState(state);
-            if (index < 0) return;
-            RemoveState(index, displayState, updateAutoStates);
+            if (index < 0) return false;
+            return RemoveState(index, displayState, updateAutoStates);
         }
-        public virtual void RemoveState(ActiveState activeState, bool displayState = true, bool updateAutoStates = true)
+        public virtual bool RemoveState(ActiveState activeState, bool displayState = true, bool updateAutoStates = true)
         {
+            bool removed = false;
             if (!BattleManager.instance.disableStateChanges)
             {
                 imageReference?.RemoveStateVisual(activeState);
                 states.Remove(activeState);
                 UpdatePrevHP();
                 if (updateAutoStates) UpdateAutoStates();
+                removed = true;
             }
             if (displayState) BattleManager.instance.DisplayState(this, activeState.state, true);
+            return removed;
         }
         public virtual void RemoveAllStates(bool showDisplay = false, bool removePermanents = false)
         {
             for (int i = 0; i < states.Count; i++)
             {
                 if (states[i].state.stateType == StateType.Permanent && !removePermanents) continue;
-                RemoveState(i, showDisplay, false);
-                i--;
+                if (RemoveState(i, showDisplay, false)) i--;
             }
             UpdateStates();
             BattleManager.instance.ForceUpdateHUD();
@@ -494,8 +502,7 @@ namespace TUFF
             for (int i = 0; i < states.Count; i++)
             {
                 if (states[i].state.stateType != type) continue;
-                RemoveState(i, showDisplay, false);
-                i--;
+                if (RemoveState(i, showDisplay, false)) i--;
             }
             UpdateStates();
             BattleManager.instance.ForceUpdateHUD();
@@ -505,8 +512,7 @@ namespace TUFF
             for (int i = 0; i < states.Count; i++)
             {
                 if (!states[i].state.removeAtBattleEnd) continue;
-                RemoveState(i, false, false);
-                i--;
+                if (RemoveState(i, false, false)) i--;
             }
             UpdateStates();
             BattleManager.instance.ForceUpdateHUD();
@@ -518,8 +524,7 @@ namespace TUFF
                 if (!states[i].state.removeByDamage) continue;
                 if(BattleManager.RollChance(states[i].state.removeByDamageChance))
                 {
-                    RemoveState(i, true, false);
-                    i--;
+                    if (RemoveState(i, true, false)) i--;
                 }
             }
             UpdateStates();
@@ -938,6 +943,7 @@ namespace TUFF
             if (features == null) features = new List<Feature>();
             for(int i = 0; i < activeStates.Count; i++)
             {
+                if (!activeStates[i].state) continue;
                 var stateFeatures = activeStates[i].state.features;
                 AddFeaturesOfTypeFrom(stateFeatures, featureType, features);
             }
