@@ -7,7 +7,12 @@ namespace TUFF
     [System.Serializable]
     public class ActiveState
     {
-        public State state;
+        public State state
+        {
+            get => DatabaseLoader.GetStateFromID(m_stateID);
+            protected set { m_stateID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_stateID = -1;
         public Targetable user;
         public int remainingTurns = 0;
         public int startingTurns = 0;
