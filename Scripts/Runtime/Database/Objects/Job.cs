@@ -193,7 +193,7 @@ namespace TUFF
             return curve;
         }
         public List<Skill> GetSkillsToLearnAtLevel(int level) => GetSkillsToLearnAtLevel(level, level);
-        public List<Skill> GetSkillsToLearnAtLevel(int level, int fromLevel = 0)
+        public List<Skill> GetSkillsToLearnAtLevel(int level, int fromLevel)
         {
             var skillsLearned = skills.FindAll(q => q.learnType == LearnType.Level && (q.levelLearnedAt >= fromLevel && q.levelLearnedAt <= level));
             var skillList = new List<Skill>();

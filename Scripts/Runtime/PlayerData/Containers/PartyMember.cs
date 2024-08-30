@@ -116,8 +116,7 @@ namespace TUFF
             newLevel = Mathf.Max(0, newLevel); // Cap Min
             level = newLevel;
             exp = job.LevelToStat(level, LevelToStatType.EXP);
-            var skills = this.job?.GetSkillsToLearnAtLevel(level, 1);
-            foreach (Skill skl in skills) LearnSkill(skl);
+            LearnSkillsAtCurrentLevel();
         }
         public void AddLevel(int levelAdd)
         {
@@ -138,8 +137,7 @@ namespace TUFF
                     Debug.Log("LEVEL UP! " + level);
                 }
             }
-            var skills = this.job?.GetSkillsToLearnAtLevel(level, 1);
-            foreach (Skill skl in skills) LearnSkill(skl);
+            LearnSkillsAtCurrentLevel();
         }
         public void SetEXP(int expSet)
         {

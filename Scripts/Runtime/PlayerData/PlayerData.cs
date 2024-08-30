@@ -147,6 +147,7 @@ namespace TUFF
                 party[i].UpdateStates();
                 party[i].CapValues();
                 party[i].ValidateLearnedSkillsSize();
+                party[i].LearnSkillsAtCurrentLevel();
             }
         }
         public void Update()
