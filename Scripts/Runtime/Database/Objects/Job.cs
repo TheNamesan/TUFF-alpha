@@ -200,5 +200,15 @@ namespace TUFF
             foreach (var lrn in skillsLearned) skillList.Add(lrn.skill);
             return skillList;
         }
+        public List<SkillsLearned> GetUnitedSkills()
+        {
+            var unitedSkills = new List<SkillsLearned>();
+            for (int i = 0; i < commands.Count; i++)
+            {
+                var commandUnitedSkills = commands[i].GetUnitedSkills();
+                foreach (SkillsLearned skl in commandUnitedSkills) unitedSkills.Add(skl);
+            }
+            return unitedSkills;
+        }
     }
 }

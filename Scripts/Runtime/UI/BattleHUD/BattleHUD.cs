@@ -273,7 +273,9 @@ namespace TUFF
         {
             if (UPBar != null)
             {
-                if (PlayerData.instance.battleData.disableUP) UPBar.gameObject.SetActive(false);
+                if (PlayerData.instance.battleData.disableUP ||
+                    !BattleManager.instance.PartyHasUsableUnitedSkills()) 
+                    UPBar.gameObject.SetActive(false);
                 else UPBar.gameObject.SetActive(true);
                 float percentage = PlayerData.instance.battleData.GetUPPercentage();
                 UPBar.SetValue(percentage, 100, format: "F0", postfix: "%");
@@ -342,7 +344,7 @@ namespace TUFF
             ToggleStatusHUD(true);
             HideSecondWindowContentExcept(SecondWindowContent.CommandsMenus);
             SetNextActableUnitIndex(0);
-            if (commandMenuIndex >= GameManager.instance.playerData.GetActivePartySize())
+            if (commandMenuIndex >= PlayerData.instance.GetActivePartySize())
             {
                 EndPlayerActions();
             }

@@ -29,6 +29,17 @@ namespace TUFF
             }
             return GetName();
         }
+        public List<SkillsLearned> GetUnitedSkills()
+        {
+            var unitedSkills = new List<SkillsLearned>();
+            for (int i = 0; i < skills.Count; i++)
+            {
+                var skill = skills[i].skill;
+                if (!skill) continue;
+                if (skill.isUnitedSkill) unitedSkills.Add(skills[i]);
+            }
+            return unitedSkills;
+        }
         /// <summary>
         /// Validates if the Command Type is Single and has a skill.
         /// </summary>

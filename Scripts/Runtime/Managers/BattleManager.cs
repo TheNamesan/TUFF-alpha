@@ -449,7 +449,7 @@ namespace TUFF
         private void QueueTargetablesForcedActions()
         {
             if (CheckBattleEnd()) return;
-            for (int i = 0; i < GameManager.instance.playerData.GetActivePartySize(); i++)
+            for (int i = 0; i < PlayerData.instance.GetActivePartySize(); i++)
             {
                 var user = activeParty[i];
                 if (!user.CanAct()) continue;
@@ -704,6 +704,25 @@ namespace TUFF
                 return userAInActiveParty && userBInActiveParty;
             }
             return false;
+        }
+        public List<SkillsLearned> GetPartyUsableUnitedSkills()
+        {
+            var unitedSkills = new List<SkillsLearned>();
+            for (int i = 0; i < PlayerData.instance.GetActivePartySize(); i++)
+            {
+                var member = PlayerData.instance.GetActivePartyMember(i);
+                if (member == null) continue;
+                var userUnitedSkills = member.GetUsableUnitedSkills();
+                foreach (SkillsLearned skl in userUnitedSkills)
+                {
+                    if (!unitedSkills.Contains(skl)) unitedSkills.Add(skl);
+                }
+            }
+            return unitedSkills;
+        }
+        public bool PartyHasUsableUnitedSkills()
+        {
+            return GetPartyUsableUnitedSkills().Count > 0;
         }
         public List<Targetable> CheckTargetIsStillValid(TargetedSkill targetedSkill)
         {

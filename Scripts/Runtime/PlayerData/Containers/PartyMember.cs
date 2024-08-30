@@ -634,5 +634,19 @@ namespace TUFF
             CheckRemoveArmorTypes(list);
             return list;
         }
+        public List<SkillsLearned> GetUsableUnitedSkills()
+        {
+            if (!job) return new List<SkillsLearned>();
+            var unitedSkills = job.GetUnitedSkills();
+            for (int i = 0; i < unitedSkills.Count; i++)
+            {
+                var unitedSkill = unitedSkills[i];
+                if (BattleManager.instance.HasUnitedSkillUsersInActiveParty(unitedSkill.skill)) continue;
+                if (KnowsSkill(unitedSkill.skill)) continue;
+                unitedSkills.RemoveAt(i);
+                i--;
+            }
+            return unitedSkills;
+        }
     }
 }
