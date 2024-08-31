@@ -15,7 +15,7 @@ namespace TUFF.TUFFEditor
             if (property.isExpanded)
             {
                 lines += 3;
-                if (BattleManager.IsRandomScope(scope)) lines += 1;
+                if (BattleLogic.IsRandomScope(scope)) lines += 1;
             }
             
             return 20f + (20f * lines);
@@ -38,7 +38,7 @@ namespace TUFF.TUFFEditor
                 EditorGUI.PropertyField(position, property.FindPropertyRelative("targetCondition"));
                 position.y += 20f;
 
-                if (BattleManager.IsRandomScope(scope))
+                if (BattleLogic.IsRandomScope(scope))
                 {
                     EditorGUI.PropertyField(position, property.FindPropertyRelative("randomNumberOfTargets"));
                     position.y += 20f;

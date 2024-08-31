@@ -75,9 +75,9 @@ namespace TUFF
             {
                 var element = hitInfo.ElementIndex;
                 var user = hitInfo.skillOrigin.user;
-                float totalMultiplier = BattleManager.GetTotalElementVulnerability(element, user, this);
+                float totalMultiplier = BattleLogic.GetTotalElementVulnerability(element, user, this);
                 
-                vulType = BattleManager.GetVulnerabilityType(totalMultiplier);
+                vulType = BattleLogic.GetVulnerabilityType(totalMultiplier);
                 value = LISAUtility.Truncate(value * totalMultiplier);
             }
         }
@@ -88,7 +88,7 @@ namespace TUFF
             {
                 var user = hitInfo.skillOrigin.user;
                 var hitType = hitInfo.hitType;
-                float totalMultiplier = BattleManager.GetTotalHitTypeVulnerability(hitType, user, this);
+                float totalMultiplier = BattleLogic.GetTotalHitTypeVulnerability(hitType, user, this);
                 
                 value = LISAUtility.Truncate(value * totalMultiplier);
             }
@@ -99,9 +99,9 @@ namespace TUFF
             var user = hitInfo.skillOrigin.user;
             float totalMultiplier = 1;
             if (hitInfo.skillOrigin.skill is Skill)
-                totalMultiplier = BattleManager.GetTotalHealingPotency(user, this);
+                totalMultiplier = BattleLogic.GetTotalHealingPotency(user, this);
             else if (hitInfo.skillOrigin.skill is Item)
-                totalMultiplier = BattleManager.GetTotalItemPotency(user, this);
+                totalMultiplier = BattleLogic.GetTotalItemPotency(user, this);
             
             value = LISAUtility.Truncate(value * totalMultiplier);
         }
@@ -109,7 +109,7 @@ namespace TUFF
         {
             if (elementIndex < 0) return 1f;
             var elementVulFeatures = GetAllFeaturesOfType(FeatureType.ElementPotency);
-            var multiplier = BattleManager.GetElementPotency(elementVulFeatures, elementIndex);
+            var multiplier = BattleLogic.GetElementPotency(elementVulFeatures, elementIndex);
             Debug.Log("Pot multiplier: " + multiplier + ", Element: " + elementIndex);
             return multiplier;
         }
@@ -117,7 +117,7 @@ namespace TUFF
         {
             if (elementIndex < 0) return 1f;
             var elementVulFeatures = GetAllFeaturesOfType(FeatureType.ElementVulnerability);
-            var multiplier = BattleManager.GetElementVulnerability(elementVulFeatures, elementIndex);
+            var multiplier = BattleLogic.GetElementVulnerability(elementVulFeatures, elementIndex);
             Debug.Log("Vul multiplier: " + multiplier + ", Element: " + elementIndex);
             return multiplier;
         }
@@ -125,14 +125,14 @@ namespace TUFF
         {
             if (state == null) return 1f;
             var stateVulFeatures = GetAllFeaturesOfType(FeatureType.StatePotency);
-            var multiplier = BattleManager.GetStatePotency(stateVulFeatures, state);
+            var multiplier = BattleLogic.GetStatePotency(stateVulFeatures, state);
             return multiplier;
         }
         public virtual float GetStateVulnerability(State state)
         {
             if (state == null) return 1f;
             var stateVulFeatures = GetAllFeaturesOfType(FeatureType.StateVulnerability);
-            var multiplier = BattleManager.GetStateVulnerability(stateVulFeatures, state);
+            var multiplier = BattleLogic.GetStateVulnerability(stateVulFeatures, state);
             Debug.Log("Vul multiplier: " + multiplier + ", State: " + state.GetName());
             return multiplier;
         }
@@ -156,7 +156,7 @@ namespace TUFF
 
         protected static bool GetAndApplyCrit(BattleAnimationEvent hitInfo, ref int value, int targetIndex, bool ignoreCritEvade = false)
         {
-            bool isCrit = BattleManager.IsCriticalHit(hitInfo, targetIndex, ignoreCritEvade);
+            bool isCrit = BattleLogic.IsCriticalHit(hitInfo, targetIndex, ignoreCritEvade);
             if (isCrit)
             {
                 value = LISAUtility.Truncate(value * TUFFSettings.critMultiplier);
@@ -522,7 +522,7 @@ namespace TUFF
             for (int i = 0; i < states.Count; i++)
             {
                 if (!states[i].state.removeByDamage) continue;
-                if(BattleManager.RollChance(states[i].state.removeByDamageChance))
+                if(BattleLogic.RollChance(states[i].state.removeByDamageChance))
                 {
                     if (RemoveState(i, true, false)) i--;
                 }
@@ -601,161 +601,161 @@ namespace TUFF
         public virtual int GetMaxHP() 
         {
             var flatValue = GetBaseMaxHP(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.MaxHP));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.MaxHP));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value); 
         }
         public virtual int GetMaxSP()
         {
             var flatValue = GetBaseMaxSP(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.MaxSP));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.MaxSP));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
         public virtual int GetMaxTP()
         {
             var flatValue = GetBaseMaxTP(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.MaxTP));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.MaxTP));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
         public virtual int GetATK() 
         {
             var flatValue = GetBaseATK(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.ATK));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.ATK));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         } 
         public virtual int GetDEF()
         {
             var flatValue = GetBaseDEF(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.DEF));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.DEF));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
         public virtual int GetSATK()
         {
             var flatValue = GetBaseSATK(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.SATK));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.SATK));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
         public virtual int GetSDEF()
         {
             var flatValue = GetBaseSDEF(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.SDEF));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.SDEF));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
         public virtual int GetAGI()
         {
             var flatValue = GetBaseAGI(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.AGI));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.AGI));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
         public virtual int GetLUK()
         {
             var flatValue = GetBaseLUK(); //Insert armor bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.LUK));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange), StatChangeType.LUK));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
         public virtual float GetHitRate() 
         {
-            var value = (GetBaseHitRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.HitRate);
+            var value = (GetBaseHitRate() * 0.01f) + BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.HitRate);
             return value; 
         }
         public virtual float GetEvasionRate()
         {
-            var value = (GetBaseEvasionRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.EvasionRate);
+            var value = (GetBaseEvasionRate() * 0.01f) + BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.EvasionRate);
             return value;
         }
         public virtual float GetCritRate()
         {
-            var value = (GetBaseCritRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.CritRate);
+            var value = (GetBaseCritRate() * 0.01f) + BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.CritRate);
             return value;
         }
         public virtual float GetCritEvasionRate()
         {
-            var value = (GetBaseCritEvasionRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.CritEvasionRate);
+            var value = (GetBaseCritEvasionRate() * 0.01f) + BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.CritEvasionRate);
             return value;
         }
         public virtual int GetHPRegenRate() 
         {
-            float value = GetMaxHP() * Mathf.Clamp((BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.HPRegenRate)), -1, 1);
+            float value = GetMaxHP() * Mathf.Clamp((BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.HPRegenRate)), -1, 1);
             return LISAUtility.Truncate(value); 
         } 
         public virtual int GetSPRegenRate()
         {
-            float value = GetMaxSP() * Mathf.Clamp((BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.SPRegenRate)), -1, 1);
+            float value = GetMaxSP() * Mathf.Clamp((BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.SPRegenRate)), -1, 1);
             return LISAUtility.Truncate(value);
         }
         public virtual int GetTPRegenRate()
         {
-            float value = GetMaxTP() * Mathf.Clamp((BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.TPRegenRate)), -1, 1);
+            float value = GetMaxTP() * Mathf.Clamp((BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange), ExtraRateChangeType.TPRegenRate)), -1, 1);
             return LISAUtility.Truncate(value);
         }
         public virtual float GetTargetRate() 
         {
-            var value = (GetBaseTargetRate() * 0.01f) * BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.TargetRate);
+            var value = (GetBaseTargetRate() * 0.01f) * BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.TargetRate);
             return value;
         }
         public virtual float GetGuardPotency() {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.GuardPotency);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.GuardPotency);
             return value; 
         }
         public virtual float GetSPCostRate() {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.SPCostRate);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.SPCostRate);
             return value;
         }
         public virtual float GetTPCostRate()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.TPCostRate);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.TPCostRate);
             return value;
         }
         public virtual float GetHealingDealtPotency()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.HealingDealtPotency);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.HealingDealtPotency);
             return value;
         }
         public virtual float GetHealingReceivedPotency()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.HealingReceivedPotency);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.HealingReceivedPotency);
             return value;
         }
         public virtual float GetItemDealtPotency()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.ItemDealtPotency);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.ItemDealtPotency);
             return value;
         }
         public virtual float GetItemReceivedPotency()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.ItemReceivedPotency);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.ItemReceivedPotency);
             return value;
         }
         public virtual float GetPhysicalDamagePotency()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.PhysicalDamagePotency);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.PhysicalDamagePotency);
             return value;
         }
         public virtual float GetPhysicalDamageVulnerability()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.PhysicalDamageVulnerability);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.PhysicalDamageVulnerability);
             return value;
         }
         public virtual float GetSpecialDamagePotency()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.SpecialDamagePotency);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.SpecialDamagePotency);
             return value;
         }
         public virtual float GetSpecialDamageVulnerability()
         {
-            var value = BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.SpecialDamageVulnerability);
+            var value = BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange), SpecialRateChangeType.SpecialDamageVulnerability);
             return value;
         }
         public virtual int GetAttackSpeed() {
-            var attackSpeed = (BattleManager.GetAttackSpeed(GetAllFeaturesOfType(FeatureType.AttackSpeed)));
+            var attackSpeed = (BattleLogic.GetAttackSpeed(GetAllFeaturesOfType(FeatureType.AttackSpeed)));
             var value = GetAGI() + attackSpeed;
             return value;
         }
@@ -841,11 +841,11 @@ namespace TUFF
         }
         private bool IsGuarded()
         {
-            return BattleManager.GetSpecialFeatureIndex(GetAllFeaturesOfType(FeatureType.SpecialFeature), SpecialFeatureType.Guard) >= 0;
+            return BattleLogic.GetSpecialFeatureIndex(GetAllFeaturesOfType(FeatureType.SpecialFeature), SpecialFeatureType.Guard) >= 0;
         }
         private bool IsImmuneToKO()
         {
-            return BattleManager.GetSpecialFeatureIndex(GetAllFeaturesOfType(FeatureType.SpecialFeature), SpecialFeatureType.ImmuneToKO) >= 0;
+            return BattleLogic.GetSpecialFeatureIndex(GetAllFeaturesOfType(FeatureType.SpecialFeature), SpecialFeatureType.ImmuneToKO) >= 0;
         }
         public virtual bool CanShowStatus()
         {

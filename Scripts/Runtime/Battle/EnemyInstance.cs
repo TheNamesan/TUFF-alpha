@@ -97,8 +97,8 @@ namespace TUFF
         }
         public override bool CanShowStatus()
         {
-            bool show = BattleManager.GetSpecialFeatureIndex(GetAllFeaturesOfType(FeatureType.SpecialFeature), SpecialFeatureType.ShowStatus) >= 0 || TUFFSettings.showEnemyStatsByDefault;
-            bool hide = BattleManager.GetSpecialFeatureIndex(GetAllFeaturesOfType(FeatureType.SpecialFeature), SpecialFeatureType.HideStatus) >= 0 || (!show && !TUFFSettings.showEnemyStatsByDefault);
+            bool show = BattleLogic.GetSpecialFeatureIndex(GetAllFeaturesOfType(FeatureType.SpecialFeature), SpecialFeatureType.ShowStatus) >= 0 || TUFFSettings.showEnemyStatsByDefault;
+            bool hide = BattleLogic.GetSpecialFeatureIndex(GetAllFeaturesOfType(FeatureType.SpecialFeature), SpecialFeatureType.HideStatus) >= 0 || (!show && !TUFFSettings.showEnemyStatsByDefault);
             if (show == hide) return TUFFSettings.showEnemyStatsByDefault;
             return show && !hide;
         }

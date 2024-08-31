@@ -416,7 +416,7 @@ namespace TUFF
             UIElementContainer[] uiElementContainer = new UIElementContainer[1]; //Horizontal navigation setup
             uiElementContainer[0] = new UIElementContainer();
             // If Selection is group or random
-            if (BattleManager.IsGroupScope(skill.ScopeData.scopeType) || BattleManager.IsRandomScope(skill.ScopeData.scopeType))
+            if (BattleLogic.IsGroupScope(skill.ScopeData.scopeType) || BattleLogic.IsRandomScope(skill.ScopeData.scopeType))
             {
                 ToggleStatusHUD(false); // Hide Status HUD
                 UIButton button = CreateTargetMenuButton(0);
@@ -512,7 +512,7 @@ namespace TUFF
         public VulnerabilityType HighlightVulnerableTarget(IBattleInvocation skill, Targetable user, Targetable target, bool unhighlightIfNoVulnerability = false, bool unhighlightUser = false)
         {
             int elementIndex = -1;
-            var vulType = BattleManager.GetVulnerabilityTypeFromSkill(skill, user, target, ref elementIndex);
+            var vulType = BattleLogic.GetVulnerabilityTypeFromSkill(skill, user, target, ref elementIndex);
 
             if (unhighlightIfNoVulnerability)
             {
@@ -534,7 +534,7 @@ namespace TUFF
             for (int i = 0; i < targets.Count; i++)
             {
                 int elementIndex = -1;
-                var vulType = BattleManager.GetVulnerabilityTypeFromSkill(skill, user, targets[i], ref elementIndex);
+                var vulType = BattleLogic.GetVulnerabilityTypeFromSkill(skill, user, targets[i], ref elementIndex);
                 bool isUser = targets[i] == user;
                 targets[i]?.MarkVulnerability(elementIndex, vulType, isUser);
             }

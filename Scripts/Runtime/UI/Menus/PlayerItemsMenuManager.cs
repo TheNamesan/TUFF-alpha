@@ -49,7 +49,7 @@ namespace TUFF
             else if (invItem is Item)
             {
                 var item = invItem as Item;
-                if (!BattleManager.IsAllyScope(item.scopeData.scopeType))
+                if (!BattleLogic.IsAllyScope(item.scopeData.scopeType))
                 {
                     uiButton.disabled = true;
                 }
@@ -87,7 +87,7 @@ namespace TUFF
             if (selectedItem is Item)
             {
                 var item = selectedItem as Item;
-                var isValid = BattleManager.IsValidTargetFromConditionScope(item.scopeData.targetCondition, member);
+                var isValid = BattleLogic.IsValidTargetFromConditionScope(item.scopeData.targetCondition, member);
                 button.disabled = !isValid;
             }
             else button.disabled = true; // Change this to respective weapon / armor
@@ -98,7 +98,7 @@ namespace TUFF
             if (selectedItem is Item)
             {
                 var item = selectedItem as Item;
-                var isValid = BattleManager.IsValidTargetFromConditionScope(item.scopeData.targetCondition, user);
+                var isValid = BattleLogic.IsValidTargetFromConditionScope(item.scopeData.targetCondition, user);
                 if (!isValid) return;
             }
             selectedItem.ConsumeItemFromMenu(user);

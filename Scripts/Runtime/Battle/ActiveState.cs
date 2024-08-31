@@ -76,7 +76,7 @@ namespace TUFF
         {
             State progressiveState = state.progressiveState;
             int chance = state.progressiveStateTriggerChance;
-            if (progressiveState != null) BattleManager.RollForStateApply(progressiveState, null, user, chance);
+            if (progressiveState != null) BattleLogic.RollForStateApply(progressiveState, null, user, chance);
             user.RemoveState(this);
         }
 

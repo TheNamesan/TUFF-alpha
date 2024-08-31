@@ -361,7 +361,7 @@ namespace TUFF
         public int GetMaxHP(List<IEquipable> equipables)
         {
             var flatValue = GetBaseMaxHP() + GetEquipmentStats(StatChangeType.MaxHP, equipables); // Insert armor stats + bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.MaxHP));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.MaxHP));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
@@ -372,7 +372,7 @@ namespace TUFF
         public int GetMaxSP(List<IEquipable> equipables)
         {
             var flatValue = GetBaseMaxSP() + GetEquipmentStats(StatChangeType.MaxSP, equipables); // Insert armor stats + bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.MaxSP));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.MaxSP));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
@@ -383,7 +383,7 @@ namespace TUFF
         public int GetMaxTP(List<IEquipable> equipables)
         {
             var flatValue = GetBaseMaxTP() + GetEquipmentStats(StatChangeType.MaxTP, equipables); // Insert armor stats + bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.MaxTP));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.MaxTP));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
@@ -394,7 +394,7 @@ namespace TUFF
         public int GetATK(List<IEquipable> equipables)
         {
             var flatValue = GetBaseATK() + GetEquipmentStats(StatChangeType.ATK, equipables); // Insert bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.ATK));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.ATK));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
@@ -405,7 +405,7 @@ namespace TUFF
         public int GetDEF(List<IEquipable> equipables)
         {
             var flatValue = GetBaseDEF() + GetEquipmentStats(StatChangeType.DEF, equipables); // Insert armor stats + bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.DEF));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.DEF));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
@@ -416,7 +416,7 @@ namespace TUFF
         public int GetSATK(List<IEquipable> equipables)
         {
             var flatValue = GetBaseSATK() + GetEquipmentStats(StatChangeType.SATK, equipables); // Insert armor stats + bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.SATK));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.SATK));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
@@ -427,7 +427,7 @@ namespace TUFF
         public int GetSDEF(List<IEquipable> equipables)
         {
             var flatValue = GetBaseSDEF() + GetEquipmentStats(StatChangeType.SDEF, equipables); // Insert armor stats + bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.SDEF));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.SDEF));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
@@ -438,7 +438,7 @@ namespace TUFF
         public int GetAGI(List<IEquipable> equipables)
         {
             var flatValue = GetBaseAGI() + GetEquipmentStats(StatChangeType.AGI, equipables); // Insert armor stats + bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.AGI));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.AGI));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
@@ -449,33 +449,33 @@ namespace TUFF
         public int GetLUK(List<IEquipable> equipables)
         {
             var flatValue = GetBaseLUK() + GetEquipmentStats(StatChangeType.LUK, equipables); // Insert armor stats + bonuses here
-            var value = flatValue * (BattleManager.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.LUK));
+            var value = flatValue * (BattleLogic.GetStatChange(GetAllFeaturesOfType(FeatureType.StatChange, equipables), StatChangeType.LUK));
             if (value < 1) value = 1;
             return LISAUtility.Truncate(value);
         }
         public virtual float GetHitRate(List<IEquipable> equipables)
         {
-            var value = (GetBaseHitRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.HitRate);
+            var value = (GetBaseHitRate() * 0.01f) + BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.HitRate);
             return value;
         }
         public virtual float GetEvasionRate(List<IEquipable> equipables)
         {
-            var value = (GetBaseEvasionRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.EvasionRate);
+            var value = (GetBaseEvasionRate() * 0.01f) + BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.EvasionRate);
             return value;
         }
         public virtual float GetCritRate(List<IEquipable> equipables)
         {
-            var value = (GetBaseCritRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.CritRate);
+            var value = (GetBaseCritRate() * 0.01f) + BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.CritRate);
             return value;
         }
         public virtual float GetCritEvasionRate(List<IEquipable> equipables)
         {
-            var value = (GetBaseCritEvasionRate() * 0.01f) + BattleManager.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.CritEvasionRate);
+            var value = (GetBaseCritEvasionRate() * 0.01f) + BattleLogic.GetExtraRateChange(GetAllFeaturesOfType(FeatureType.ExtraRateChange, equipables), ExtraRateChangeType.CritEvasionRate);
             return value;
         }
         public virtual float GetTargetRate(List<IEquipable> equipables)
         {
-            var value = (GetBaseTargetRate() * 0.01f) * BattleManager.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange, equipables), SpecialRateChangeType.TargetRate);
+            var value = (GetBaseTargetRate() * 0.01f) * BattleLogic.GetSpecialRateChange(GetAllFeaturesOfType(FeatureType.SpecialRateChange, equipables), SpecialRateChangeType.TargetRate);
             return value;
         }
         public override List<Feature> GetAllFeaturesOfType(FeatureType featureType)

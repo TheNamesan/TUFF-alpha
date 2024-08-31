@@ -116,10 +116,10 @@ namespace TUFF
         }
         public void CheckTargetIsRandom()
         {
-            if (BattleManager.IsRandomScope(scopeData.scopeType))
+            if (BattleLogic.IsRandomScope(scopeData.scopeType))
             {
                 int noOfTargets = scopeData.randomNumberOfTargets;
-                targets = BattleManager.RollForTargets(BattleManager.instance.GetInvocationValidTargets(user, scopeData), noOfTargets);
+                targets = BattleLogic.RollForTargets(BattleManager.instance.GetInvocationValidTargets(user, scopeData), noOfTargets);
             }
         }
         public void OverrideScopeData(ScopeData newScopeData, List<Targetable> newTargetList = null)
@@ -129,7 +129,7 @@ namespace TUFF
             if (newTargetList == null)
             {
                 var validTargets = BattleManager.instance.GetInvocationValidTargets(user, scopeData);
-                newTargetList = BattleManager.GetDefaultTargets(validTargets, scopeData);
+                newTargetList = BattleLogic.GetDefaultTargets(validTargets, scopeData);
             }
             targets = newTargetList;
         }
