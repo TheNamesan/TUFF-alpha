@@ -24,6 +24,9 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(disabled);
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("text"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fill"));
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("holdTimeToSelect"));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("menusToClose"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("menusToOpen")); 

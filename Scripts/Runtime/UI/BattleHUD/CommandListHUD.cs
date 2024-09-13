@@ -175,7 +175,8 @@ namespace TUFF
             {
                 button.disabled = false;
                 if (memberRef.HasCommandSeal(command)) button.disabled = true;
-                
+
+                button.holdTimeToSelect = 0;
                 if (command.IsValidSingleCommand())
                 {
                     var skill = command.skills[0].skill;
@@ -184,51 +185,11 @@ namespace TUFF
                 else if (command.commandType == CommandType.Escape)
                 {
                     button.disabled = !BattleManager.instance.CanEscape;
+                    button.holdTimeToSelect = 1f;
                 }
                 button.highlightDisplayText = command.GetDescription();
             }
         }
-        //private void InstantiateCommandElement(Command command, UIElementContainer[] uiElementContainer, int containerPosition)
-        //{
-        //    CommandElement commandElement = Instantiate(commandElementPrefab, content.transform);
-        //    commandElement.SetCommand(command);
-        //    commandElement.LoadCommandInfo();
-        //    uiElementContainer[containerPosition] = new UIElementContainer();
-        //    UIButton uiButton = commandElement.uiButton;
-        //    uiElementContainer[containerPosition].UIElements.Add(uiButton);
-        //    if (memberRef.HasCommandSeal(command)) uiButton.disabled = true;
-        //    uiButton.highlightDisplayText = command.GetDescription();
-        //    if (command.skills.Count > 0)
-        //    {
-        //        if (command.commandType == CommandType.Single)
-        //        {
-        //            var skill = command.skills[0].skill;
-        //            var validTargets = BattleManager.instance.GetInvocationValidTargets(memberRef, skill.scopeData);
-        //            if (!BattleManager.instance.CanUseSkill(skill, memberRef, false)) uiButton.disabled = true;
-        //            uiButton.onHighlight.AddListener(() => 
-        //            {
-        //                battleHUD.MarkVulnerableTargets(skill, memberRef, validTargets);
-        //            });
-        //        }
-        //    }
-        //    uiButton.onHighlight.AddListener(() => battleHUD.ShowDescriptionDisplay(true));
-        //    uiButton.onSelect.AddListener(() => { 
-        //        battleHUD.CommandSelect(memberRef, m_commandListIndex, command);
-        //    });
-        //    uiButton.onHorizontalInput.AddListener((input) => 
-        //    {
-        //        battleHUD.SkipCommandMenu(input, m_commandListIndex, uiMenu);
-        //    });
-        //    elements.Add(commandElement);
-        //}
-        //public void ResetCommands()
-        //{
-        //    foreach (Transform child in content.transform)
-        //    {
-        //        Destroy(child.gameObject);
-        //    }
-        //    elements.Clear();
-        //}
         public void SetActive(bool setActive)
         {
             gameObject.SetActive(setActive);
