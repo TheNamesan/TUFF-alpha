@@ -156,6 +156,7 @@ namespace TUFF.TUFFEditor
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_loadFilePromptTermKey", TUFFSettings.loadFilePromptText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_currentExpTermKey", TUFFSettings.currentExpText);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_toNextLevelTermKey", TUFFSettings.toNextLevelText);
+            DrawTermFieldAndLocalizedPreview(serializedObject, "m_endTurnTermKey", TUFFSettings.endTurnText);
 
             EditorGUILayout.LabelField("Character Bio", EditorStyles.boldLabel);
             DrawTermFieldAndLocalizedPreview(serializedObject, "m_fightingArtTermKey", TUFFSettings.fightingArtText);

@@ -125,6 +125,7 @@ namespace TUFF
         public static string loadFilePromptText { get => ParseText(Instance.m_loadFilePromptTermKey); }
         public static string currentExpText { get => ParseText(Instance.m_currentExpTermKey); }
         public static string toNextLevelText { get => ParseText(Instance.m_toNextLevelTermKey); }
+        public static string endTurnText { get => ParseText(Instance.m_endTurnTermKey); }
         // Character Bio
         public static string fightingArtText { get => ParseText(Instance.m_fightingArtTermKey); }
         public static string pastOccupationText { get => ParseText(Instance.m_pastOccupationTermKey); }
@@ -342,6 +343,7 @@ namespace TUFF
         public string m_loadFilePromptTermKey = "Load which file?";
         public string m_currentExpTermKey = "Current Exp";
         public string m_toNextLevelTermKey = "To Next Level";
+        public string m_endTurnTermKey = "End Turn";
 
         public string m_fightingArtTermKey = "Fighting Art";
         public string m_pastOccupationTermKey = "Past Occupation";

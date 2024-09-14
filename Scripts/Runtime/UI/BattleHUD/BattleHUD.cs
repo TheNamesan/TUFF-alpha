@@ -183,7 +183,9 @@ namespace TUFF
         }
         public void DisplayEndTurn(bool display)
         {
-            if (endTurnText) endTurnText.gameObject.SetActive(display);
+            if (!endTurnText) return;
+            endTurnText.gameObject.SetActive(display);
+            endTurnText.text = TUFFSettings.endTurnText;
         }
         public void ShowAll()
         {
@@ -339,15 +341,6 @@ namespace TUFF
         }
         private void UpdateSkipTurn()
         {
-            //if (!commandList) return;
-            //if (!commandList.uiMenu) return;
-            //if (commandList.uiMenu.IsOpen)
-            //{
-            //    int index = commandList.commandListIndex;
-            //    SkipCommandMenu((int)UIController.instance.horizontalAxisDown, commandList.commandListIndex, commandList.uiMenu);
-            //    if (commandMenuIndex + 1 >= PlayerData.instance.GetActivePartySize() &&
-            //        UIController.instance.horizontalAxisHold > 0) m_skippingTurn = true;
-            //}
             if (m_skippingTurn)
             {
                 m_skipTurnTimer += Time.deltaTime;
@@ -356,7 +349,7 @@ namespace TUFF
                 {
                     m_skipTurnTimer = 0;
                     m_skippingTurn = false;
-                    commandList.uiMenu.ForcePlayHighlightClip();
+                    commandList?.uiMenu?.ForcePlayHighlightClip();
                     EndPlayerActions();
                 }
             }
