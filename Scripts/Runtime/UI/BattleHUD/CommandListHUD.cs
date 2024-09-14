@@ -137,20 +137,6 @@ namespace TUFF
         {
             battleHUD.CommandCancel();
         }
-        //private void AddFromCommandList(List<Command> commandList, UIElementContainer[] uiElementContainer)
-        //{
-        //    for (int i = 0; i < commandList.Count; i++)
-        //    {
-        //        InstantiateCommandElement(commandList[i], uiElementContainer, i);
-        //    }
-        //}
-        //void AddDefaultCommands(List<Command> commandList, UIElementContainer[] uiElementContainer)
-        //{
-        //    for (int i = 0; i < defaultCommands.Count; i++)
-        //    {
-        //        InstantiateCommandElement(defaultCommands[i], uiElementContainer, commandList.Count + i);
-        //    }
-        //}
         private void InstantiateCommandElement(Command command, int row)
         {
             if (!commandElementPrefab) return;
@@ -185,7 +171,7 @@ namespace TUFF
                 else if (command.commandType == CommandType.Escape)
                 {
                     button.disabled = !BattleManager.instance.CanEscape;
-                    button.holdTimeToSelect = 1f;
+                    button.holdTimeToSelect = 0.5f;
                 }
                 button.highlightDisplayText = command.GetDescription();
             }

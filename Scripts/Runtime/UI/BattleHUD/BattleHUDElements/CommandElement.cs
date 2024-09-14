@@ -25,10 +25,6 @@ namespace TUFF
                 uiButton.onSelect.AddListener(() => {
                     commandListHUD.battleHUD.CommandSelect(commandListHUD.memberRef, commandListHUD.commandListIndex, command);
                 });
-                uiButton.onHorizontalInput.AddListener((input) =>
-                {
-                    commandListHUD.battleHUD.SkipCommandMenu(input, commandListHUD.commandListIndex, commandListHUD.uiMenu);
-                });
             }
         }
         private void OnHighlightMarkVulnerableTargets(CommandListHUD commandListHUD)

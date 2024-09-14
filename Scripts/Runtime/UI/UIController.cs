@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 namespace TUFF
 {
@@ -67,6 +68,8 @@ namespace TUFF
         public float verticalAxisHold = 0f;
         public float horizontalAxisDown = 0f;
         public float horizontalAxisHold = 0f;
+        public UnityEvent<InputAction.CallbackContext> onHorizontalChange = new();
+        public UnityEvent<InputAction.CallbackContext> onVerticalChange = new();
 
         [Header("Other Inputs")]
         public bool QDown = false;
@@ -356,11 +359,13 @@ namespace TUFF
         public void VerticalAxis(InputAction.CallbackContext context)
         {
             AxisHandler(context, ref verticalAxisDown, ref verticalAxisHold);
+            onVerticalChange.Invoke(context);
         }
 
         public void HorizontalAxis(InputAction.CallbackContext context)
         {
             AxisHandler(context, ref horizontalAxisDown, ref horizontalAxisHold);
+            onHorizontalChange.Invoke(context);
         }
         public void QKey(InputAction.CallbackContext context)
         {

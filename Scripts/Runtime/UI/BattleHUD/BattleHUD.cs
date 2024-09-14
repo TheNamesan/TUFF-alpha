@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using TMPro;
 
 namespace TUFF
 {
@@ -31,17 +33,24 @@ namespace TUFF
         public StatusHUD allyStatusHUD;
         public StatusHUD enemyStatusHUD;
         public DetailedStatusHUD detailedStatusHUD;
+        public TMP_Text endTurnText;
+        public Image endTurnFill;
         public UnitHUD[] unitHUD = new UnitHUD[PlayerData.activePartyMaxSize];
         public CommandListHUD commandList = null;
         public CommandSubmenuHUD commandSubmenuHUD;
-        public CommandListHUD[] commandListHUD = new CommandListHUD[PlayerData.activePartyMaxSize];
         public UnitHUD selectedUnitHUD;
         public List<HitDisplayGroup> hitDisplayGroups = new List<HitDisplayGroup>();
         public List<EnemyBarHandler> enemyHPBars = new List<EnemyBarHandler>();
+        
 
         [Header("Terms Name Keys")]
         public string allEnemiesScopeKey = "scope_AllEnemies";
         public string allAlliesScopeKey = "scope_AllAllies";
+
+        public float timeTilTurnSkip = 0.5f;
+        private bool m_skippingTurn = false;
+        private float m_skipTurnTimer = 0f;
+        
         public enum PrimaryWindowContent
         {
             All = 0,
@@ -53,12 +62,19 @@ namespace TUFF
             CommandsMenus = 1,
             SelectedUnit = 2
         };
+        private void OnEnable()
+        {
+            UIController.instance.onHorizontalChange.AddListener(OnHorizontalChange);
+        }
+        private void OnDisable()
+        {
+            UIController.instance.onHorizontalChange.RemoveListener(OnHorizontalChange);
+        }
 
         public void InitializeHUD()
         {
             UnloadHUD();
             commandMenuIndex = 0;
-            commandListHUD = new CommandListHUD[PlayerData.activePartyMaxSize];
             unitHUD = new UnitHUD[PlayerData.activePartyMaxSize];
 
             for (int i = 0; i < PlayerData.activePartyMaxSize; i++)
@@ -87,7 +103,6 @@ namespace TUFF
                 CommandListHUD listHUD = menuGO.GetComponent<CommandListHUD>();
                 if (listHUD == null) continue;
                 listHUD.AssignBattleHUD(this);
-                commandListHUD[i] = listHUD;
             }
             var selectUnitGO = Instantiate(unitHUDPrefab, selectedUnitInfoContent);
             selectUnitGO.name = "SelectedUnit";
@@ -104,6 +119,7 @@ namespace TUFF
         public void Update()
         {
             OpenStatusHUD();
+            UpdateSkipTurn();
         }
         public void ResetPrimaryWindow()
         {
@@ -164,6 +180,10 @@ namespace TUFF
             if (window == null) return;
             if (show && window.state != BoxTransitionState.Visible) window.Appear();
             if (!show && window.state != BoxTransitionState.Hidden) window.Dissapear();
+        }
+        public void DisplayEndTurn(bool display)
+        {
+            if (endTurnText) endTurnText.gameObject.SetActive(display);
         }
         public void ShowAll()
         {
@@ -317,6 +337,44 @@ namespace TUFF
                 }
             }
         }
+        private void UpdateSkipTurn()
+        {
+            //if (!commandList) return;
+            //if (!commandList.uiMenu) return;
+            //if (commandList.uiMenu.IsOpen)
+            //{
+            //    int index = commandList.commandListIndex;
+            //    SkipCommandMenu((int)UIController.instance.horizontalAxisDown, commandList.commandListIndex, commandList.uiMenu);
+            //    if (commandMenuIndex + 1 >= PlayerData.instance.GetActivePartySize() &&
+            //        UIController.instance.horizontalAxisHold > 0) m_skippingTurn = true;
+            //}
+            if (m_skippingTurn)
+            {
+                m_skipTurnTimer += Time.deltaTime;
+                if (endTurnFill && timeTilTurnSkip > 0) endTurnFill.fillAmount = m_skipTurnTimer / timeTilTurnSkip;
+                if (m_skipTurnTimer >= timeTilTurnSkip)
+                {
+                    m_skipTurnTimer = 0;
+                    m_skippingTurn = false;
+                    commandList.uiMenu.ForcePlayHighlightClip();
+                    EndPlayerActions();
+                }
+            }
+            else m_skipTurnTimer = 0;
+            DisplayEndTurn(m_skippingTurn);
+        }
+        private void OnHorizontalChange(InputAction.CallbackContext context)
+        {
+            if (!commandList) return;
+            if (!commandList.uiMenu) return;
+            if (!commandList.uiMenu.IsOpen) return;
+            if (context.performed)
+            {
+                float value = context.ReadValue<float>();
+                int dir = LISAUtility.Sign(value);
+                SkipCommandMenu(dir, commandList.commandListIndex, commandList.uiMenu);
+            }
+        }
         public void UpdateSelectedStatusHUD(Targetable targetable)
         {
             if (targetable is PartyMember)
@@ -342,6 +400,7 @@ namespace TUFF
         {
             ShowAll();
             ToggleStatusHUD(true);
+            DisplayEndTurn(false);
             HideSecondWindowContentExcept(SecondWindowContent.CommandsMenus);
             SetNextActableUnitIndex(0);
             if (commandMenuIndex >= PlayerData.instance.GetActivePartySize())
@@ -652,12 +711,18 @@ namespace TUFF
         public void SkipCommandMenu(int direction, int commandListIndex, UIMenu uiMenu)
         {
             int dir = LISAUtility.Sign(direction);
+            m_skippingTurn = false;
             if (dir > 0)
             {
-                uiMenu.ForcePlayHighlightClip();
-                GoToNextCommandMenu();
+                if (commandMenuIndex + 1 < PlayerData.instance.GetActivePartySize())
+                {
+                    m_skippingTurn = false;
+                    uiMenu.ForcePlayHighlightClip();
+                    GoToNextCommandMenu();
+                }
+                else m_skippingTurn = true;
             }
-            if(dir < 0)
+            if (dir < 0)
             {
                 if (GetPrevActableUnitIndex(commandListIndex - 1) >= 0) uiMenu.ForcePlayHighlightClip();
                 GoToPrevCommandMenu();
@@ -735,6 +800,7 @@ namespace TUFF
             DisplayWindow(secondaryWindow, false);
             ToggleStatusHUD(false);
             ShowDescriptionDisplay(false);
+            DisplayEndTurn(false);
         }
 
         private void GoToPrevCommandMenu()

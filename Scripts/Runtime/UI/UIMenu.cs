@@ -427,9 +427,9 @@ namespace TUFF
 
         public void HighlightHMove(int directionX)
         {
-            if (directionX == 0) return;
             if (!HighlightInUIMenuIsValid(this)) return;
             UIElements[highlightY][highlightX].HorizontalInput(directionX, UIController.instance.horizontalAxisDown == 0f);
+            if (directionX == 0) { return; }
             if (UIElements[highlightY][highlightX].GetMenuHInputDisabled()) return;
             if (UIElements[highlightY].Length <= 1) return;
             int startingIndexX = highlightX;
