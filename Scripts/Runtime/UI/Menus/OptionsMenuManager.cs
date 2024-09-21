@@ -16,9 +16,9 @@ namespace TUFF
         public UISlider ambienceSlider;
         public UIPicker textSpeed;
 
-        public void OpenOptionsMenu()
+        public void OpenMenu()
         {
-            uiMenu.OpenMenu();
+            uiMenu?.OpenMenu();
         }
         public void SetOptionsValues() // Called from OptionsMenu OnOpenMenu
         {

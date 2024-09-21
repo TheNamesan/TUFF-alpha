@@ -37,7 +37,7 @@ namespace TUFF
             UpdatePromptText();
         }
 
-        public void OpenFileSelectMenu(FileSelectMenuMode openMode, EventAction actionCallback = null)
+        public void OpenMenu(FileSelectMenuMode openMode, EventAction actionCallback = null)
         {
             mode = openMode;
             m_savedFile = false;

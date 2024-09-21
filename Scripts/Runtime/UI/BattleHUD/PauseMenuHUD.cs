@@ -68,5 +68,9 @@ namespace TUFF
             if (magazineCountViewer != null)
                 magazineCountViewer.ShowMags(LISAUtility.IntToString(PlayerData.instance.mags));
         }
+        public void OpenReturnToTitleScreenMenu()
+        {
+            UIController.instance.OpenReturnToTitleMenu();
+        }
     }
 }

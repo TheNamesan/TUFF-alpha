@@ -7,6 +7,14 @@ namespace TUFF
     public class ReturnToTitleMenuManager : MonoBehaviour
     {
         public string titleScreenSceneName = "TitleScreen";
+
+        [Header("References")]
+        public UIMenu uiMenu;
+
+        public void OpenMenu()
+        {
+            uiMenu?.OpenMenu();
+        }
         public void ToTitleButton()
         {
             StartCoroutine(ToTitle());

@@ -33,6 +33,8 @@ namespace TUFF
         [SerializeField] protected ShopMenu shopMenu;
         [SerializeField] protected FileSelectMenu fileSelectMenu;
         [SerializeField] protected OptionsMenuManager optionsMenu;
+        [SerializeField] protected ReturnToTitleMenuManager returnToTitleMenu;
+        [SerializeField] protected ExitMenuManager exitMenu;
         [SerializeField] protected RectTransform loadingIcon;
         public DialogueManager textbox;
         public DialogueManager dimTextbox;
@@ -230,19 +232,27 @@ namespace TUFF
         
         public void ShowChoices(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
         {
-            choicesMenu.DisplayChoices(callback, options, closeWithCancel, onMenuCancel);
+            choicesMenu?.DisplayChoices(callback, options, closeWithCancel, onMenuCancel);
         }
         public void OpenShop(ShopData shopData, EventAction actionCallback = null)
         {
-            shopMenu.OpenShop(shopData, actionCallback);
+            shopMenu?.OpenMenu(shopData, actionCallback);
         }
         public void OpenFileSelectMenu(FileSelectMenuMode openMenu, EventAction actionCallback = null)
         {
-            fileSelectMenu?.OpenFileSelectMenu(openMenu, actionCallback);
+            fileSelectMenu?.OpenMenu(openMenu, actionCallback);
         }
         public void OpenOptionsMenu()
         {
-            optionsMenu.OpenOptionsMenu();
+            optionsMenu?.OpenMenu();
+        }
+        public void OpenReturnToTitleMenu()
+        {
+            returnToTitleMenu?.OpenMenu();
+        }
+        public void OpenExitMenu()
+        {
+            exitMenu?.OpenMenu();
         }
 
         public void InvokePauseMenu()

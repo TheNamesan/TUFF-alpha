@@ -27,6 +27,10 @@ namespace TUFF
         {
             UIController.instance.OpenOptionsMenu();
         }
+        public void ExitButton()
+        {
+            UIController.instance.OpenExitMenu();
+        }
 
         protected IEnumerator NewGame()
         {

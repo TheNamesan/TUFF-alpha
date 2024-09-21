@@ -37,7 +37,7 @@ namespace TUFF
         public int selectedPrice = 0;
         public int selectedQuantity = 0;
 
-        public void OpenShop(ShopData shopData, EventAction actionCallback = null)
+        public void OpenMenu(ShopData shopData, EventAction actionCallback = null)
         {
             SetSelection(null, 0);
             selectedQuantity = 0;
