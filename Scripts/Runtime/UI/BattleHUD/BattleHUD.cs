@@ -40,7 +40,7 @@ namespace TUFF
         public CommandSubmenuHUD commandSubmenuHUD;
         public UnitHUD selectedUnitHUD;
         public List<HitDisplayGroup> hitDisplayGroups = new List<HitDisplayGroup>();
-        public List<EnemyBarHandler> enemyHPBars = new List<EnemyBarHandler>();
+        public List<EnemyHUD> enemyHPBars = new List<EnemyHUD>();
         
 
         [Header("Terms Name Keys")]
@@ -150,7 +150,7 @@ namespace TUFF
             {
                 Destroy(enemyHPBars[i].gameObject);
             }
-            enemyHPBars = new List<EnemyBarHandler>();
+            enemyHPBars = new List<EnemyHUD>();
 
             foreach (Transform child in overlayInfo) //Clean anything else
             {
@@ -867,23 +867,23 @@ namespace TUFF
             {
                 if (enemyHPBars[i].target == target)
                 {
-                    enemyHPBars[i].ShowBar(target, this, infDisplayTime);
+                    enemyHPBars[i].Show(target, this, infDisplayTime);
                     return;
                 }
             }
             
-            var enemyHPBarGO = Instantiate(TUFFSettings.enemyHPBar, overlayInfo);
-            var enemyHPBar = enemyHPBarGO.GetComponent<EnemyBarHandler>();
+            var enemyHPBarGO = Instantiate(TUFFSettings.enemyHUD, overlayInfo);
+            var enemyHPBar = enemyHPBarGO.GetComponent<EnemyHUD>();
             enemyHPBars.Add(enemyHPBar);
-            enemyHPBar.ShowBar(target, this, infDisplayTime);
+            enemyHPBar.Show(target, this, infDisplayTime);
         }
-        public void RemoveEnemyHPBar(EnemyBarHandler enemyHPBar)
+        public void RemoveEnemyHUD(EnemyHUD enemyHUD)
         {
             for (int i = 0; i < enemyHPBars.Count; i++)
             {
-                if (enemyHPBars[i] == enemyHPBar)
+                if (enemyHPBars[i] == enemyHUD)
                 {
-                    Destroy(enemyHPBar.gameObject);
+                    Destroy(enemyHUD.gameObject);
                     enemyHPBars.RemoveAt(i);
                     return;
                 }

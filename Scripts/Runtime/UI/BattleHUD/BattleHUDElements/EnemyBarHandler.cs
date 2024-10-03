@@ -8,83 +8,47 @@ namespace TUFF
 {
     public class EnemyBarHandler : BarHandler
     {
-        public ActiveStatesHUD statesHUD;
-        [HideInInspector] public BattleHUD hudCallback;
-        [HideInInspector] public EnemyInstance target;
         private const float depleteDuration = 0.5f;
-        private const float secondsToWaitToDestroy = 1f;
-        private Tween tween;
-        private IEnumerator destroyCoroutine = null;
-        private float currentValue;
-        private float targetValue;
-        private float targetMaxValue;
+        public Tween tween;
+        private float m_currentValue;
+        private float m_targetValue;
+        private float m_targetMaxValue;
         private string format = null;
-        private bool forceShow = false;
-        public void ShowBar(EnemyInstance target, BattleHUD hudCallback, bool infDisplayTime = false, string format = "F0")
+        public void ShowBar(float targetValue, float targetMaxValue, float targetPrevValue, bool infDisplayTime = false, string format = "F0", System.Action onFinished = null)
         {
-            this.target = target;
-            this.hudCallback = hudCallback;
-            this.forceShow = infDisplayTime;
             this.format = format;
 
-            var rect = GetComponent<RectTransform>();
-            rect.position = target.imageReference.GetOverlayPosition();
-            rect.anchoredPosition -= Vector2.up * 250f;
-
-            targetValue = target.HP;
-            targetMaxValue = target.GetMaxHP();
-            float prevValue = target.prevHP;
+            m_targetValue = targetValue;
+            m_targetMaxValue = targetMaxValue;
+            float prevValue = targetPrevValue;
             
-            if(destroyCoroutine != null) StopCoroutine(destroyCoroutine);
-            destroyCoroutine = WaitToDestroy();
             if (tween != null)
             {
-                prevValue = currentValue;
+                prevValue = m_currentValue;
                 tween?.Kill();
                 tween = null;
             }
-            else
-            {
-                statesHUD.InitializeHUD();
-            }
-            statesHUD.UpdateStates(target.states);
             if (infDisplayTime)
             {
-                OnUpdate(targetValue);
+                OnUpdate(m_targetValue);
             }
             else
             {
                 OnUpdate(prevValue);
                 tween = DOTween
-                    .To(val => OnUpdate(val), prevValue, targetValue, depleteDuration)
+                    .To(val => OnUpdate(val), prevValue, m_targetValue, depleteDuration)
                     .SetEase(Ease.Linear)
                     .OnComplete(() => {
-                        DestroyBar();
+                        onFinished?.Invoke();
                     });
             }    
         }
-        public void QuickUpdate()
-        {
-            if (target == null) return;
-            statesHUD.UpdateStates(target.states);
-        }
         private void OnUpdate(float currentValue)
         {
-            fill.fillAmount = Mathf.Clamp(currentValue / targetMaxValue, 0f, 1f);
+            fill.fillAmount = Mathf.Clamp(currentValue / m_targetMaxValue, 0f, 1f);
             valueText.text = LISAUtility.FloatToString(currentValue, format);
             UpdateFillColor();
-            this.currentValue = currentValue;
-        }
-        private void DestroyBar()
-        {
-            if(!forceShow) StartCoroutine(destroyCoroutine);
-        }
-        private IEnumerator WaitToDestroy()
-        {
-            yield return new WaitForSeconds(secondsToWaitToDestroy);
-            tween?.Kill();
-            tween = null;
-            hudCallback.RemoveEnemyHPBar(this);
+            this.m_currentValue = currentValue;
         }
         private void OnDestroy()
         {

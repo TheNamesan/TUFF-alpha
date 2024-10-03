@@ -439,6 +439,7 @@ namespace TUFF
             initMember.exp = unit.initialJob.LevelToStat(initMember.level, LevelToStatType.EXP);
             initMember.HP = initMember.GetMaxHP();//unit.initialJob.LevelToStat(initMember.level, LevelToStatType.MaxHP);
             initMember.prevHP = initMember.HP;
+            initMember.prevSP = initMember.SP;
             initMember.SP = initMember.GetMaxSP();//unit.initialJob.LevelToStat(initMember.level, LevelToStatType.MaxSP);
             initMember.TP = 0;
 

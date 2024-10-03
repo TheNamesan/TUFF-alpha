@@ -29,6 +29,7 @@ namespace TUFF
             exp = this.userA.exp;
             HP = GetMaxHP();
             prevHP = HP;
+            prevSP = SP;
             SP = GetMaxSP();
             TP = 0;
         }

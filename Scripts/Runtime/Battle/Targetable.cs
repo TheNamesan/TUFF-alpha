@@ -9,6 +9,7 @@ namespace TUFF
         public int HP = 0;
         public int prevHP = 0;
         public int SP = 0;
+        public int prevSP = 0;
         public int TP = 0;
         public bool isKOd = false;
         public virtual bool acted { get => m_acted; set { m_acted = value; } }
@@ -226,6 +227,7 @@ namespace TUFF
         public virtual void UpdatePrevHP()
         {
             prevHP = HP;
+            prevSP = SP;
         }
         public virtual void CalculateSP(int value)
         {

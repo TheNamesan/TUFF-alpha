@@ -62,7 +62,7 @@ namespace TUFF
         public static Sprite magsIcon { get => Instance.m_magsIcon; }
         //Battle System Prefab
         public static GameObject hitDisplayGroup { get => Instance.m_hitDisplayGroup; }
-        public static GameObject enemyHPBar { get => Instance.m_enemyHPBar; }
+        public static GameObject enemyHUD { get => Instance.m_enemyHUD; }
         //Battle System Animations
         public static float critPauseTimer { get => Instance.m_critPauseTimer; }
         public static BattleAnimation enemyKOAnimation { get => Instance.m_enemyKOAnimation; }
@@ -271,7 +271,7 @@ namespace TUFF
 
         [Header("Battle System Prefabs")]
         [SerializeField] private GameObject m_hitDisplayGroup;
-        [SerializeField] private GameObject m_enemyHPBar;
+        [SerializeField] private GameObject m_enemyHUD;
 
         [Header("Battle System Animations")]
         [SerializeField] private float m_critPauseTimer = 0.5f;

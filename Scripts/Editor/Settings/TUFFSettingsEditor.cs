@@ -89,7 +89,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_magsIcon"));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_hitDisplayGroup"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_enemyHPBar"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_enemyHUD"));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_critPauseTimer"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_enemyKOAnimation"));
