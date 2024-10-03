@@ -361,6 +361,7 @@ namespace TUFF
             if (!commandList) return;
             if (!commandList.uiMenu) return;
             if (!commandList.uiMenu.IsOpen) return;
+            if (commandList.uiMenu != UIController.instance.CurrentMenu) return;
             if (context.performed)
             {
                 float value = context.ReadValue<float>();

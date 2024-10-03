@@ -58,6 +58,10 @@ namespace TUFF
 
         [Tooltip("Currently active menus. Position 0 is the currently controlled menu.")]
         [SerializeField] private List<UIMenu> activeMenus = new List<UIMenu>();
+        public UIMenu CurrentMenu { get { 
+                if (activeMenus == null || activeMenus.Count <= 0) return null;
+                return activeMenus[0];
+            } }
 
         [Header("Input")]
         public bool actionButtonDown = false;
