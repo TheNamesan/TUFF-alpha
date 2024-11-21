@@ -11,8 +11,10 @@ namespace TUFF
         public Animator anim;
 
         [Header("Pivot")]
+        [Tooltip("Relative position when the target is a Party Member.")]
         public AnimationPivotType targetPartyPivot = AnimationPivotType.Center;
-        public AnimationPivotType targetEnemyPivot = AnimationPivotType.Center;
+        [Tooltip("Relative position when the target is an Enemy Instance.")]
+        public AnimationPivotType targetEnemyPivot = AnimationPivotType.Bottom;
 
         [Header("Events")]
         [Tooltip("If true, automatically runs all events and ends the animation on Initialize. Enable if there's no animator or animations to play for this skill.")]

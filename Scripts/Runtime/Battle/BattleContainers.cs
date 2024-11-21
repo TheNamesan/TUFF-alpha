@@ -159,6 +159,11 @@ namespace TUFF
                 }
             }
         }
+        public BattleAnimation GetAnimation()
+        {
+            if (skill == null) return null;
+            return skill.animation;
+        }
         
 
         public virtual bool CanAffordSP()

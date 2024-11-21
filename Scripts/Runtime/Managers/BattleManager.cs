@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.GraphicsBuffer;
 namespace TUFF
 {
     public enum BattleState
@@ -364,13 +365,12 @@ namespace TUFF
             if (targetedSkill.skill.animation == null) return null;
             return PlayAnimation(targetedSkill.skill.animation, targetedSkill);
         }
-        private BattleAnimation PlayAnimation(BattleAnimation battleAnimation, TargetedSkill targetedSkill)
+        protected BattleAnimation PlayAnimation(BattleAnimation battleAnimation, TargetedSkill targetedSkill)
         {
             GameObject skillAnimGO;
             BattleAnimation skillAnim;
             CreateAnimation(battleAnimation, targetedSkill, out skillAnimGO, out skillAnim);
-            var target = targetedSkill.targets[0];
-            SetAnimationPosition(skillAnimGO.GetComponent<RectTransform>(), skillAnim.callRef, battleAnimation.GetPivot(target));
+            SetAnimationPosition(skillAnimGO.transform as RectTransform, skillAnim.callRef);
 
             return skillAnim;
         }
@@ -397,34 +397,66 @@ namespace TUFF
             skillAnim.InitiateAnimation(targetedSkill);
             //hud.AddToBattleStage(skillAnimGO.transform);
         }
-        public static void SetAnimationPosition(RectTransform rectTransform, TargetedSkill targetedSkill, AnimationPivotType pivot = AnimationPivotType.Center)
+        public static void SetAnimationPosition(RectTransform rectTransform, TargetedSkill targetedSkill)
         {
-            if (targetedSkill == null) return;
-            if (targetedSkill.targets == null) return;
-            if (targetedSkill.targets.Count <= 0) return;
+            if (targetedSkill == null) { Debug.LogWarning("No Targeted Skill!"); return; }//return;
+            AnimationPivotType pivot = AnimationPivotType.Center;
+            BattleAnimation animation = targetedSkill.GetAnimation();
+            var target = targetedSkill.targets[0];
+            if (animation) pivot = animation.GetPivot(target);
+            SetAnimationPosition(rectTransform, targetedSkill, pivot);
+        }
+        public static void SetAnimationPosition(RectTransform rectTransform, TargetedSkill targetedSkill, AnimationPivotType pivot)
+        {
+            if (!rectTransform) { Debug.LogWarning("No Rect Transform assigned!"); return; }
+            if (targetedSkill == null) { Debug.LogWarning("No Targeted Skill!"); return; }//return;
+            if (targetedSkill.targets == null) { Debug.LogWarning("No Targets!"); return; } //return;
+            if (targetedSkill.targets.Count <= 0) { Debug.LogWarning("No Target Count!"); return; } //return;
             if (BattleLogic.IsGroupScope(targetedSkill.scopeData.scopeType) || BattleLogic.IsRandomScope(targetedSkill.scopeData.scopeType)) return;
 
-            var target = targetedSkill.targets[0];
-            var basePosition = target.imageReference.GetCameraPosition();
-            AssignAnimationPositionFromPivot(rectTransform, pivot, basePosition);
+            AssignAnimationPositionFromPivot(rectTransform, pivot, targetedSkill.targets[0].imageReference);
             //rectTransform.position = targetedSkill.targets[0].imageReference.rect.position;
         }
-        public static void AssignAnimationPositionFromPivot(RectTransform rectTransform, AnimationPivotType pivot, Vector3 basePosition)
+        public static void AssignAnimationPositionFromPivot(RectTransform rectTransform, AnimationPivotType pivot, GraphicHandler imageReference)
         {
-            rectTransform.position = basePosition;
+            if (!rectTransform) { Debug.LogWarning("No Rect Transform assigned!"); return; }
+            if (!imageReference) { Debug.LogWarning("No Graphic Handler assigned!"); return; }
+            Debug.Log("Org Position: " + rectTransform.position);
+            rectTransform.position = imageReference.GetCameraPosition();
+            Vector2 halfScaledSize = imageReference.GetScaledSize() * 0.5f;
+            Debug.Log("Size: " + halfScaledSize);
             switch (pivot)
             {
                 case AnimationPivotType.Top:
-                    rectTransform.anchoredPosition += (Vector2.up * 560f);
+                    rectTransform.anchoredPosition += (halfScaledSize.y + (imageReference.IsInOverlayCanvas() ? 400f : 0f)) * Vector2.up;//(Vector2.up * 560f);
                     break;
                 case AnimationPivotType.Bottom:
-                    rectTransform.anchoredPosition += (Vector2.up * -560f);
+                    rectTransform.anchoredPosition -= halfScaledSize.y * Vector2.up;//(Vector2.up * -560f);
                     break;
+                case AnimationPivotType.Screen:
+                    rectTransform.anchoredPosition = Vector2.zero;
+                    break;
+            }
+            Debug.Log($"[{rectTransform.gameObject.name}]Final Position: " + rectTransform.position + $"({pivot})");
+        }
+        public static void AssignAnimationPositionFromPivot(RectTransform rectTransform, AnimationPivotType pivot, Vector3 basePosition)
+        {
+            if (!rectTransform) return;
+            rectTransform.position = basePosition;
+            switch (pivot)
+            {
+                //case AnimationPivotType.Top:
+                //    rectTransform.anchoredPosition += (Vector2.up * 560f);
+                //    break;
+                //case AnimationPivotType.Bottom:
+                //    rectTransform.anchoredPosition += (Vector2.up * -560f);
+                //    break;
                 case AnimationPivotType.Screen:
                     rectTransform.anchoredPosition = (Vector2.zero);
                     break;
             }
         }
+        
         public bool GetPatternSkillAndTargets(Targetable user, List<ActionPattern> actionPatterns, out Skill skill, out List<Targetable> targets, int fromTurn)
         {
             skill = GetSkillFromPatternPool(actionPatterns, user, fromTurn);

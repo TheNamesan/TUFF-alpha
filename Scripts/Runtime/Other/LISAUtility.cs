@@ -170,19 +170,7 @@ namespace TUFF
             var parentCanvas = lastParent.GetComponent<Canvas>();
             return parentCanvas;
         }
-
-        public static Vector2 GetCanvasOverlayPosition(GraphicHandler graphicHandler)
-        {
-            if (graphicHandler.canvasRoot.renderMode == RenderMode.ScreenSpaceOverlay)
-                return graphicHandler.rect.position;
-            return GetCanvasCameraToOverlayPosition(graphicHandler.rect.position);
-        }
-        public static Vector2 GetCanvasCameraPosition(GraphicHandler graphicHandler)
-        {
-            if (graphicHandler.canvasRoot.renderMode == RenderMode.ScreenSpaceCamera)
-                return graphicHandler.rect.position;
-            return GetCanvasOverlayToCameraPosition(graphicHandler.rect.position);
-        }
+        
         public static Vector2 GetCanvasOverlayToCameraPosition(Vector2 position)
         {
             var cam = UIController.instance.cameraCanvas.worldCamera;

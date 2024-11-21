@@ -34,7 +34,7 @@ namespace TUFF
 
         [HideInInspector] public bool isHighlighted = false;
 
-        [HideInInspector] public RectTransform rect;
+        public RectTransform rect { get => transform as RectTransform; }
         [HideInInspector] public Color originalUserColor = new Color();
         [HideInInspector] public Color originalVFXColor = new Color();
         protected Tween colorTween;
@@ -45,7 +45,6 @@ namespace TUFF
 
         public void Awake()
         {
-            rect = GetComponent<RectTransform>();
             canvasRoot = LISAUtility.GetCanvasRoot(transform);
             if(userImage != null)
             {
@@ -57,9 +56,36 @@ namespace TUFF
             }
             ActivateOutline(false);
         }
-        public Vector2 GetOverlayPosition() => LISAUtility.GetCanvasOverlayPosition(this);
-        public Vector2 GetCameraPosition() => LISAUtility.GetCanvasCameraPosition(this);
-        public void LateUpdate()
+        public bool IsInOverlayCanvas()
+        {
+            if (canvasRoot == null) { Debug.LogWarning("No canvas!"); return false; }
+            return canvasRoot.renderMode == RenderMode.ScreenSpaceOverlay;
+        }
+        public bool IsInCameraCanvas()
+        {
+            if (canvasRoot == null) { Debug.LogWarning("No canvas!"); return false; }
+            return canvasRoot.renderMode == RenderMode.ScreenSpaceCamera;
+        }
+        public Vector2 GetOverlayPosition()
+        {
+            if (IsInOverlayCanvas())
+                return rect.position;
+            return LISAUtility.GetCanvasCameraToOverlayPosition(rect.position);
+        }
+
+        public Vector2 GetCameraPosition()
+        {
+            if (IsInCameraCanvas())
+                return rect.position;
+            return LISAUtility.GetCanvasOverlayToCameraPosition(rect.position);
+        }
+        public Vector2 GetScaledSize()
+        {
+            RectTransform rect = this.rect;
+            if (!rect) return Vector2.zero;
+            return rect.rect.size * rect.localScale; 
+        }
+        private void LateUpdate()
         {
             if (outlineImage != null)
             {

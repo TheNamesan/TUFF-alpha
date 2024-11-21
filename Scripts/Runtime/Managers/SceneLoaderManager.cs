@@ -35,7 +35,7 @@ namespace TUFF
             if (cachedNeighbourScenes.IndexOf(scene) >= 0) return; //Neighbour already added
             if (scene == currentScene) return;
             cachedNeighbourScenes.Add(scene);
-            Debug.Log($"Added Neighbour ({scene.name}) to {currentScene.name}");
+            //Debug.Log($"Added Neighbour ({scene.name}) to {currentScene.name}");
         }
         public bool HasScene(Scene scene)
         {
@@ -238,7 +238,7 @@ namespace TUFF
                 var scene = SceneManager.GetSceneAt(i);
                 if (currentSceneNode.HasScene(scene)) continue;
                 //if (lastSceneNode.HasScene(scene)) continue;
-                Debug.Log($"Unloading: {scene.name}");
+                //Debug.Log($"Unloading: {scene.name}");
                 var op = SceneManager.UnloadSceneAsync(scene.name);
                 unloadingScenes.Add(scene.name);
                 op.completed += (asyncOperation) => { unloadingScenes.Remove(scene.name); };

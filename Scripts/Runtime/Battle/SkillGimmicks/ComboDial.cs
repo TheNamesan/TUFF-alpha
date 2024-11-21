@@ -167,7 +167,6 @@ namespace TUFF
                     return;
                 }
             }
-            //if (!skillAnim.callRef.CanAffordSP() || !skillAnim.callRef.CanAffordTP()) return false;
             PlaySFX(inputSFX);
         }
         protected void ReactivateNeutralPose()
@@ -175,7 +174,7 @@ namespace TUFF
             if (neutralPose == null) return;
             if (queuedSkillsIndex >= maxInputs - 1) return;
             if (comboMoveSkill != null && queuedSkillsIndex >= queuedSkills.Count - 1) return;
-            BattleManager.SetAnimationPosition(skillAnim.GetComponent<RectTransform>(), queuedSkills[queuedSkillsIndex]);
+            BattleManager.SetAnimationPosition(skillAnim.transform as RectTransform, queuedSkills[queuedSkillsIndex]);
             //if (queuedSkills[queuedSkillsIndex].targets[0] != null)
                 //skillAnim.transform.position = queuedSkills[queuedSkillsIndex].targets[0].imageReference.transform.position;
             neutralPose.SetActive(true);

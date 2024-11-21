@@ -17,7 +17,7 @@ namespace TUFF
             hitDisplays = new List<HitDisplay>();
             var rect = GetComponent<RectTransform>();
             var pos = target.imageReference.GetOverlayPosition();
-            Debug.Log(pos);
+            //Debug.Log(pos);
             rect.position = pos;
             rect.anchoredPosition += Vector2.up * 250f;
         }
