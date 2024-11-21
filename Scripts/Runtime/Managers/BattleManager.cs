@@ -421,10 +421,8 @@ namespace TUFF
         {
             if (!rectTransform) { Debug.LogWarning("No Rect Transform assigned!"); return; }
             if (!imageReference) { Debug.LogWarning("No Graphic Handler assigned!"); return; }
-            Debug.Log("Org Position: " + rectTransform.position);
             rectTransform.position = imageReference.GetCameraPosition();
             Vector2 halfScaledSize = imageReference.GetScaledSize() * 0.5f;
-            Debug.Log("Size: " + halfScaledSize);
             switch (pivot)
             {
                 case AnimationPivotType.Top:
@@ -437,7 +435,6 @@ namespace TUFF
                     rectTransform.anchoredPosition = Vector2.zero;
                     break;
             }
-            Debug.Log($"[{rectTransform.gameObject.name}]Final Position: " + rectTransform.position + $"({pivot})");
         }
         public static void AssignAnimationPositionFromPivot(RectTransform rectTransform, AnimationPivotType pivot, Vector3 basePosition)
         {
