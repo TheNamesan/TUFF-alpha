@@ -29,7 +29,6 @@ namespace TUFF.TUFFEditor
         }
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            property.serializedObject.Update();
             PartyMember member = LISAEditorUtility.GetTargetObjectOfProperty(property) as PartyMember;
 
             int index = LISAEditorUtility.GetArrayIndexFromPath(property.propertyPath);

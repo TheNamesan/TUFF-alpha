@@ -28,8 +28,6 @@ namespace TUFF.TUFFEditor
         }
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-
             GUI.enabled = false;
             SerializedProperty prop = serializedObject.FindProperty("m_Script");
             EditorGUILayout.PropertyField(prop, true, new GUILayoutOption[0]);
@@ -99,6 +97,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("notes"));
 
             serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
         }
         private string PrintEvaluate(Job job, string label, LevelToStatType stat, bool exp = false)
         {

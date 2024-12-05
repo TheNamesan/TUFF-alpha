@@ -13,13 +13,14 @@ namespace TUFF.TUFFEditor
         public override void OnInspectorGUI()
         {
             var greatTest = target as GreatTest;
-            serializedObject.Update();
+            
             SerializedProperty prop = serializedObject.FindProperty("op");
             //EditorGUILayout.PropertyField(prop.GetArrayElementAtIndex(1));
             LISAEditorUtility.DrawThing(prop.GetArrayElementAtIndex(1));
             //EditorGUILayout.PropertyField();
 
             serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
         }
 
     }

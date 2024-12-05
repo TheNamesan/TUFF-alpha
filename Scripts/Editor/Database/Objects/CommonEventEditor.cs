@@ -12,8 +12,6 @@ namespace TUFF.TUFFEditor
     {
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-
             var content = serializedObject.FindProperty("actionList.content");
             EditorGUILayout.LabelField($"Event Count: {content.arraySize}");
             if(GUILayout.Button(new GUIContent("Content", "Show the event list.")))
@@ -22,6 +20,7 @@ namespace TUFF.TUFFEditor
             }
 
             serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
         }
 
         //public static CommonEvent CreateCommonEvent(Scene scene, string targetName, List<EventCommand> eventCommands = null)

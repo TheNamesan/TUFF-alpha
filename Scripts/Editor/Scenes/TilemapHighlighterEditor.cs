@@ -17,8 +17,8 @@ namespace TUFF.TUFFEditor
             {
                 TilePaletteUtilityWindow.ShowWindow();
             }
-            serializedObject.Update();
             serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
         }
     }
 }

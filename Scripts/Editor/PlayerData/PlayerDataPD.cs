@@ -44,9 +44,9 @@ namespace TUFF.TUFFEditor
                 {
                     var prop = property.FindPropertyRelative(variableNames[i]);
                     if (variableNames[i] == "playtime")
-                        { position.y += DrawPlaytime(position, prop); continue; }
-                    if (variableNames[i] == "partyOrder") 
-                        { position.y += DrawPartyOrder(position, property, prop); continue; }
+                    { position.y += DrawPlaytime(position, prop); continue; }
+                    if (variableNames[i] == "partyOrder")
+                    { position.y += DrawPartyOrder(position, property, prop); continue; }
                     EditorGUI.PropertyField(position, prop);
                     position.y += EditorGUI.GetPropertyHeight(prop) + EditorGUIUtility.standardVerticalSpacing;
                 }

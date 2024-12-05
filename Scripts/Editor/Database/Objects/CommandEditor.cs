@@ -14,8 +14,6 @@ namespace TUFF.TUFFEditor
         }
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-
             var nameKey = serializedObject.FindProperty("nameKey");
             EditorGUILayout.PropertyField(nameKey);
             LISAEditorUtility.DrawDatabaseParsedTextPreview("Name", nameKey.stringValue, true);
@@ -28,6 +26,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("notes"));
 
             serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
         }
         public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
         {

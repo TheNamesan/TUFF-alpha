@@ -28,8 +28,6 @@ namespace TUFF.TUFFEditor
         }
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-
             EditorGUILayout.PropertyField(m_clip);
             EditorGUILayout.PropertyField(m_loopStart);
             EditorGUILayout.PropertyField(m_loopEnd);
@@ -66,6 +64,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(m_author);
 
             serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
         }
         private static string CreateClonePath(string originalPath, string assetName, string filename)
         {

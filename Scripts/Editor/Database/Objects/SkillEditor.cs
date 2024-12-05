@@ -16,8 +16,6 @@ namespace TUFF.TUFFEditor
         }
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-
             GUI.enabled = false;
             SerializedProperty prop = serializedObject.FindProperty("m_Script");
             EditorGUILayout.PropertyField(prop, true, new GUILayoutOption[0]);
@@ -84,6 +82,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("notes"));
 
             serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
         }
         public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
         {
