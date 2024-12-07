@@ -23,7 +23,8 @@ namespace TUFF
         public AdjustToPreferredTextSize textSizeAdjuster;
         public AdjustToOtherRect adjustToOtherRect;
         public RectTransform continuePrompt;
-        
+
+        public CanvasScaler parentCanvasScaler;
         private LayoutGroup rootLayout;
         private RectTransform parentRT;
         private UIMenu uiMenu;
@@ -36,7 +37,7 @@ namespace TUFF
         public float skipTimeBuffer = 0.03f;
 
         List<string> sentences;
-        Camera cam;
+        public Camera cam { get => UIController.instance.cameraCanvas.worldCamera; }
 
         [SerializeField] public float skipTime = 0;
         public bool autoContinue = false;
@@ -78,11 +79,11 @@ namespace TUFF
                 uiMenu = GetComponent<UIMenu>();
             if (rootLayout == null)
                 rootLayout = GetComponent<LayoutGroup>();
+            parentCanvasScaler = LISAUtility.GetCanvasScalerRoot(transform);
 
             BattleManager.instance.hud.ShowWindowsDynamic(false);
             UIController.instance.SetMenu(uiMenu);
             LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0f));
-            cam = Camera.main;
             parentRT = transform.parent as RectTransform;
             currentSentence = 0;
             text.enabled = true;
@@ -115,10 +116,11 @@ namespace TUFF
             if (dialogue.textboxType == TextboxType.Normal)
             {
                 LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0f));
-                Vector2 uiOffset = new Vector2(parentRT.rect.width * 0.5f, parentRT.rect.height * 0.5f);
-                Vector2 viewportPosition = cam.WorldToViewportPoint(originPos + (Vector3)dialogue.positionOffset + (Vector3)DEFAULT_OFFSET);
-                Vector2 proportionalPosition = new Vector2(viewportPosition.x * parentRT.rect.width, viewportPosition.y * parentRT.rect.height);
-                rect.localPosition = proportionalPosition - uiOffset;
+                Vector2 canvasResolution = parentCanvasScaler.referenceResolution;
+                Vector2 screenPosition = cam.WorldToScreenPoint(originPos + (Vector3)dialogue.positionOffset + (Vector3)DEFAULT_OFFSET);
+                Vector2 canvasPosition = screenPosition - canvasResolution * 0.5f;
+                rect.localPosition = canvasPosition;
+                
                 if (dialogue.origin == null) rect.localPosition = dialogue.positionOffset * 100f;
                 //AdjustOutOfBounds(); // needs fixing lol
                 LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0.5f));

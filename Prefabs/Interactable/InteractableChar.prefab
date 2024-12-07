@@ -66,35 +66,6 @@ MonoBehaviour:
   m_ShadowIntensity: 0.75
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
-  m_Vertices:
-  - position: {x: 0.9985302, y: 0.9985302, z: 0}
-    color: {r: 0.70710677, g: 0.70710677, b: 0, a: 0}
-    uv: {x: 0, y: 0}
-  - position: {x: 0.9985302, y: 0.9985302, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  - position: {x: -0.9985302, y: 0.9985302, z: 0}
-    color: {r: -0.70710677, g: 0.70710677, b: 0, a: 0}
-    uv: {x: 0, y: 0}
-  - position: {x: -0.9985302, y: 0.9985302, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  - position: {x: -0.99853003, y: -0.9985304, z: 0}
-    color: {r: -0.70710665, g: -0.7071069, b: 0, a: 0}
-    uv: {x: 0, y: 0}
-  - position: {x: -0.99853003, y: -0.9985304, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  - position: {x: 0.99853003, y: -0.9985304, z: 0}
-    color: {r: 0.70710665, g: -0.7071069, b: 0, a: 0}
-    uv: {x: 0, y: 0}
-  - position: {x: 0.99853003, y: -0.9985304, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  - position: {x: 0, y: 0, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  m_Triangles: 030001000800020000000100030002000100050003000800040002000300050004000300070005000800060004000500070006000500010007000800000006000700010000000700
   m_LocalBounds:
     m_Center: {x: 0, y: -0.00000011920929, z: 0}
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
@@ -240,7 +211,7 @@ MonoBehaviour:
   - {x: 0.78125, y: 0, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 156392
+  m_InstanceId: 204094
   m_LocalBounds:
     m_Center: {x: 0, y: 0.78125, z: 0}
     m_Extent: {x: 0.78125, y: 0.78125, z: 0}
@@ -317,6 +288,9 @@ MonoBehaviour:
   moveRouteHandler: {fileID: 8360891451595779954}
   charAnim: {fileID: 4033237326442083067}
   lightSource: {fileID: 1819656249851853432}
+  onLightToggle:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4089372521618083605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,11 +353,12 @@ MonoBehaviour:
   ignoredLayersAtJumpCheck:
     serializedVersion: 2
     m_Bits: 452
-  touchingWalkable: {fileID: 0}
+  m_touchingWalkable: {fileID: 0}
   touchingWalkableBeforeFalling: {fileID: 0}
   touchingWalkableProperties: {fileID: 0}
   ignoreWalkableForSeconds: 0.225
   ignoreWalkable: 0
+  ignoreCollision: 0
   ignoreGroundCheck: 0
   ignoreFallCheck: 0
   distancePerStep: 1.15
@@ -490,6 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 4089372521618083604}
+  spriteRenderer: {fileID: 4089372520755699044}
   pack: {fileID: 11400000, guid: 0ce7e72b86aa90246a939bb187bd2c65, type: 2}
   alt: -1
   lastStateName: 

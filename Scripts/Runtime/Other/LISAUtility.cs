@@ -170,7 +170,20 @@ namespace TUFF
             var parentCanvas = lastParent.GetComponent<Canvas>();
             return parentCanvas;
         }
-        
+        public static UnityEngine.UI.CanvasScaler GetCanvasScalerRoot(Transform element)
+        {
+            var parent = element.parent;
+            var lastParent = element.parent;
+            while (true)
+            {
+                if (parent.parent == null) break;
+                lastParent = parent;
+                parent = parent.parent;
+            }
+            var parentCanvas = lastParent.GetComponent<UnityEngine.UI.CanvasScaler>();
+            return parentCanvas;
+        }
+
         public static Vector2 GetCanvasOverlayToCameraPosition(Vector2 position)
         {
             var cam = UIController.instance.cameraCanvas.worldCamera;
