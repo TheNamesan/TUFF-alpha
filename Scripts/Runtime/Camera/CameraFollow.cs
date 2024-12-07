@@ -64,14 +64,14 @@ namespace TUFF
             }
             if (!si) Debug.LogWarning("No Scene Properties found!");
         }
-        void Start()
+        private void Start()
         {
             previousPosition = transform.position;
             GetParallaxOriginalPosition();
             UpdateCamera();
         }
 
-        void LateUpdate()
+        private void Update()
         {
             UpdateCamera();
         }
@@ -90,7 +90,7 @@ namespace TUFF
                 originalParallaxPos.Add(new Vector2(position.x, position.y));
             }
         }
-        private void UpdateCamera()
+        public void UpdateCamera()
         {
             Vector3 startpos = transform.position;
             if (FollowerInstance.player && FollowerInstance.player.controller)
@@ -102,14 +102,25 @@ namespace TUFF
 
             //Debug.Log($"W: {camHalfWidth}, H: {camHalfHeight}");
             if (!si) return;
+            transform.position = ClampVector(transform.position);
+            GetCameraBoundaries(out Vector2 clampMinPos, out Vector2 clampMaxPos);
+
+            UpdateParallax(clampMinPos, clampMaxPos);
+        }
+        public void GetCameraBoundaries(out Vector2 clampMinPos, out Vector2 clampMaxPos)
+        {
+            clampMinPos = Vector2.zero;
+            clampMaxPos = Vector2.zero;
+            if (!si) return;
             float minPosX = min.x + camHalfWidth;
             float maxPosX = max.x - camHalfWidth;
             float minPosY = min.y + camHalfHeight;
             float maxPosY = max.y - camHalfHeight;
 
             // Clamp Position
-            Vector2 clampMinPos = new Vector2(minPosX + pixelPerfectOffsetX, minPosY + pixelPerfectOffsetY);
-            Vector2 clampMaxPos = new Vector2(maxPosX - pixelPerfectOffsetX, maxPosY - pixelPerfectOffsetY);
+            clampMinPos = new Vector2(minPosX + pixelPerfectOffsetX, minPosY + pixelPerfectOffsetY);
+            clampMaxPos = new Vector2(maxPosX - pixelPerfectOffsetX, maxPosY - pixelPerfectOffsetY);
+
             if (clampMinPos.x > clampMaxPos.x)
             {
                 if (clampMinPos.x > camHalfWidth) clampMinPos.x = camHalfWidth;
@@ -120,17 +131,9 @@ namespace TUFF
                 if (clampMinPos.y > camHalfHeight) clampMinPos.y = camHalfHeight;
                 if (clampMaxPos.y < camHalfHeight) clampMaxPos.y = camHalfHeight;
             }
-            transform.position = new Vector3
-                (
-                    Mathf.Clamp(transform.position.x, clampMinPos.x, clampMaxPos.x),
-                    Mathf.Clamp(transform.position.y, clampMinPos.y, clampMaxPos.y),
-                    transform.position.z
-                );
-
-            UpdateParallax(clampMinPos.x, clampMaxPos.x, clampMinPos.y, clampMaxPos.y);
         }
 
-        private void UpdateParallax(float minPosX, float maxPosX, float minPosY, float maxPosY)
+        public void UpdateParallax(Vector2 minPos, Vector2 maxPos)
         {
 
             if (background != null)
@@ -138,8 +141,8 @@ namespace TUFF
                 Vector2 minimumPos = min + (Vector2)backgroundSpr.bounds.size * 0.5f;
                 Vector2 maximumPos = max - (Vector2)backgroundSpr.bounds.size * 0.5f;
 
-                float timeX = Mathf.InverseLerp(minPosX, maxPosX, transform.position.x);
-                float timeY = Mathf.InverseLerp(minPosY, maxPosY, transform.position.y);
+                float timeX = Mathf.InverseLerp(minPos.x, maxPos.x, transform.position.x);
+                float timeY = Mathf.InverseLerp(minPos.y, maxPos.y, transform.position.y);
                 float posX = Mathf.Lerp(minimumPos.x, maximumPos.x, timeX);
                 float posY = Mathf.Lerp(minimumPos.y, maximumPos.y, timeY);
 
@@ -158,7 +161,7 @@ namespace TUFF
 
                 Vector2 size = fixedParallaxElements[i].bounds.size;
                 float posX = Mathf.Lerp(min.x + size.x * 0.5f, max.x - size.x * 0.5f,
-                    Mathf.InverseLerp(minPosX, maxPosX, transform.position.x));
+                    Mathf.InverseLerp(minPos.x, maxPos.x, transform.position.x));
 
                 //float posY = Mathf.Lerp(si.min.y + size.y * 0.5f, si.max.y - size.y * 0.5f,
                 //    Mathf.InverseLerp(minPosX, maxPosX, transform.position.x));
@@ -177,14 +180,14 @@ namespace TUFF
                 float scaleX = parallaxHorizontalBaseSpeed / positionZ; //The higher the z position, the slower the parallax will go.
                 float scaleY = parallaxVerticalBaseSpeed / positionZ; //The higher the z position, the slower the parallax will go.
 
-                float offsetX = transform.position.x * 0.1f * scaleX - (minPosX * 0.1f * scaleX);
+                float offsetX = transform.position.x * 0.1f * scaleX - (minPos.x * 0.1f * scaleX);
                 offsetX -= parallaxElements[i].bounds.size.x * 0.5f - camHalfWidth;
                 Vector2 indParallaxOffset = Vector2.zero;
                 if (i < individualParallaxOffset.Count)
                     indParallaxOffset = individualParallaxOffset[i];
                 float posX = transform.position.x - offsetX + parallaxOffset.x + indParallaxOffset.x;
 
-                float offsetY = (transform.position.y - minPosY) * 0.1f * scaleY;
+                float offsetY = (transform.position.y - minPos.y) * 0.1f * scaleY;
                 float posY = originalParallaxPos[i].y - offsetY + parallaxOffset.y + indParallaxOffset.y;
 
                 parallaxElements[i].transform.position = new Vector3(
@@ -272,14 +275,17 @@ namespace TUFF
                 }
                 );
         }
-        Vector3 ClampVector(Vector3 vector)
+        public Vector3 ClampVector(Vector3 vector)
         {
+            //return vector;
             if (!si) return vector;
+
+            GetCameraBoundaries(out Vector2 clampMinPos, out Vector2 clampMaxPos);
             vector = new Vector3
                 (
-                    Mathf.Clamp(vector.x, min.x + camHalfWidth, max.x - camHalfWidth),
-                    Mathf.Clamp(vector.y, min.y + camHalfHeight, max.y - camHalfHeight),
-                    transform.position.z
+                    Mathf.Clamp(vector.x, clampMinPos.x, clampMaxPos.x),
+                    Mathf.Clamp(vector.y, clampMinPos.y, clampMaxPos.y),
+                    vector.z
                 );
 
             return vector;

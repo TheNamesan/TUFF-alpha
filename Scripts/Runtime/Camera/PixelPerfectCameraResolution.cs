@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
+using System.Reflection;
 
 namespace TUFF
 {
@@ -10,14 +11,28 @@ namespace TUFF
         public const int baseHeight = 540;
         public float targetSize = 6f;
         public PixelPerfectCamera pixelPerfectCamera;
+        public Camera cam;
 
-        private int height = 0;
         private void Awake()
         {
             if (!pixelPerfectCamera) pixelPerfectCamera = GetComponent<PixelPerfectCamera>();
+            if (!cam) cam = GetComponent<Camera>();
+            if (cam)
+            {
+                cam.orthographicSize = targetSize;
+            }
+            AdjustToResolution();
+            
+        }
+        private void Start()
+        {
+            if (cam)
+            {
+                cam.orthographicSize = targetSize;
+            }
             AdjustToResolution();
         }
-        void Update()
+        private void Update()
         {
             AdjustToResolution();
         }
@@ -26,11 +41,13 @@ namespace TUFF
         {
             if (!pixelPerfectCamera) return;
             if (!pixelPerfectCamera.enabled) return;
-            height = Screen.height;
+            int height = Screen.height;
             pixelPerfectCamera.refResolutionY = height;
             pixelPerfectCamera.refResolutionX = Mathf.RoundToInt(height / 9 * 16f);
 
-            pixelPerfectCamera.assetsPPU = LISAUtility.Truncate((pixelPerfectCamera.refResolutionY * 0.5f) / targetSize);
+            float size = Mathf.Max(targetSize, 0.00001f);
+            pixelPerfectCamera.assetsPPU = LISAUtility.Truncate((pixelPerfectCamera.refResolutionY * 0.5f) / size);
+            
         }
     }
 }

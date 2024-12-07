@@ -58,9 +58,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.073148146
-    width: 0.091406256
-    height: 0.09140625
+    y: 0.20231481
+    width: 0.11145834
+    height: 0.11145833
   near clip plane: 0.3
   far clip plane: 10000
   field of view: 60
@@ -95,6 +95,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 4614520689751154260}
   si: {fileID: 0}
+  anchorBackgroundX: 0
+  anchorBackgroundY: 0
   parallaxHorizontalBaseSpeed: 100
   parallaxVerticalBaseSpeed: 35
   background: {fileID: 0}
@@ -105,6 +107,9 @@ MonoBehaviour:
   - {fileID: 0}
   fixedParallaxElements: []
   originalParallaxPos: []
+  onCameraFollowingToggle:
+    m_PersistentCalls:
+      m_Calls: []
   disableCameraFollow: 0
   orgPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &6599978325762594533
@@ -121,6 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetSize: 6
   pixelPerfectCamera: {fileID: 461763127944175289}
+  cam: {fileID: 4614520689751154260}
 --- !u!114 &4614520689751154346
 MonoBehaviour:
   m_ObjectHideFlags: 0
