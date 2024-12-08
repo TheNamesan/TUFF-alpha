@@ -116,8 +116,11 @@ namespace TUFF
             if (dialogue.textboxType == TextboxType.Normal)
             {
                 LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0f));
+                float orthoSize = Mathf.Max(cam.orthographicSize, 0.00001f);
+                transform.localScale = Vector3.one * (6 / orthoSize);
                 Vector2 canvasResolution = parentCanvasScaler.referenceResolution;
                 Vector2 screenPosition = cam.WorldToScreenPoint(originPos + (Vector3)dialogue.positionOffset + (Vector3)DEFAULT_OFFSET);
+                screenPosition = new Vector2(screenPosition.x * canvasResolution.x / Screen.width, screenPosition.y * canvasResolution.y / Screen.height);
                 Vector2 canvasPosition = screenPosition - canvasResolution * 0.5f;
                 rect.localPosition = canvasPosition;
                 
@@ -154,48 +157,54 @@ namespace TUFF
 
         private void AdjustOutOfBounds()
         {
-            float preferredWidth = LayoutUtility.GetPreferredWidth(rect);
-            float preferredHeight = LayoutUtility.GetPreferredHeight(rect);
+            Vector2 bounds = parentRT.rect.size;
+            Debug.Log(bounds);
+            transform.localPosition = new Vector3(
+                Mathf.Clamp(transform.localPosition.x, -bounds.x, bounds.x),
+                Mathf.Clamp(transform.localPosition.y, -bounds.y, bounds.y),
+                transform.localPosition.z);
+            //float preferredWidth = LayoutUtility.GetPreferredWidth(rect);
+            //float preferredHeight = LayoutUtility.GetPreferredHeight(rect);
 
-            Vector3[] rectCorners = new Vector3[4];
-            rect.GetWorldCorners(rectCorners);
-            bottomLeftCorner = rectCorners[0];
-            upperLeftCorner = rectCorners[1];
-            upperRightCorner = rectCorners[2];
-            bottomRightCorner = rectCorners[3];
+            //Vector3[] rectCorners = new Vector3[4];
+            //rect.GetWorldCorners(rectCorners);
+            //bottomLeftCorner = rectCorners[0];
+            //upperLeftCorner = rectCorners[1];
+            //upperRightCorner = rectCorners[2];
+            //bottomRightCorner = rectCorners[3];
 
-            Vector3[] canvasCorners = new Vector3[4];
-            parentRT.GetWorldCorners(canvasCorners);
-            canvasBottomLeftCorner = canvasCorners[0];
-            canvasUpperLeftCorner = canvasCorners[1];
-            canvasUpperRightCorner = canvasCorners[2];
-            canvasBottomRightCorner = canvasCorners[3];
+            //Vector3[] canvasCorners = new Vector3[4];
+            //parentRT.GetWorldCorners(canvasCorners);
+            //canvasBottomLeftCorner = canvasCorners[0];
+            //canvasUpperLeftCorner = canvasCorners[1];
+            //canvasUpperRightCorner = canvasCorners[2];
+            //canvasBottomRightCorner = canvasCorners[3];
 
-            //Debug.DrawLine(bottomLeftCorner, upperRightCorner, Color.cyan, 5);
-            //Debug.DrawLine(upperLeftCorner, bottomRightCorner, Color.red, 5);
-            //Debug.DrawLine(canvasBottomLeftCorner, canvasUpperRightCorner, Color.white, 5);
-            //Debug.DrawLine(canvasUpperLeftCorner, canvasBottomRightCorner, Color.white, 5);
+            ////Debug.DrawLine(bottomLeftCorner, upperRightCorner, Color.cyan, 5);
+            ////Debug.DrawLine(upperLeftCorner, bottomRightCorner, Color.red, 5);
+            ////Debug.DrawLine(canvasBottomLeftCorner, canvasUpperRightCorner, Color.white, 5);
+            ////Debug.DrawLine(canvasUpperLeftCorner, canvasBottomRightCorner, Color.white, 5);
 
-            if (bottomRightCorner.x > canvasBottomRightCorner.x)
-            {
-                rect.position += Vector3.left * Mathf.Abs(canvasBottomRightCorner.x - bottomRightCorner.x);
-                //ForceRebuild();
-            }
-            if (bottomLeftCorner.x < canvasBottomLeftCorner.x)
-            {
-                rect.position += Vector3.right * Mathf.Abs(canvasBottomLeftCorner.x - bottomLeftCorner.x);
-                //ForceRebuild();
-            }
-            if (upperLeftCorner.y > canvasUpperLeftCorner.y)
-            {
-                rect.position += Vector3.down * Mathf.Abs(canvasUpperLeftCorner.y - upperLeftCorner.y);
-                //ForceRebuild();
-            }
-            if (bottomLeftCorner.y < canvasBottomLeftCorner.y)
-            {
-                rect.position += Vector3.up * Mathf.Abs(canvasBottomLeftCorner.y - bottomLeftCorner.y);
-                //ForceRebuild();
-            }
+            //if (bottomRightCorner.x > canvasBottomRightCorner.x)
+            //{
+            //    rect.position += Vector3.left * Mathf.Abs(canvasBottomRightCorner.x - bottomRightCorner.x);
+            //    //ForceRebuild();
+            //}
+            //if (bottomLeftCorner.x < canvasBottomLeftCorner.x)
+            //{
+            //    rect.position += Vector3.right * Mathf.Abs(canvasBottomLeftCorner.x - bottomLeftCorner.x);
+            //    //ForceRebuild();
+            //}
+            //if (upperLeftCorner.y > canvasUpperLeftCorner.y)
+            //{
+            //    rect.position += Vector3.down * Mathf.Abs(canvasUpperLeftCorner.y - upperLeftCorner.y);
+            //    //ForceRebuild();
+            //}
+            //if (bottomLeftCorner.y < canvasBottomLeftCorner.y)
+            //{
+            //    rect.position += Vector3.up * Mathf.Abs(canvasBottomLeftCorner.y - bottomLeftCorner.y);
+            //    //ForceRebuild();
+            //}
         }
 
         void SetVoicebank()
@@ -245,6 +254,7 @@ namespace TUFF
 
         private void Update()
         {
+            //AdjustOutOfBounds();
             SkipTimeTimer();
 
             if (textboxInitiated)

@@ -87,16 +87,10 @@ namespace TUFF
             if (DialogueManager.openBoxes.Count > 0 && DialogueManager.openBoxes[0])
             {
                 var relativeBox = DialogueManager.openBoxes[0];
-                Debug.Log("RelativeBoxPos: " + relativeBox.rect.anchoredPosition);
-                Debug.Log("RelativeBoxSize: " + relativeBox.rect.sizeDelta);
-                Debug.Log("SelfPos: " + rect.anchoredPosition);
-                Debug.Log("SelfSize: " + rect.sizeDelta);
-                //if (uiMenu.transitionHandler) uiMenu.transitionHandler.originalSize = rect.sizeDelta;
-                var offsetX = (relativeBox.rect.sizeDelta.x - rect.sizeDelta.x) / 2f;
-                if (relativeBox.dialogue.textboxType == TextboxType.Fixed) offsetX /= 2f;
+                var offsetX = (relativeBox.rect.sizeDelta.x - rect.sizeDelta.x) * 0.5f;
+                if (relativeBox.dialogue.textboxType == TextboxType.Fixed) offsetX *= 0.5f;
                 float middleAdjustment = ((relativeBox.rect.anchoredPosition.y < 0f) ? 1 : (-1));
-                var offsetY = (rect.sizeDelta.y / 2f + relativeBox.rect.sizeDelta.y / 2f) * middleAdjustment;
-                //offsetY *= middleAdjustment;
+                var offsetY = (rect.sizeDelta.y * 0.5f + relativeBox.rect.sizeDelta.y * 0.5f) * middleAdjustment;
 
                 position = relativeBox.rect.anchoredPosition + new Vector2(offsetX, offsetY);
             }
