@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TUFF
 {
     public class ChoicesMenu : MonoBehaviour
     {
         // TODO: Implementation for adding new elements
+        [Header("References")]
         public UIMenu uiMenu;
         public RectTransform content;
         public CanvasGroup contentCanvasGroup;
+        public BoxTransitionHandler transition;
         public List<UIButton> elements = new();
 
         [System.NonSerialized]
@@ -197,9 +200,23 @@ namespace TUFF
 
             yield return new WaitForEndOfFrame(); // Little hack so it doesn't automatically skip text when this ends, fix later?
             onCancelMenu?.Invoke();
+            yield return WaitForTransition();
             m_inUse = false;
             yield break;
         }
+
+        private IEnumerator WaitForTransition()
+        {
+            if (transition != null)
+            {
+                transition.Dissapear();
+                while (transition.state == BoxTransitionState.Dissapearing)
+                {
+                    yield return null;
+                }
+            }
+        }
+
         private IEnumerator EndChoices(int index)
         {
             ShowContent(false);
@@ -208,6 +225,7 @@ namespace TUFF
             
             yield return new WaitForEndOfFrame(); // Little hack so it doesn't automatically skip text when this ends, fix later?
             actionCallback?.EndEvent(index);
+            yield return WaitForTransition();
             m_inUse = false;
             yield break;
         }

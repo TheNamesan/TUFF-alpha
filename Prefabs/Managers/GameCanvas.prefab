@@ -60204,6 +60204,7 @@ MonoBehaviour:
   uiMenu: {fileID: 6980412324842073783}
   content: {fileID: 5307566570122273551}
   contentCanvasGroup: {fileID: 1390103607893112953}
+  transition: {fileID: 1767844676071724254}
   elements: []
 --- !u!114 &6980412324842073783
 MonoBehaviour:
