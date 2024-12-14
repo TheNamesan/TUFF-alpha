@@ -36,7 +36,7 @@ namespace TUFF
         private float m_updateTimer = 0;
 
         public float mimicStartRate = 0.25f;
-        private float mimicStartTicks = 0;
+        private float m_mimicStartTime = 0;
         private bool mimicInitialized;
 
         public bool mimic = false;
@@ -47,30 +47,57 @@ namespace TUFF
         }
         private void OnEnable()
         {
+            FollowerInstance.AddFollower(this);
+            ResetValues();
+        }
+
+        public void ResetValues()
+        {
+            if (!target) target = FollowerInstance.player ? FollowerInstance.player.controller : null; // For tests
+
             if (target)
             {
                 transform.position = target.transform.position;
                 //target.onFixedUpdate.AddListener(FixedLogic);
                 //target.onUpdate.AddListener(Logic);
                 //target.onInputUpdate.AddListener(StartTimer);
-                target.onInputUpdate.AddListener(Logic);
                 //target.onFixedUpdate.AddListener(Logic);
+
+                target.onInputUpdate.RemoveListener(Logic);
+                target.onInputUpdate.AddListener(Logic);
             }
-            mimicStartTicks = mimicStartRate;
+            targetInputQueue.Clear();
+            lastInput = new();
+            registedPositions.Clear();
+            m_mimicStartTime = mimicStartRate;
         }
+
         private void OnDisable()
         {
+            Dispose();
+        }
+
+        private void Dispose()
+        {
+            FollowerInstance.RemoveFollower(this);
             if (target)
             {
                 //target.onFixedUpdate.RemoveListener(FixedLogic);
                 //target.onUpdate.RemoveListener(Logic);
                 //target.onInputUpdate.RemoveListener(StartTimer);
+                
                 target.onInputUpdate.RemoveListener(Logic);
             }
             mimicInitialized = false;
         }
-        void Logic()
+
+        private void OnDestroy()
         {
+            Dispose();
+        }
+        public void Logic()
+        {
+            if (!enabled || !gameObject.activeInHierarchy) return;
             if (controller == null) return;
             if (target == null) return;
             //controller.nextInput = target.nextInput;
@@ -100,24 +127,32 @@ namespace TUFF
             bool selfStopppedRunButton = controller.lastInput.runButtonHold && !controller.input.runButtonHold;
             
             bool positionNotSame = false;
-            if (mimicStartTicks <= 0)
+            if (m_mimicStartTime <= 0)
             {
                 if (registedPositions.Count > 0) 
-                    positionNotSame = registedPositions[^1] != target.lastPosition;
+                    positionNotSame = Vector2.Distance(registedPositions[^1], target.lastPosition) >= 0.001f;
             }
             else
             {   
                 RunTimer();
                 targetInputQueue.Add(targetInput);
                 registedPositions.Add(target.lastPosition);
-                if (mimicStartTicks <= 0){
+                if (m_mimicStartTime <= 0){
                     registedPositions.RemoveAt(0);
                     targetInputQueue.RemoveAt(0);
                 }
             }
+            //if (selfMove) Debug.Log("A!");
+            //if (imposedMove) Debug.Log("A!");
+            //if (selfImposedMove) Debug.Log("A!");
+            //if (targetRunPrep) Debug.Log("A!");
+            //if (selfRunPrep) Debug.Log("A!");
+            //if (stopppedRunButton) Debug.Log("A!");
+            //if (selfStopppedRunButton) Debug.Log("A!");
+            //if (positionNotSame) Debug.Log("A!");
             bool update = selfMove || imposedMove || selfImposedMove || targetRunPrep || selfRunPrep || stopppedRunButton ||
                 selfStopppedRunButton || positionNotSame;
-            if (update && mimicStartTicks <= 0)
+            if (update && m_mimicStartTime <= 0)
             {
                 state = FollowingState.Awake;
                 //RunTimer();
@@ -186,10 +221,10 @@ namespace TUFF
 
         private void RunTimer()
         {
-            mimicStartTicks -= Time.fixedDeltaTime;
-            if (mimicStartTicks < 0)
+            m_mimicStartTime -= Time.fixedDeltaTime;
+            if (m_mimicStartTime < 0)
             {
-                mimicStartTicks = 0;
+                m_mimicStartTime = 0;
             }
         }
 

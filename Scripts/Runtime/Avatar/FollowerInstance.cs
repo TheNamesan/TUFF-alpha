@@ -9,6 +9,8 @@ namespace TUFF
         public static FollowerInstance instance;
         public static FollowerInstance player { get { return instance; } } // Tmp
 
+        public static List<FollowerController> followerList = new();
+
         private void Awake()
         {
             if (instance != null)
@@ -19,5 +21,32 @@ namespace TUFF
                 DontDestroyOnLoad(gameObject);
             }
         }
+
+        public static void AddFollower(FollowerController newFollower)
+        {
+            if (!newFollower) return;
+            if (!followerList.Contains(newFollower))
+                followerList.Add(newFollower);
+        }
+        public static void RemoveFollower(FollowerController follower)
+        {
+            followerList.Remove(follower);
+        }
+        public static void ResetFollowers()
+        {
+            foreach (FollowerController follower in followerList)
+            {
+                if (!follower) continue;
+                follower.ResetValues();
+            }
+        }
+        //public static void RunFollowersLogic()
+        //{
+        //    foreach (FollowerController follower in followerList)
+        //    {
+        //        if (!follower) continue;
+        //        follower.Logic();
+        //    }
+        //}
     }
 }

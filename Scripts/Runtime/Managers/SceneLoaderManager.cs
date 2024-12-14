@@ -321,6 +321,7 @@ namespace TUFF
             controller.ChangeFaceDirection(faceDirection);
             controller.SetSceneChangeFrameConditions();
             controller.fallStart = position;
+            FollowerInstance.ResetFollowers();
         }
         
         private void SetAllRootGameObjectsActive(GameObject[] rootGOs, bool active)
