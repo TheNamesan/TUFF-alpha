@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8400723678192941819}
   - component: {fileID: 3249235011600254313}
   - component: {fileID: 8940855510764851500}
+  - component: {fileID: 1296227033507339433}
   m_Layer: 5
   m_Name: EXP
   m_TagString: Untagged
@@ -137,6 +138,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1296227033507339433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063033677130846332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 8940855510764851500}
 --- !u!1 &1619137055594781251
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,6 +382,7 @@ GameObject:
   - component: {fileID: 1081459868099320984}
   - component: {fileID: 1379668167358143845}
   - component: {fileID: 2387582227788367046}
+  - component: {fileID: 5876876383506005285}
   m_Layer: 5
   m_Name: UnitName
   m_TagString: Untagged
@@ -494,6 +509,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5876876383506005285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3173175967574192351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 2387582227788367046}
 --- !u!1 &6338477206633316383
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,9 +575,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   userImage: {fileID: 3406760214870667953}
   imageVFX: {fileID: 3529336053358059251}
-  rect: {fileID: 0}
+  highlightAnimator: {fileID: 0}
+  vfxFlashHandler: {fileID: 0}
+  outline: {fileID: 0}
+  outlineImage: {fileID: 0}
+  vulnerabilityInfoParent: {fileID: 0}
+  vulnerabilityInfoImage: {fileID: 0}
+  vulnerabilityInfoText: {fileID: 0}
+  stateVisualsParent: {fileID: 0}
+  canvasRoot: {fileID: 0}
+  isHighlighted: 0
   originalUserColor: {r: 0, g: 0, b: 0, a: 0}
   originalVFXColor: {r: 0, g: 0, b: 0, a: 0}
+  stateVisuals: []
 --- !u!222 &4111804001443876796
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -613,7 +651,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608499620485706892, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_fontSize
-      value: 53.2
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 608499620485706892, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -829,7 +867,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8867205359679057679, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_Name
-      value: UnitHP
+      value: UnitEXP
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4676d71192c008d429b579a09f813dd6, type: 3}

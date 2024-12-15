@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5139157947787062102}
   - component: {fileID: 5359024683225158976}
   - component: {fileID: 1185994834745283319}
+  - component: {fileID: 8255039604271157048}
   m_Layer: 5
   m_Name: UnitLvl
   m_TagString: Untagged
@@ -139,6 +140,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8255039604271157048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2420537396147347517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 1185994834745283319}
 --- !u!1 &4873158591325906665
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,6 +392,7 @@ GameObject:
   - component: {fileID: 5724891266695900050}
   - component: {fileID: 7473419997469997202}
   - component: {fileID: 1478055566668935997}
+  - component: {fileID: 173507611983718658}
   m_Layer: 5
   m_Name: UnitJobName
   m_TagString: Untagged
@@ -504,6 +519,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &173507611983718658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9109727559009036079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 1478055566668935997}
 --- !u!1 &9133613840079474134
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5933975093796918504, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 5933975093796918504, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -828,7 +856,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6484452751743868383, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 6484452751743868383, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -836,7 +864,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7029241275294058764, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 7029241275294058764, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -844,7 +872,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7054447688241508680, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 7054447688241508680, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -868,7 +896,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7649416958056726587, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 7649416958056726587, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -960,7 +988,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7656892634816673919, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 7656892634816673919, guid: b201579a05c5f3e4abde666fb694b52c, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -1110,27 +1138,6 @@ MonoBehaviour:
   TPBar: {fileID: 6979592894034408198}
   activeStatesHUD: {fileID: 8429734603008732961}
   commandIcon: {fileID: 6245613225057882514}
-  memberRef:
-    HP: 0
-    prevHP: 0
-    SP: 0
-    TP: 0
-    isKOd: 0
-    acted: 0
-    states: []
-    imageReference: {fileID: 0}
-    unitRef: {fileID: 0}
-    job: {fileID: 0}
-    prevExp: 0
-    exp: 0
-    prevLevel: 1
-    level: 1
-    primaryWeapon: {fileID: 0}
-    secondaryWeapon: {fileID: 0}
-    head: {fileID: 0}
-    body: {fileID: 0}
-    primaryAccessory: {fileID: 0}
-    secondaryAccessory: {fileID: 0}
   portraitImage: {fileID: 4873158591325903127}
   jobNameText: {fileID: 1478055566668935997}
   levelText: {fileID: 1185994834745283319}

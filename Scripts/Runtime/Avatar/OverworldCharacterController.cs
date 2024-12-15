@@ -693,11 +693,14 @@ namespace TUFF
         {
             return FindInteractable(out InteractableObject obj);
         }
+        public bool CanInteract()
+        {
+            return !GameManager.disablePlayerInput && !hardLanded && ((grounded && rb.velocity.y == 0 && input.horizontalInput == 0) || climbing);
+        }
         private bool FindInteractable(out InteractableObject obj)
         {
             obj = null;
-            if (GameManager.disablePlayerInput) return false;
-            if (hardLanded) return false;
+            if (!CanInteract()) return false;
             //Debug.Log($"{gameObject.name}: Check interactable");
             if (grounded && rb.velocity.y == 0 && input.horizontalInput == 0)
             {

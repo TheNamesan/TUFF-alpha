@@ -8,7 +8,7 @@ namespace TUFF
     {
         protected UIMenu currentMenu = null;
         public GameObject descriptionBox;
-        public GameObject quoteBox;
+        public QuoteBoxHUD quoteBox;
         public UIMenu levelUpMenu;
         public UIMenu levelUpOverviewMenu;
         public UIMenu rewardsMenu;
@@ -21,10 +21,8 @@ namespace TUFF
 
             gameObject?.SetActive(true);
             descriptionBox?.SetActive(true);
-            quoteBox?.SetActive(true);
-            Debug.Log("Results");
+            if (quoteBox) quoteBox.gameObject.SetActive(true);
 
-            Debug.Log("Level Up");
             levelUpMenu.OpenMenu();
 
             currentMenu = levelUpMenu;
@@ -45,8 +43,6 @@ namespace TUFF
             else if (currentMenu == levelUpOverviewMenu)
             {
                 levelUpOverviewMenu.CloseMenu();
-
-                Debug.Log("Rewards");
                 currentMenu = rewardsMenu;
                 rewardsMenu.OpenMenu();
                 
@@ -57,10 +53,27 @@ namespace TUFF
                 EndResults();
             }
         }
+        public void SetWinQuote()
+        {
+            if (!quoteBox) return;
+            var member = PlayerData.instance.GetRandomActivePartyMember();
+            quoteBox.DisplayQuote(member.GetGraphic(), member.GetName(), member.GetRandomWinQuote());
+        }
+        public void SetLevelUpQuote(PartyMember member)
+        {
+            if (!quoteBox) return;
+            quoteBox.DisplayQuote(member.GetGraphic(), member.GetName(), member.GetRandomLevelUpQuote());
+        }
+        public void SetDropQuote()
+        {
+            if (!quoteBox) return;
+            var member = PlayerData.instance.GetRandomActivePartyMember();
+            quoteBox.DisplayQuote(member.GetGraphic(), member.GetName(), member.GetRandomDropsQuote());
+        }
         public virtual void EndResults()
         {
             descriptionBox?.SetActive(false);
-            quoteBox?.SetActive(false);
+            if (quoteBox) quoteBox.gameObject.SetActive(false);
             isFinished = true;
         }
     }

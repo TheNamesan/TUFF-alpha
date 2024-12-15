@@ -10,7 +10,6 @@ namespace TUFF.TUFFEditor
     {
         int lines = 0;
         float additionalHeight = 0;
-        private bool showDialogue = true;
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             return (EditorGUIUtility.singleLineHeight - EditorGUIUtility.standardVerticalSpacing) +
@@ -25,8 +24,8 @@ namespace TUFF.TUFFEditor
             additionalHeight = 0;
             label = EditorGUI.BeginProperty(position, label, prop);
             position.height = 20f;
-            showDialogue = EditorGUI.Foldout(position, showDialogue, label);
-            if (showDialogue)
+            prop.isExpanded = EditorGUI.Foldout(position, prop.isExpanded, label, true);
+            if (prop.isExpanded)
             {
                 EditorGUI.indentLevel++;
                 Rect rect = EditorGUI.IndentedRect(position);

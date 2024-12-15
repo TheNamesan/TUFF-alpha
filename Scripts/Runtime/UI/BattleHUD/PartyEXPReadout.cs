@@ -10,7 +10,6 @@ namespace TUFF
     {
         public ResultsScreenHUD resultsScreenHUD;
         public TMP_Text descriptionText;
-        public QuoteBoxHUD quoteBoxHUD;
         public Image magsIcon;
         public TMP_Text magsText;
         public PartyEXPReadoutElement readoutPrefab;
@@ -40,7 +39,7 @@ namespace TUFF
             }
             descriptionText.text = TUFFSettings.victoryMessageText;
             UpdateMags();
-            SetQuote();
+            if (resultsScreenHUD) resultsScreenHUD.SetWinQuote();
         }
         public void Update()
         {
@@ -98,11 +97,6 @@ namespace TUFF
                 magsText.text = $"{(mags < 0 ? "" : "+")}{LISAUtility.IntToString(mags)}";
                 magsText.color = (mags < 0 ? TUFFSettings.negativeColor : TUFFSettings.positiveColor);
             }
-        }
-        public void SetQuote()
-        {
-            var member = PlayerData.instance.GetRandomActivePartyMember();
-            quoteBoxHUD.DisplayQuote(member.GetGraphic(), member.GetName(), member.GetRandomWinQuote());
         }
     }
 }

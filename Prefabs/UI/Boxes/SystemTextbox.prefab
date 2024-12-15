@@ -220,8 +220,8 @@ MonoBehaviour:
   transition: {fileID: 5658209575872850115}
   textSizeAdjuster: {fileID: 5510710819489163098}
   adjustToOtherRect: {fileID: 0}
-  rectTransform: {fileID: 7955086074237899391}
   continuePrompt: {fileID: 6063774463951475351}
+  parentCanvasScaler: {fileID: 0}
   skipTimeBuffer: 0.03
   skipTime: 0
   autoContinue: 0
@@ -245,6 +245,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onDissapear:
+    m_PersistentCalls:
+      m_Calls: []
+  onTransitionChange:
     m_PersistentCalls:
       m_Calls: []
 --- !u!225 &9198874010778674378
@@ -334,6 +337,7 @@ MonoBehaviour:
   UIElementContainers: []
   highlightX: 0
   highlightY: 0
+  scrollRect: {fileID: 0}
   transitionHandler: {fileID: 0}
   rememberHighlight: 0
   closeMenuWithCancel: 0
@@ -409,6 +413,7 @@ GameObject:
   - component: {fileID: 7188909339887498484}
   - component: {fileID: 2129203468242327820}
   - component: {fileID: 5510710819489163098}
+  - component: {fileID: 2014312481472162359}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -567,6 +572,21 @@ MonoBehaviour:
   rt: {fileID: 2129203468242327823}
   minWidth: 0
   minHeight: 0
+  widthPadding: 0
+  heightPadding: 0
+--- !u!114 &2014312481472162359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129203468242327822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 2129203468242327820}
 --- !u!1 &8629149599838931466
 GameObject:
   m_ObjectHideFlags: 0

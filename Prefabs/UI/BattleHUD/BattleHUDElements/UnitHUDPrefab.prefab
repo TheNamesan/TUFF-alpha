@@ -68,27 +68,6 @@ MonoBehaviour:
   TPBar: {fileID: 849865551233479320}
   activeStatesHUD: {fileID: 2300006817985031871}
   commandIcon: {fileID: 4448372075581706252}
-  memberRef:
-    HP: 0
-    prevHP: 0
-    SP: 0
-    TP: 0
-    isKOd: 0
-    acted: 0
-    states: []
-    imageReference: {fileID: 0}
-    unitRef: {fileID: 0}
-    job: {fileID: 0}
-    prevExp: 0
-    exp: 0
-    prevLevel: 1
-    level: 1
-    primaryWeapon: {fileID: 0}
-    secondaryWeapon: {fileID: 0}
-    head: {fileID: 0}
-    body: {fileID: 0}
-    primaryAccessory: {fileID: 0}
-    secondaryAccessory: {fileID: 0}
 --- !u!1 &2787817531724407823
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,6 +249,7 @@ GameObject:
   - component: {fileID: 1711618677458295865}
   - component: {fileID: 857771867950161348}
   - component: {fileID: 4170508599927850087}
+  - component: {fileID: 5438623972422899429}
   m_Layer: 5
   m_Name: UnitName
   m_TagString: Untagged
@@ -396,6 +376,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5438623972422899429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3804302129735479422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 4170508599927850087}
 --- !u!1 &4526588212987181725
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,8 +612,8 @@ MonoBehaviour:
   vulnerabilityInfoImage: {fileID: 0}
   vulnerabilityInfoText: {fileID: 0}
   stateVisualsParent: {fileID: 0}
+  canvasRoot: {fileID: 0}
   isHighlighted: 0
-  rect: {fileID: 0}
   originalUserColor: {r: 0, g: 0, b: 0, a: 0}
   originalVFXColor: {r: 0, g: 0, b: 0, a: 0}
   stateVisuals: []
@@ -783,7 +776,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 276129894754827707, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 276129894754827707, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -791,7 +784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608499620485706892, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 608499620485706892, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -960,7 +953,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 276129894754827707, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 276129894754827707, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -968,7 +961,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608499620485706892, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 608499620485706892, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -1358,7 +1351,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 276129894754827707, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 276129894754827707, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]
@@ -1366,7 +1359,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608499620485706892, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 608499620485706892, guid: 4676d71192c008d429b579a09f813dd6, type: 3}
       propertyPath: m_ActiveFontFeatures.Array.data[0]

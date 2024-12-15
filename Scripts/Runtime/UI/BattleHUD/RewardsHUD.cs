@@ -13,7 +13,8 @@ namespace TUFF
         public void Initiate()
         {
             rewardsItemViewer.LoadItems(BattleManager.instance.rewards);
-            SetQuote();
+            if (resultsScreenHUD) resultsScreenHUD.SetDropQuote();
+            //SetQuote();
         }
 
         public void Update()
@@ -23,11 +24,11 @@ namespace TUFF
                 resultsScreenHUD.NextMenu();
             }
         }
-        public void SetQuote()
-        {
-            var member = PlayerData.instance.GetRandomActivePartyMember();
-            quoteBoxHUD.DisplayQuote(member.GetGraphic(), member.GetName(), member.GetRandomDropsQuote());
-        }
+        //public void SetQuote()
+        //{
+        //    var member = PlayerData.instance.GetRandomActivePartyMember();
+        //    quoteBoxHUD.DisplayQuote(member.GetGraphic(), member.GetName(), member.GetRandomDropsQuote());
+        //}
     }
 }
 

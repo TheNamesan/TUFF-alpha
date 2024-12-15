@@ -11,7 +11,6 @@ namespace TUFF
         public ResultsScreenHUD resultsScreenHUD;
         public GeneralInfoDisplay generalInfoDisplayPrefab;
         public TMP_Text descriptionText;
-        public QuoteBoxHUD quoteBoxHUD;
         public Image portrait;
         public TMP_Text nameText;
         public TMP_Text expText;
@@ -63,7 +62,7 @@ namespace TUFF
             var member = leveledUpMembers[idx];
             AudioManager.instance.PlaySFX(TUFFSettings.levelUpSFX);
             descriptionText.text = $"{member.GetName()}{TUFFSettings.levelUpMessageText}";
-            SetQuote(member);
+            if (resultsScreenHUD) resultsScreenHUD.SetLevelUpQuote(member);
             portrait.sprite = member.GetPortraitSprite();
             nameText.text = member.GetName();
             expText.text = $"+{LISAUtility.IntToString(BattleManager.instance.expCollected)}{TUFFSettings.expText}";
@@ -180,10 +179,6 @@ namespace TUFF
             AGIElement.UpdateLabel(TUFFSettings.AGIShortText);
             LUKElement.UpdateLabel(TUFFSettings.LUKShortText);
             newSkillsText.text = TUFFSettings.newSkillsText;
-        }
-        public void SetQuote(PartyMember member)
-        {
-            quoteBoxHUD.DisplayQuote(member.GetGraphic(), member.GetName(), member.GetRandomLevelUpQuote());
         }
     }
 }

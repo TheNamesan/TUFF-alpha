@@ -163,6 +163,7 @@ GameObject:
   - component: {fileID: 3079061168069311899}
   - component: {fileID: 4610730153862698572}
   - component: {fileID: 165507380216799586}
+  - component: {fileID: 3672049834773268202}
   m_Layer: 5
   m_Name: PlayTimeText
   m_TagString: Untagged
@@ -289,6 +290,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3672049834773268202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7041452659332885397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 165507380216799586}
 --- !u!1 &8385936249696375094
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,7 +650,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 457027509474864676}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -876,6 +890,8 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  fill: {fileID: 0}
+  holdTimeToSelect: 0
   menusToClose: []
   menusToOpen: []
 --- !u!114 &1690477895441560119
