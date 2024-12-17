@@ -22,6 +22,9 @@ namespace TUFF.TUFFEditor
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("m_overworldCharacterPrefab"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("m_enemyGraphicPrefab"));
 
+                // Text
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("m_defaultTextFont"));
+
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("m_defaultTextbox"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("m_systemTextbox"));
 

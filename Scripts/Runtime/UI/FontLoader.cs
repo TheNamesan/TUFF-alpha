@@ -12,6 +12,11 @@ namespace TUFF
         private void Awake()
         {
             if (!text) text = GetComponent<TMP_Text>();
+            if (text)
+            {
+                TMP_FontAsset loadedFont = TUFFSettings.defaultTextFont;
+                if (loadedFont) text.font = loadedFont;
+            }
         }
     }
 }

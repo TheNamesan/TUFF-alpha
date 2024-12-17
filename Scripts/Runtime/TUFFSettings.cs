@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace TUFF
 {
@@ -12,6 +13,7 @@ namespace TUFF
         public static GameObject interactablePrefab { get => Instance.m_interactablePrefab; }
         public static GameObject overworldCharacterPrefab { get => Instance.m_overworldCharacterPrefab; }
         public static GameObject enemyGraphicPrefab { get => Instance.m_enemyGraphicPrefab; }
+        public static TMP_FontAsset defaultTextFont { get => Instance.m_defaultTextFont; }
         public static GameObject defaultTextbox { get => Instance.m_defaultTextbox; }
         public static GameObject fixedTextbox { get => Instance.m_systemTextbox; }
         // Debug
@@ -186,6 +188,9 @@ namespace TUFF
         [SerializeField] private GameObject m_interactablePrefab;
         [SerializeField] private GameObject m_overworldCharacterPrefab;
         [SerializeField] private GameObject m_enemyGraphicPrefab;
+
+        [Header("Text")]
+        [SerializeField] private TMP_FontAsset m_defaultTextFont = null;
 
         [Header("Textbox Prefabs")]
         [SerializeField]

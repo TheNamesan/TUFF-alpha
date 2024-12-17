@@ -163,6 +163,7 @@ GameObject:
   - component: {fileID: 1101910834174175087}
   - component: {fileID: 949333034138745307}
   - component: {fileID: 4089560526491574665}
+  - component: {fileID: 6514055002259885017}
   m_Layer: 5
   m_Name: Uses
   m_TagString: Untagged
@@ -289,6 +290,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6514055002259885017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5354874397274328972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 4089560526491574665}
 --- !u!1 &6976471862686763324
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,6 +314,7 @@ GameObject:
   - component: {fileID: 6296561147836230653}
   - component: {fileID: 3474131694576602445}
   - component: {fileID: 5628258638616174420}
+  - component: {fileID: 8763251457174814621}
   m_Layer: 5
   m_Name: SPCost
   m_TagString: Untagged
@@ -382,7 +397,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72.8
+  m_fontSize: 65.15
   m_fontSizeBase: 72.8
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -426,6 +441,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8763251457174814621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6976471862686763324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 5628258638616174420}
 --- !u!1 &7036716078583251760
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +504,7 @@ GameObject:
   - component: {fileID: 8438536284790909248}
   - component: {fileID: 4712859474683487660}
   - component: {fileID: 6360389275111008505}
+  - component: {fileID: 3726499675651394607}
   m_Layer: 5
   m_Name: TPCost
   m_TagString: Untagged
@@ -602,6 +631,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3726499675651394607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7525736731679697972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c100472fe8b3a774689d9e38ce0295ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 6360389275111008505}
 --- !u!1 &7880828801180933547
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,7 +1021,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.8
+  m_fontSize: 42.6
   m_fontSizeBase: 21
   m_fontWeight: 400
   m_enableAutoSizing: 1
