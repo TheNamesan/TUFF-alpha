@@ -36,7 +36,7 @@ namespace TUFF
         [Header("Input")]
         public float skipTimeBuffer = 0.03f;
 
-        List<string> sentences;
+        List<string> sentences = new();
         public Camera cam { get => UIController.instance.cameraCanvas.worldCamera; }
 
         [SerializeField] public float skipTime = 0;
@@ -59,6 +59,8 @@ namespace TUFF
 
         public static List<DialogueManager> openBoxes = new(); // tmp // Change this to be a brief period of buffer time before a dialogue is called? (For things like SFXs)
         private static readonly Vector2 DEFAULT_OFFSET = new Vector2(0, 1f);
+
+        private Color baseColor = Color.white; //tmp, change to get color from TUFFSettings;
 
         private void Awake()
         {
@@ -154,6 +156,19 @@ namespace TUFF
                 //ForceRebuild();
             }
         }
+        public void SetTextColor()
+        {
+            if (dialogue == null) return;
+            Color textColor = baseColor;
+            if (dialogue.overrideTextColor) textColor = dialogue.customColor;
+            if (currentSentence < dialogue.sentences.Length)
+            {
+                var targetSentence = dialogue.sentences[currentSentence];
+                if (targetSentence.overrideTextColor)
+                    textColor = targetSentence.customColor;
+            }
+            text.color = textColor;
+        }
 
         private void AdjustOutOfBounds()
         {
@@ -182,7 +197,7 @@ namespace TUFF
             }
         }
 
-        float SetTextSpeed()
+        private float SetTextSpeed()
         {
             if (dialogue.sentences[currentSentence].textSpeed > 0) return dialogue.sentences[currentSentence].textSpeed;
             else if (dialogue.baseTextSpeed > 0) return dialogue.baseTextSpeed;
@@ -301,15 +316,18 @@ namespace TUFF
             }
             DisplayContinuePrompt(false);
             SetVoicebank();
+            SetTextColor();
             autoContinue = false;
             var savedTags = new List<TUFFTextParser.TagData>();
             var text = TUFFTextParser.ParseText(sentences[currentSentence], savedTags);
+            Debug.Log("Found: " + savedTags.Count + " tags");
             if (savedTags.Exists(e => e.type == TUFFTextParser.TextTagType.AutoContinue) || (currentSentence >= sentences.Count - 1 && ChoicesIsNext()))
             {
                 autoContinue = true;
-                Debug.Log("AUTOCONTINUE: " + autoContinue);
+                //Debug.Log("AUTOCONTINUE: " + autoContinue);
             }
-            typewriter.Play(text, SetTextSpeed(), () => { DisplayContinuePrompt(true); });
+
+            typewriter.Play(text, SetTextSpeed(), savedTags, () => { DisplayContinuePrompt(true); });
             currentSentence++;
             AdjustText();
             SetPosition();

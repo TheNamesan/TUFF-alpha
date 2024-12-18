@@ -12,7 +12,8 @@ namespace TUFF
             LocalizedDialogueText = 0,
             LocalizedText = 1,
             MagsCount = 2,
-            AutoContinue = 3
+            AutoContinue = 3,
+            TextPause = 4,
         }
         public struct TagData
         {
@@ -25,7 +26,7 @@ namespace TUFF
             public int index;
         }
         public static string[] tags = {
-            "<ld:", "<l:", "<mags:>", "<skip:>"
+            "<ld:", "<l:", "<mags:>", "<skip:>", "<wait:>"
         };
         public static string ParseText(string text) => ParseText(text, null);
         public static string ParseText(string text, List<TagData> savedTags)
@@ -59,7 +60,7 @@ namespace TUFF
                         //Debug.Log(tagType);
                         var tagFound = new TagData(tagType, from);
                         changedString = ApplyTagBehaviour(tagType, substring, ref parse);
-                        if (savedTags != null) savedTags.Add(tagFound);
+                        savedTags?.Add(tagFound);
                         break;
                     }
                 }
@@ -79,7 +80,7 @@ namespace TUFF
                     {
                         string key = substring.Substring(4, substring.Length - 5);
                         string localizedText = LISAUtility.GetLocalizedDialogueText(key);
-                        parse = parse.Replace(substring, localizedText);
+                        parse = ReplaceFirst(parse, substring, localizedText);
                         return true;
                     }
                     return false;
@@ -92,7 +93,7 @@ namespace TUFF
                         string table = localizationTag.Substring(0, separationIdx);
                         string key = localizationTag.Substring(separationIdx + 1);
                         string localizedText = LISAUtility.GetLocalizedText(table, key);
-                        parse = parse.Replace(substring, localizedText);
+                        parse = ReplaceFirst(parse, substring, localizedText);
                         return true;
                     }
                     return false;
@@ -106,12 +107,21 @@ namespace TUFF
                             magsCount = LISAUtility.IntToString(GameManager.instance.playerData.mags);
                         }
                     }
-                    parse = parse.Replace(substring, magsCount);
+                    parse = ReplaceFirst(parse, substring, magsCount);
                     return true;
                 default:
-                    parse = parse.Replace(substring, "");
+                    parse = ReplaceFirst(parse, substring, "");
                     return true;
             }
+        }
+        private static string ReplaceFirst(string org, string oldValue, string newValue)
+        {
+            int index = org.IndexOf(oldValue);
+            if (index >= 0)
+            {
+                return org.Substring(0, index) + newValue + org.Substring(index + oldValue.Length);
+            }
+            return org;
         }
     }
 }

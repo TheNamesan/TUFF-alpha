@@ -23,5 +23,9 @@ namespace TUFF
         public Voicebank voicebank;
         [Tooltip("The Text Speed to use for this sentence. Leave to 0 or less to use base Text Speed.")]
         public float textSpeed;
+        [Tooltip("If true, will change the display color of Dialogue Sentences inside the textbox.")]
+        public bool overrideTextColor;
+        [Tooltip("The text color to override with.")]
+        public Color customColor;
     }
 }

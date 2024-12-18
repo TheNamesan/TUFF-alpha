@@ -4,6 +4,7 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -15,6 +16,16 @@ namespace TUFF
 	[RequireComponent(typeof(TMP_Text))]
 	public partial class TMP_Typewriter : MonoBehaviour
 	{
+		public class TextPause
+		{
+			public int from;
+			public bool finished;
+			public TextPause(int index)
+			{
+				from = index;
+				finished = false;
+			}
+		}
 		//==============================================================================
 		// 変数(SerializeField)
 		//==============================================================================
@@ -31,6 +42,12 @@ namespace TUFF
 		public AudioClip clip;
 		public float pitch = 1;
 		public float pitchVariation = 0.1f;
+
+		private List<TUFFTextParser.TagData> m_savedTags = new();
+		private List<TextPause> m_pauses = new();
+		private Tween m_pauseTween;
+		private float m_pauseTimer = 0f;
+		private float m_pauseStartDuration = 0.5f;
 
 		//==============================================================================
 		// 関数
@@ -62,31 +79,39 @@ namespace TUFF
 		/// <param name="onComplete">演出完了時に呼び出されるコールバック</param>
 		public void Play(string text, float speed, Action onComplete)
 		{
-			m_textUI.text = text;
-			m_onComplete = onComplete;
-			StartCoroutine(PlayCoroutine(text, speed, onComplete));
-			//m_textUI.ForceMeshUpdate();
+			Play(text, speed, new List<TUFFTextParser.TagData>(), onComplete);
 		}
+        public void Play(string text, float speed, List<TUFFTextParser.TagData> tagData, Action onComplete)
+        {
+            m_textUI.text = text;
+            m_onComplete = onComplete;
+			tagData ??= new List<TUFFTextParser.TagData>();
+			m_savedTags = tagData;
+            StartCoroutine(PlayCoroutine(text, speed, onComplete));
+        }
 
-		private IEnumerator PlayCoroutine(string text, float speed, Action onComplete)
+        private IEnumerator PlayCoroutine(string text, float speed, Action onComplete)
         {
 			m_textUI.maxVisibleCharacters = 0;
 			yield return new WaitForEndOfFrame();
 
 			m_parsedText = m_textUI.GetParsedText();
 
-			var length = m_parsedText.Length;
+			int length = m_parsedText.Length;
 
-			var duration = 1 / speed * length;
+			float duration = 1 / speed * length;
 
-			OnUpdate(0);
+			GetPauses();
 
-			m_tween?.Kill();
+            OnUpdate(0);
+
+            m_tween?.Kill();
 			m_tween = DOTween
 				.To(value => OnUpdate(value), 0, 1, duration)
 				.SetEase(Ease.Linear)
 				.OnComplete(() => OnComplete())
 			;
+
 			if (GameManager.instance.configData.textSpeed >= 1) Skip();
 		}
 
@@ -100,6 +125,9 @@ namespace TUFF
 			m_tween = null;
 
 			OnUpdate(1);
+			m_pauseTween?.Kill();
+			m_pauseTween = null;
+
 			m_textUI.maxVisibleCharacters = 99999;
 			if (!withCallbacks) return;
 
@@ -136,7 +164,8 @@ namespace TUFF
 			{
 				if(clip != null) AudioManager.instance.PlaySFX(clip, 1f, UnityEngine.Random.Range(pitch - pitchVariation, pitch + pitchVariation));
 				m_lastMaxVisibleCharacters = m_textUI.maxVisibleCharacters;
-			}
+                CheckPause();
+            }
 		}
 
 
@@ -150,6 +179,40 @@ namespace TUFF
 			m_onComplete?.Invoke();
 			m_onComplete = null;
 			m_lastMaxVisibleCharacters = -1;
+		}
+
+		private void GetPauses()
+		{
+			if (m_savedTags == null) return;
+            m_pauses.Clear();
+            var pauses = m_savedTags.FindAll(e => e.type == TUFFTextParser.TextTagType.TextPause);
+			foreach (var pause in pauses) 
+			{
+				m_pauses.Add(new TextPause(pause.index));
+			}
+			Debug.Log($"Got {m_pauses.Count} pauses");
+		}
+
+		private void CheckPause()
+		{
+			if (m_tween == null) return;
+			int currentLetter = m_lastMaxVisibleCharacters;
+			TextPause validPause = m_pauses.Find(e => !e.finished && e.from <= m_lastMaxVisibleCharacters);
+			if (validPause != null)
+			{
+                Pause();
+				RunPauseTimer(validPause);
+            }
+		}
+		private void RunPauseTimer(TextPause pause)
+		{
+			if (pause == null) return;
+			m_pauseTween?.Kill();
+			float duration = m_pauseStartDuration;
+			m_pauseTween = DOTween
+				.To(x => m_pauseTimer = x, duration, 0, duration)
+                .SetEase(Ease.Linear)
+                .OnComplete(() => { pause.finished = true; Resume(); });
 		}
 	}
 }

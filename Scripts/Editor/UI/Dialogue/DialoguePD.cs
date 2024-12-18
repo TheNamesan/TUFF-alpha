@@ -12,7 +12,7 @@ namespace TUFF.TUFFEditor
         float additionalHeight = 0;
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return (EditorGUIUtility.singleLineHeight - EditorGUIUtility.standardVerticalSpacing) +
+            return (20f) +
                 (EditorGUIUtility.singleLineHeight * lines) + 
                 (EditorGUIUtility.standardVerticalSpacing) + additionalHeight;
         }
@@ -67,8 +67,9 @@ namespace TUFF.TUFFEditor
                     AddLine(ref rect);
                     EditorGUI.PropertyField(rect, prop.FindPropertyRelative("fixedTextboxPosition"));
                 }
-                var overrideTextbox = prop.FindPropertyRelative("overrideTextbox");
+                
                 AddLine(ref rect);
+                var overrideTextbox = prop.FindPropertyRelative("overrideTextbox");
                 EditorGUI.PropertyField(rect, overrideTextbox);
                 if (overrideTextbox.boolValue)
                 {
@@ -77,12 +78,22 @@ namespace TUFF.TUFFEditor
                     customTextbox.objectReferenceValue = 
                         (GameObject)EditorGUI.ObjectField(rect, "Custom Textbox", customTextbox.objectReferenceValue, typeof(GameObject), false);
                 }
-                AddLine(ref rect, 2);
+                AddLine(ref rect);
                 EditorGUI.PropertyField(rect, prop.FindPropertyRelative("baseVoicebank"));
-                AddLine(ref rect, 2);
+                AddLine(ref rect);
                 EditorGUI.PropertyField(rect, prop.FindPropertyRelative("baseTextSpeed"));
-                AddLine(ref rect, 2);
-                var sentences = prop.FindPropertyRelative("sentences");
+                AddLine(ref rect);
+                var overrideColor = prop.FindPropertyRelative("overrideTextColor");
+                EditorGUI.PropertyField(rect, overrideColor);
+                AddLine(ref rect);
+                if (overrideColor.boolValue)
+                {
+                    EditorGUI.PropertyField(rect, prop.FindPropertyRelative("customColor"));
+                    AddLine(ref rect);
+                }
+
+
+                    var sentences = prop.FindPropertyRelative("sentences");
                 EditorGUI.PropertyField(rect, sentences);
                 float sentenceHeight = EditorGUI.GetPropertyHeight(sentences, true) + EditorGUIUtility.standardVerticalSpacing;
                 additionalHeight += sentenceHeight;
@@ -102,7 +113,7 @@ namespace TUFF.TUFFEditor
         private void AddLine(ref Rect position, float spaceMult = 1)
         {
             lines++;
-            position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * spaceMult);
+            position.y += (20f * spaceMult);
         }
     }
 }

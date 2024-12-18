@@ -3,7 +3,18 @@ guid: 4be12c8c5255dc941a2551823649aa2d
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_interactablePrefab: {instanceID: 0}
+  - m_overworldCharacterPrefab: {instanceID: 0}
+  - m_enemyGraphicPrefab: {instanceID: 0}
+  - m_defaultTextFont: {fileID: 11400000, guid: dd88ec5abbdc41d4ca284a4aacf7b938, type: 2}
+  - m_defaultTextbox: {instanceID: 0}
+  - m_systemTextbox: {instanceID: 0}
+  - m_magsIcon: {instanceID: 0}
+  - m_hitDisplayGroup: {instanceID: 0}
+  - m_enemyHUD: {instanceID: 0}
+  - m_enemyKOAnimation: {instanceID: 0}
+  - m_defaultVoicebank: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -166,9 +166,10 @@ namespace TUFF.TUFFEditor
                 LowerPanelGUI(position, panelEventListTarget, panelEventListEditorsTarget);
                 EditorGUIUtility.labelWidth = labelWidth;
             }
-            catch
+            catch (System.Exception ex)
             {
                 Debug.LogWarning("Whoops");
+                Debug.LogException(ex);
             }
         }
         private static void UpperPanelGUI(Rect position)
