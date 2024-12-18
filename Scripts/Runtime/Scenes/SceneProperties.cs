@@ -31,6 +31,7 @@ namespace TUFF
         
         private void Awake()
         {
+            if (!camFollow) camFollow = GetComponentInChildren<CameraFollow>();
             if (camFollow != null)
                 camFollow.si = this;
             AwakeScene();

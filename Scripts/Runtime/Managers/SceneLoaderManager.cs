@@ -249,7 +249,7 @@ namespace TUFF
         {
             StartCoroutine(AsyncLoadNeighbourScene(sceneName));
         }
-        IEnumerator AsyncLoadNeighbourScene(string sceneName)
+        private IEnumerator AsyncLoadNeighbourScene(string sceneName)
         {
             // If neighbour is already loading, abort
             if (loadingNeighbourScenes.IndexOf(sceneName) >= 0) yield break;
@@ -258,9 +258,20 @@ namespace TUFF
             if (sceneIndex < 0) // Scene not loaded
             {
                 var prevPriority = Application.backgroundLoadingPriority;
+                AsyncOperation nextOperation = null;
                 Application.backgroundLoadingPriority = ThreadPriority.High;
+                try
+                {
+                    nextOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                    Application.backgroundLoadingPriority = prevPriority;
+                    yield break;
+                }
+                if (nextOperation == null) { Application.backgroundLoadingPriority = prevPriority; yield break; }
                 loadingNeighbourScenes.Add(sceneName);
-                AsyncOperation nextOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
                 neighbourOperations.Add(nextOperation);
                 nextOperation.completed += (asyncOperation) =>
                 {

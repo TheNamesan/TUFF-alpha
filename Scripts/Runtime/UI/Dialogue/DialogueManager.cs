@@ -309,7 +309,6 @@ namespace TUFF
                     else {
                         if (actionCallback != null) actionCallback.EndEvent();
                         textboxInitiated = false;
-                        Debug.Log("Choices is next!"); 
                     }
                 }
                 return;
@@ -320,7 +319,6 @@ namespace TUFF
             autoContinue = false;
             var savedTags = new List<TUFFTextParser.TagData>();
             var text = TUFFTextParser.ParseText(sentences[currentSentence], savedTags);
-            Debug.Log("Found: " + savedTags.Count + " tags");
             if (savedTags.Exists(e => e.type == TUFFTextParser.TextTagType.AutoContinue) || (currentSentence >= sentences.Count - 1 && ChoicesIsNext()))
             {
                 autoContinue = true;
