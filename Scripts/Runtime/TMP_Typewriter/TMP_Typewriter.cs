@@ -18,11 +18,11 @@ namespace TUFF
 	{
 		public class TextPause
 		{
-			public int from;
+			public TUFFTextParser.TagData tagData;
 			public bool finished;
-			public TextPause(int index)
+			public TextPause(TUFFTextParser.TagData tagData)
 			{
-				from = index;
+				this.tagData = tagData;
 				finished = false;
 			}
 		}
@@ -47,7 +47,7 @@ namespace TUFF
 		private List<TextPause> m_pauses = new();
 		private Tween m_pauseTween;
 		private float m_pauseTimer = 0f;
-		private float m_pauseStartDuration = 0.5f;
+		private float m_defaultPauseStartDuration = 0.5f;
 
 		//==============================================================================
 		// 関数
@@ -188,16 +188,15 @@ namespace TUFF
             var pauses = m_savedTags.FindAll(e => e.type == TUFFTextParser.TextTagType.TextPause);
 			foreach (var pause in pauses) 
 			{
-				m_pauses.Add(new TextPause(pause.index));
+				m_pauses.Add(new TextPause(pause));
 			}
-			Debug.Log($"Got {m_pauses.Count} pauses");
 		}
 
 		private void CheckPause()
 		{
 			if (m_tween == null) return;
 			int currentLetter = m_lastMaxVisibleCharacters;
-			TextPause validPause = m_pauses.Find(e => !e.finished && e.from <= m_lastMaxVisibleCharacters);
+			TextPause validPause = m_pauses.Find(e => !e.finished && e.tagData.index <= m_lastMaxVisibleCharacters);
 			if (validPause != null)
 			{
                 Pause();
@@ -208,11 +207,34 @@ namespace TUFF
 		{
 			if (pause == null) return;
 			m_pauseTween?.Kill();
-			float duration = m_pauseStartDuration;
+			float duration = GetPauseTime(pause.tagData.fullTag);
 			m_pauseTween = DOTween
 				.To(x => m_pauseTimer = x, duration, 0, duration)
                 .SetEase(Ease.Linear)
                 .OnComplete(() => { pause.finished = true; Resume(); });
+		}
+
+		private float GetPauseTime(string fullTag)
+		{
+			float duration = m_defaultPauseStartDuration;
+			if (!string.IsNullOrEmpty(fullTag))
+			{
+                int from = fullTag.IndexOf(':', 0); // Find first index of ':'
+                int to = fullTag.IndexOf('>', from); // Find first index of '>'
+				if (from >= 0 && to >= 0)
+				{
+					from += 1;
+					to -= 1;
+                    int length = to - from + 1;
+					if (length >= 1)
+					{
+                        string timeSubstring = fullTag.Substring(from, length);
+                        if (float.TryParse(timeSubstring, out float result))
+                            duration = result;
+                    }
+                }
+            }
+			return duration;
 		}
 	}
 }

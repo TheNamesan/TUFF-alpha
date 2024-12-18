@@ -17,16 +17,18 @@ namespace TUFF
         }
         public struct TagData
         {
-            public TagData(TextTagType type, int index)
+            public TagData(TextTagType type, int index, string fullTag)
             {
                 this.type = type;
                 this.index = index;
+                this.fullTag = fullTag;
             }
             public TextTagType type;
             public int index;
+            public string fullTag;
         }
         public static string[] tags = {
-            "<ld:", "<l:", "<mags:>", "<skip:>", "<wait:>"
+            "<ld:", "<l:", "<mags:>", "<skip:>", "<wait:"
         };
         public static string ParseText(string text) => ParseText(text, null);
         public static string ParseText(string text, List<TagData> savedTags)
@@ -58,7 +60,7 @@ namespace TUFF
                     {
                         var tagType = (TextTagType)i;
                         //Debug.Log(tagType);
-                        var tagFound = new TagData(tagType, from);
+                        var tagFound = new TagData(tagType, from, substring);
                         changedString = ApplyTagBehaviour(tagType, substring, ref parse);
                         savedTags?.Add(tagFound);
                         break;
