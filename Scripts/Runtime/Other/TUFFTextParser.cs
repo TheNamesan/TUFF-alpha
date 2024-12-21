@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TUFF
 {
-    public static class TUFFTextParser 
+    public static class TUFFTextParser
     {
         private const int MAX_ITERATIONS = 2500;
         public enum TextTagType
@@ -71,6 +71,12 @@ namespace TUFF
             }
             //Debug.Log("*** Parse: " + parse);
             return parse;
+        }
+        public static List<TagData> GetTags(string text)
+        {
+            var tags = new List<TagData>();
+            ParseText(text, tags);
+            return tags;
         }
         private static bool ApplyTagBehaviour(TextTagType tagType, string substring, ref string parse)
         {

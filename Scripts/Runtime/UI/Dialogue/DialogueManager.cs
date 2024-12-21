@@ -318,11 +318,19 @@ namespace TUFF
             SetTextColor();
             autoContinue = false;
             var savedTags = new List<TUFFTextParser.TagData>();
-            var text = TUFFTextParser.ParseText(sentences[currentSentence], savedTags);
+            string text = sentences[currentSentence];
+            TMP_Text typewriterText = typewriter.textUI;
+            if (typewriterText)
+            {
+                typewriterText.text = text;
+                typewriterText.ForceMeshUpdate();
+                string parsedText = typewriterText.GetParsedText();
+                savedTags = TUFFTextParser.GetTags(parsedText);
+            }
+            text = TUFFTextParser.ParseText(text);
             if (savedTags.Exists(e => e.type == TUFFTextParser.TextTagType.AutoContinue) || (currentSentence >= sentences.Count - 1 && ChoicesIsNext()))
             {
                 autoContinue = true;
-                //Debug.Log("AUTOCONTINUE: " + autoContinue);
             }
 
             typewriter.Play(text, SetTextSpeed(), savedTags, () => { DisplayContinuePrompt(true); });
