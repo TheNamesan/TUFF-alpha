@@ -143,6 +143,7 @@ namespace TUFF
                 System.Array.Resize(ref party, DatabaseLoader.units.Length);
             for (int i = 0; i < party.Length; i++)
             {
+                if (party[i] == null) party[i] = InitiatePartyMember(i);
                 party[i].unitRef = DatabaseLoader.units[i];
                 party[i].UpdateStates();
                 party[i].CapValues();
