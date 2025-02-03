@@ -46,6 +46,10 @@ namespace TUFF.TUFFEditor
             {
                 DoubleFieldVectorFirst(position, property, orgLabelWidth, totalWidth, "jumpForceDirection", "hardFallBehaviour", new GUIContent("?"), new GUIContent("?"));
             }
+            if (ins == MoveRouteInstruction.ChangeSpeed)
+            {
+                SingleField(position, property, orgLabelWidth, totalWidth, nameof(MoveRouteElement.newSpeed), new GUIContent("?"));
+            }
 
             EditorGUIUtility.labelWidth = orgLabelWidth;
             property.serializedObject.ApplyModifiedProperties();

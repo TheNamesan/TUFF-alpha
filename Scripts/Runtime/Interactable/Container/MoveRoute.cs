@@ -10,7 +10,8 @@ namespace TUFF
         MoveHorizontal = 1,
         ChangeFacing = 2,
         TryVerticalJump = 3,
-        ForceJump = 4
+        ForceJump = 4,
+        ChangeSpeed = 5
     }
     [System.Serializable]
     public class MoveRoute
@@ -27,6 +28,7 @@ namespace TUFF
         public FaceDirections facing = FaceDirections.East;
         public Vector2 jumpForceDirection = new Vector2();
         public HardFallBehaviour hardFallBehaviour = HardFallBehaviour.Default;
+        public float newSpeed = 0;
 
         public IEnumerator PlayElement(OverworldCharacterController controller)
         {
@@ -55,6 +57,9 @@ namespace TUFF
                     break;
                 case MoveRouteInstruction.ForceJump:
                     controller.ForceFall(jumpForceDirection, hardFallBehaviour);
+                    break;
+                case MoveRouteInstruction.ChangeSpeed:
+                    controller.ChangeMoveSpeed(newSpeed);
                     break;
             }
             yield break;

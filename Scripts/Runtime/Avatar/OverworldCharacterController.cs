@@ -190,8 +190,8 @@ namespace TUFF
         [SerializeField] FaceDirections m_faceDirection = FaceDirections.East;
         int nextXFacing = 0;
         int nextYFacing = 0;
-        int faceX = 1; //Used for animator changes
-        int faceY = 0; //Used for animator changes
+        public int faceX = 1; //Used for animator changes
+        public int faceY = 0; //Used for animator changes
 
         [Header("Interaction")]
         [Tooltip("Distance checked to find interactables in the Avatar's facing direction.")]
@@ -1706,6 +1706,10 @@ namespace TUFF
         public void ChangeClimbMode(CharacterClimbMode climbMode)
         {
             this.climbMode = climbMode;
+        }
+        public void ChangeMoveSpeed(float speed)
+        {
+            moveSpeed = speed;
         }
     }
 }
