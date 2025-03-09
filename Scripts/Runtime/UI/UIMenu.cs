@@ -216,7 +216,7 @@ namespace TUFF
             ignoreInput = true;
             if (openSFX != null) PlaySound(openSFX);
             onOpenMenu?.Invoke();
-            scrollRect?.UpdateScroll();
+            if (scrollRect) scrollRect.UpdateScroll();
             transitionHandler?.Appear();
             HighlightCurrent(); //Highlight two times in case elements are changed.
             CallElementsOnOpenMenu();

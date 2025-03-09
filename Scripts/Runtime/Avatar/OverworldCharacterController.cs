@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements.Experimental;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace TUFF
 {
@@ -19,6 +21,9 @@ namespace TUFF
         public CharacterAnimationHandler animHandler;
         public Rigidbody2D rb;
         public Collider2D col;
+        public Vector2 closestContactPointD { get => col.ClosestPoint((Vector2)col.bounds.center + Vector2.down * col.bounds.size); }
+        public Vector2 closestContactPointR { get => col.ClosestPoint((Vector2)col.bounds.center + Vector2.right * col.bounds.size); }
+        public Vector2 closestContactPointL { get => col.ClosestPoint((Vector2)col.bounds.center + Vector2.left * col.bounds.size); }
         public SpriteRenderer sprite;
         [SerializeField] ClimbableDetector climbDetect;
 
@@ -32,43 +37,45 @@ namespace TUFF
 
         [Header("Horizontal Movement")]
         [Tooltip("Avatar speed when walking.")]
-        [SerializeField] float moveSpeed = 4;
+        [SerializeField] protected float moveSpeed = 4;
         [Tooltip("Avatar speed when running (pressing Run button).")]
-        [SerializeField] float runSpeed = 7;
+        [SerializeField] protected float runSpeed = 7;
         [Tooltip("Determines the behaviour for character run movement.\n" +
             "Default: Character runs any time the run button is pressed.\n" +
             "Prep: Character needs to stand still while holding the run button before they can run.")]
         public CharacterRunMode runMode;
+        public Rigidbody2D.SlideMovement slideMove = new Rigidbody2D.SlideMovement();
+        public Rigidbody2D.SlideResults slideResults = new Rigidbody2D.SlideResults();
         protected Vector2 touchingWalkableNormal = Vector2.zero;
         protected Vector2 lastTouchingWalkableNormal = Vector2.zero;
         protected Vector2 touchingWalkablePerp = Vector2.zero;
         protected Vector2 nextTouchingWalkableNormal = Vector2.zero;
         protected Vector2 collisionBoxSize = Vector2.zero;
         protected float collisionBoxDistance = 0f;
-        protected float maxNormalDirection = 1.01f;
+        protected float maxNormalDirection = 1f;
         [Tooltip("Player can currently control their horizontal input value.")]
-        [SerializeField] bool enableHorizontalVelocity;
+        [SerializeField] protected bool enableHorizontalVelocity;
 
         [Tooltip("Player can currently control their vertical input value.")]
-        [SerializeField] bool enableVerticalVelocity;
+        [SerializeField] protected bool enableVerticalVelocity;
 
         [Header("Gravity")]
         [Tooltip("Avatar gravity under normal conditions (multiplies value set by Physics.gravity).")]
-        [SerializeField] float gravityScale;
+        [SerializeField] protected float gravityScale;
         [Tooltip("Avatar current gravity applied.")]
-        [SerializeField] float gravity;
+        [SerializeField] protected float gravity;
         [Tooltip("Used when instantiating the Avatar.")]
         public bool muteLandSound = true;
 
         [Header("Jumping")]
         [Tooltip("Avatar jump up force.")]
-        [SerializeField] float jumpForce;
+        [SerializeField] protected float jumpForce;
         [Tooltip("Avatar jump down force.")]
-        [SerializeField] float jumpDownForce;
+        [SerializeField] protected float jumpDownForce;
         [Tooltip("Avatar horizontal jump force in the X axis.")]
-        [SerializeField] float horizontalJumpXForce = 4;
+        [SerializeField] protected float horizontalJumpXForce = 4;
         [Tooltip("Avatar horizontal jump force in the Y axis.")]
-        [SerializeField] float horizontalJumpYForce = 6;
+        [SerializeField] protected float horizontalJumpYForce = 6;
         public UnityEvent<Vector2> onJump = new();
 
 
@@ -76,7 +83,7 @@ namespace TUFF
         [Tooltip("Avatar current horizontal jumping direction.")]
         [SerializeField] HJumpDir hJumpDir = HJumpDir.None;
         [Tooltip("Avatar current horizontal jumping velocity.")]
-        [SerializeField] float hJumpXVelocity = 0;
+        [SerializeField] protected float hJumpXVelocity = 0;
         [Tooltip("Avatar is currently touching the ground (ground is defined by walkableLayer).")]
         public bool grounded;
         public bool wasGrounded;
@@ -282,7 +289,7 @@ namespace TUFF
 
         public void FixedUpdate()
         {
-            lastXVelocity = rb.velocity.x;
+            lastXVelocity = rb.linearVelocity.x;
             Vector2 last = lastPosition;
             CheckJumpDownExpectedLanding();
             CheckQueues();
@@ -290,6 +297,7 @@ namespace TUFF
             ClimbHandler();
             DequeueAction();
             MoveHandler();
+            
             onFixedUpdate?.Invoke();
             queuedAction = QueuedAction.None;
             Vector2 current = rb.position;
@@ -299,11 +307,8 @@ namespace TUFF
             //Debug.Log($"{gameObject.name}: {current}");
             onInputUpdate?.Invoke();
             lastPosition = rb.position;
-            lastVelocity = rb.velocity;
+            lastVelocity = rb.linearVelocity;
             InputUpdate();
-            //nextInput.interactionButtonDown = false;
-            //nextInput.runButtonDown = false;
-            //nextInput.pauseButtonDown = false;
             wasGrounded = grounded;
         }
         private IEnumerator LateFixedUpdate()
@@ -311,6 +316,15 @@ namespace TUFF
             while (true)
             {
                 yield return new WaitForFixedUpdate();
+                CheckGround(true);
+                ////if (FindGround(out GroundFoundType foundType, true))
+                //{
+                //    Vector2 velocity = rb.linearVelocity;
+                //    if (!slideMove.useSimulationMove) velocity *= 0.02f;
+                //    slideResults = rb.Slide(velocity, 0.02f, slideMove);
+                //}
+                //Debug.Log("Bounds in Late: " + col.bounds.center);
+                //Debug.DrawRay(col.bounds.center, Vector3.up, Color.cyan);
 
             }
         }
@@ -318,13 +332,13 @@ namespace TUFF
         private void VelocityZeroCorrection() // Attempts to fix sprite clipping when crossing other characters
         {
             float min = 0.0001f;
-            if (Mathf.Abs(rb.velocity.x) <= min)
+            if (Mathf.Abs(rb.linearVelocity.x) <= min)
             {
-                rb.velocity = new Vector2(0, rb.velocity.y);
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             }
-            if (Mathf.Abs(rb.velocity.y) <= min)
+            if (Mathf.Abs(rb.linearVelocity.y) <= min)
             {
-                rb.velocity = new Vector2(rb.velocity.x, 0);
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
             }
         }
 
@@ -357,41 +371,109 @@ namespace TUFF
                     break;
             }
         }
-
-        private void CheckGround()
+        private enum GroundFoundType
         {
-            Vector2 closestContactPoint = col.ClosestPoint((Vector2)col.bounds.center + Vector2.down * col.bounds.size);
-            Vector2 boxCenter = closestContactPoint;
-            float DCOMultiplier = 0.1f;
+            None = 0,
+            Found = 1,
+            CorrectedFromTopSlope = 2,
+        }
+        private RaycastHit2D FindGround(out GroundFoundType foundType, bool calledInLate = false)
+        {
+            LayerMask layers = walkableLayers;
+            Vector2 boxCenter = closestContactPointD;
             collisionBoxSize = new Vector2(col.bounds.size.x, Physics2D.defaultContactOffset);
-            //collisionBoxSize = new Vector2(col.bounds.size.x, Physics2D.defaultContactOffset * DCOMultiplier);
             Vector2 boxExtents = collisionBoxSize * 0.5f;
             collisionBoxDistance = Physics2D.defaultContactOffset;
-            //collisionBoxDistance = (rb.velocity.y > -10 ? collisionBoxSize.y * 10f : collisionBoxSize.y * 200f) /*+ (WasOnSlope() ? 0.3f : 0f)*/; //Has a higher distance check if velocity is higher (mainly when falling or jumping down)
-            RaycastHit2D collision = Physics2D.BoxCast(closestContactPoint, collisionBoxSize, 0f, Vector2.down, collisionBoxDistance, walkableLayers);
-            Vector2 nextOrigin = closestContactPoint;
-            RaycastHit2D nextCollision = Physics2D.BoxCast(nextOrigin, collisionBoxSize, 0f, Vector2.down, 0.15f/*(IsOnSlope() ? 0.5f : 0.15f)*/, walkableLayers);
+            RaycastHit2D collision = Physics2D.BoxCast(closestContactPointD, collisionBoxSize, 0f, Vector2.down, collisionBoxDistance, layers);
+            foundType = GroundFoundType.None;
 
-            bool slopeFound = false;
-            Collider2D collider = collision.collider;
-            Vector2 normal = collision.normal;
-            Vector2 point = collision.point;
+            if (collision) foundType = GroundFoundType.Found;
+            
+            if (calledInLate)
+            {
+                if (grounded && !collision)
+                {
+                    //// This is a fix used when reaching the top of a slope
+                    //if (IsOnSlope()) // If was on slope climbing up, attempt to find expected ground
+                    //{
+                    //    var distance = collisionBoxDistance * 100f;
+                    //    RaycastHit2D snapAttempt = Physics2D.BoxCast(closestContactPointD, collisionBoxSize, 0f, Vector2.down, distance, layers);
+                    //    if (snapAttempt)
+                    //    {
+                    //        collision = snapAttempt;
+                    //        foundType = GroundFoundType.CorrectedFromTopSlope;
+                    //        Debug.Log("Found snap");
+                    //    }
+                    //}
+                    Vector2 origin = closestContactPointD;
+                    Vector2 offset = new Vector2(boxExtents.x, boxExtents.y - characterHeight * 0.5f);
+                    Vector2 dest = closestContactPointD + offset;
+                    Debug.DrawLine(origin, dest, new Color32(63, 72, 204, 255));
+                    RaycastHit2D rightRaycast = Physics2D.Linecast(origin, dest, layers);
+                    if (rightRaycast)
+                    {
+                        //RaycastHit2D isDown = Physics2D.Linecast(origin + new Vector2(boxExtents.x, 0f), dest);
+                        float distance = Vector2.Distance(origin, dest);
+                        RaycastHit2D isDown = Physics2D.BoxCast(origin, collisionBoxSize, 0f, Vector2.down, distance, layers);
+                        if (isDown)
+                        {
+                            collision = isDown;
+                            foundType = GroundFoundType.CorrectedFromTopSlope;
+                            //Debug.Log("Corrected from right");
+                            return collision;
+                        }
+                    }
+                    offset.x *= -1f;
+                    dest = closestContactPointD + offset;
+                    Debug.DrawLine(origin, dest, new Color32(34, 177, 76, 255));
+                    RaycastHit2D leftRaycast = Physics2D.Linecast(origin, dest, layers);
+                    if (leftRaycast)
+                    {
+                        //RaycastHit2D isDown = Physics2D.Linecast(origin - new Vector2(boxExtents.x, 0f), dest);
+                        float distance = Vector2.Distance(origin, dest);
+                        RaycastHit2D isDown = Physics2D.BoxCast(origin, collisionBoxSize, 0f, Vector2.down, distance, layers);
+                        if (isDown)
+                        {
+                            collision = isDown;
+                            foundType = GroundFoundType.CorrectedFromTopSlope;
+                            //Debug.Log("Corrected from left");
+                            return collision;
+                        }
+                    }
+                }
+            }
+            
+            return collision;
+        }
+        private void CheckGround(bool calledInLate = false)
+        {
+            LayerMask layers = walkableLayers;
+            Vector2 boxCenter = closestContactPointD;
+            collisionBoxSize = new Vector2(col.bounds.size.x, Physics2D.defaultContactOffset);
+            Vector2 boxExtents = collisionBoxSize * 0.5f;
+            collisionBoxDistance = Physics2D.defaultContactOffset;
+            RaycastHit2D collision = FindGround(out GroundFoundType foundGround, calledInLate);
+            if (foundGround == GroundFoundType.CorrectedFromTopSlope)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Important! 
+                Debug.DrawRay(Vector2.zero, collision.point, new Color32(253, 153, 53, 255));
+                SnapToGround(collision.collider, collision.point, instant: true); // The instant is important so it doesn't cancel the speed in MoveHandler (rb.MovePosition is the issue)
+            }
             Color boxColor;
-            /*if (nextCollision && !collision)
-            {
-                collider = nextCollision.collider;
-                normal = nextCollision.normal;
-                point = nextCollision.point;
-            }*/
 
-            //Debug.DrawRay(slopeNormalHit.point, slopeNormalHit.normal, Color.yellow);
-            //Debug.DrawLine(closestContactPoint + rb.velocity * Time.deltaTime, slopeNormalHit.point, Color.blue);
 
-            if ((collision /*|| (nextCollision && grounded)*/) && !IsWalkableLayerCollisionDisabled()) //OnCollisionEnter/Stay
+            if ((collision) && !IsWalkableLayerCollisionDisabled()) //OnCollisionEnter/Stay
             {
+                Collider2D collider = collision.collider;
+                Vector2 normal = collision.normal;
+                Vector2 point = collision.point;
+                Debug.DrawRay(point, normal, Color.yellow);
+
                 if (m_touchingWalkable == collider || grounded)
                 {
                     boxColor = Color.yellow;
+                    if (lastTouchingWalkableNormal != touchingWalkableNormal) // This is here so char doesn't get placed a few pixels above when reaching the top of a slope
+                        SnapToGround(collider, point);
                 }
                 //if (grounded && !collision/*!collision && nextCollision*/)
                 //{
@@ -409,14 +491,13 @@ namespace TUFF
                 //}
                 if (grounded && m_touchingWalkable != collider)
                 {
-                    Debug.Log(collider + " (" + collision.collider + ")," + slopeFound + "," + touchingWalkableNormal);
-                    SnapToGround(closestContactPoint, DCOMultiplier, collider, point);
+                    SnapToGround(collider, point);
                     SetTouchingWalkable(collider);
                     boxColor = Color.yellow;
                 }
-                if (!grounded && m_touchingWalkable == null /*&& normal.y > 0*/ && rb.velocity.y < 0.1f && !ignoreGroundCheck)
+                if (!grounded && m_touchingWalkable == null /*&& normal.y > 0*/ && rb.linearVelocity.y < 0.1f && !ignoreGroundCheck)
                 {
-                    SnapToGround(closestContactPoint, DCOMultiplier, collider, point);
+                    SnapToGround(collider, point);
                     TouchLand(collider);
                     boxColor = Color.green;
                 }
@@ -425,23 +506,37 @@ namespace TUFF
                     boxColor = Color.magenta;
                 }
 
+
+                //if (!collision && nextCollision)
+                //{
+                //    touchingWalkableNormal = nextCollision.normal;
+                //    touchingWalkablePerp = Vector2.Perpendicular(touchingWalkableNormal).normalized;
+                //}
+                //else
                 lastTouchingWalkableNormal = touchingWalkableNormal;
-                if (!collision && nextCollision)
-                {
-                    touchingWalkableNormal = nextCollision.normal;
-                    touchingWalkablePerp = Vector2.Perpendicular(touchingWalkableNormal).normalized;
-                }
-                else
-                {
-                    touchingWalkableNormal = collision.normal;
-                    touchingWalkablePerp = Vector2.Perpendicular(touchingWalkableNormal).normalized;
-                }
+                CorrectNormal(layers, collision.point, ref normal);
 
+                float distance = characterHeight - Physics2D.defaultContactOffset;
 
+                // This is a fix for going down slopes
+
+                //RaycastHit2D normalHitV = Physics2D.BoxCast(closestContactPointD, collisionBoxSize, 0f, Vector2.down, distance, layers);
+                //RaycastHit2D normalHitVRay = Physics2D.Raycast(closestContactPointD, Vector2.down, distance, layers);
+                //if (normalHitVRay)
+                //{
+                //    float boxDiff = Vector2.Distance(normalHitV.normal, Vector2.up);
+                //    float rayDiff = Vector2.Distance(normalHitVRay.normal, Vector2.up);
+                //    if (boxDiff < rayDiff)
+                //    {
+                //        normal = normalHitVRay.normal; // If this takes priority, it allows climbing down normally
+                //    }
+                //}
+
+                touchingWalkableNormal = normal;
+                touchingWalkablePerp = Vector2.Perpendicular(touchingWalkableNormal).normalized;
                 //Debug.DrawLine(transform.position, collision.point, Color.yellow);
-                //Debug.DrawRay(collision.point, touchingWalkableNormal, Color.cyan);
+                Debug.DrawRay(collision.point, touchingWalkableNormal, Color.cyan);
                 //Debug.DrawRay(collision.point, touchingWalkablePerp, Color.green);
-                if (nextCollision) { Debug.DrawLine(nextOrigin, nextCollision.point, new Color32(67, 171, 255, 255)); }
             }
             else //OnCollisionExit
             {
@@ -452,7 +547,7 @@ namespace TUFF
                 else boxColor = Color.red;
                 if (!climbing && grounded && !ignoreFallCheck)
                 {
-                    Debug.Log("Ungrounded && WasOnSlope: " + WasOnSlope());
+                    //Debug.Log("Ungrounded && WasOnSlope: " + WasOnSlope());
                     SetupFall();
                 }
                 else
@@ -462,30 +557,61 @@ namespace TUFF
                 }
             }
 
-            float displayTime = 0f;
+            //float displayTime = 0f;
+            if (!calledInLate) boxColor.a *= 0.5f;
+            else
+            { 
+                
+                boxColor = new Color32(53, 253, 87, 255); 
+                if (!grounded) boxColor = new Color32(253, 153, 53, 255);
+            }
             Debug.DrawLine(new Vector2(boxCenter.x + boxExtents.x, boxCenter.y - boxExtents.y),
-                new Vector2(boxCenter.x + boxExtents.x, boxCenter.y + boxExtents.y), boxColor, displayTime);
+                new Vector2(boxCenter.x + boxExtents.x, boxCenter.y + boxExtents.y), boxColor);
             Debug.DrawLine(new Vector2(boxCenter.x + boxExtents.x, boxCenter.y + boxExtents.y),
-               new Vector2(boxCenter.x - boxExtents.x, boxCenter.y + boxExtents.y), boxColor, displayTime);
+               new Vector2(boxCenter.x - boxExtents.x, boxCenter.y + boxExtents.y), boxColor);
             Debug.DrawLine(new Vector2(boxCenter.x - boxExtents.x, boxCenter.y + boxExtents.y),
-               new Vector2(boxCenter.x - boxExtents.x, boxCenter.y - boxExtents.y), boxColor, displayTime);
+               new Vector2(boxCenter.x - boxExtents.x, boxCenter.y - boxExtents.y), boxColor);
             Debug.DrawLine(new Vector2(boxCenter.x - boxExtents.x, boxCenter.y - boxExtents.y),
-               new Vector2(boxCenter.x + boxExtents.x, boxCenter.y - boxExtents.y), boxColor, displayTime);
+               new Vector2(boxCenter.x + boxExtents.x, boxCenter.y - boxExtents.y), boxColor);
 
             ignoreGroundCheck = false;
             ignoreFallCheck = false;
         }
 
-        private void SnapToGround(Vector2 closestContactPoint, float DCOMultiplier, Collider2D collider, Vector2 point)
+        private static void CorrectNormal(LayerMask layers, Vector2 point, ref Vector2 normal)
         {
-            RaycastHit2D hitW = Physics2D.Raycast(rb.position, Vector2.down, Vector2.Distance(closestContactPoint, rb.position) * 1.25f, 1 << collider.gameObject.layer);
-            Vector2 landingPosition = (hitW ? hitW.point : point);
-            float moveBuffer = (climbing ? Vector2.Distance(closestContactPoint, landingPosition) : Physics2D.defaultContactOffset * DCOMultiplier); //if climbing, it places the player a little higher, since it's most likely it will collide deeper into the ground
-            float moveToY = landingPosition.y + Vector2.Distance(closestContactPoint, rb.position) + moveBuffer;
-            if (rb.velocity.y > -1f) { rb.MovePosition(new Vector2(rb.position.x, moveToY)); }  //if velocity is too small, smooth out the positioning
-            else rb.position = new Vector2(rb.position.x, moveToY); //else position the player instantly
+            // Normal Correction
+            Vector2 correctionBox = new Vector2(Physics2D.defaultContactOffset * 1f, Physics2D.defaultContactOffset * 1f);
+            float dis = correctionBox.y * 2f;
+            Vector2 pos = point + Vector2.up * correctionBox.y * 0.5f;
+            RaycastHit2D normalCorrection = Physics2D.BoxCast(pos, correctionBox, 0f, Vector2.down, dis, layers);
+            if (normalCorrection) { normal = normalCorrection.normal; }
         }
 
+        private void SnapToGround(Collider2D collider, Vector2 point, bool instant = false)
+        {
+            int layers = 1 << collider.gameObject.layer;
+            float distance = Vector2.Distance(closestContactPointD, rb.position) * 1.25f;
+            if (collider.gameObject == null) Debug.LogWarning("Collider is null!");
+            RaycastHit2D hitW = Physics2D.BoxCast(rb.position, collisionBoxSize, 0f, Vector2.down, distance, layers);
+            Vector2 landingPosition = (hitW ? hitW.point : point);
+            landingPosition = (point);
+            float moveBuffer = (climbing ? Vector2.Distance(closestContactPointD, landingPosition) : -Physics2D.defaultContactOffset * 0.5f); //if climbing, it places the player a little higher, since it's most likely it will collide deeper into the ground
+            float moveToY = landingPosition.y + Mathf.Abs(closestContactPointD.y - rb.position.y) + moveBuffer;
+            var pos = new Vector2(rb.position.x, moveToY);
+            if (!instant)
+            {
+                pos = new Vector2(rb.position.x + rb.linearVelocity.x * Time.deltaTime, moveToY);
+                if (rb.linearVelocity.y > -1f) { rb.MovePosition(pos); }  // if velocity is too small, smooth out the positioning
+                else rb.position = pos; // else position the player instantly
+            }
+            else
+            {
+                rb.position = pos;
+                transform.position = new Vector3(pos.x, pos.y, transform.position.z); // This is placed here because otherwise rb.position doesnt render correctly if called from LateFixedUpdate
+            }
+        }
+        
         private void AnimatorSpeed()
         {
             GroundedAnimationStateCheck();
@@ -500,7 +626,7 @@ namespace TUFF
         {
             if (!grounded || jumping || hardLanded || climbing || falling) return;
 
-            if (Mathf.Abs(rb.velocity.x) > 0.000001f && moveH != 0)
+            if (Mathf.Abs(rb.linearVelocity.x) > 0.000001f && moveH != 0)
             {
                 SetHardLanded(false);
                 ChangeState(CharacterStates.Walk);
@@ -650,7 +776,7 @@ namespace TUFF
             {
                 StopRunMomentum();
             }
-            bool groundedSpeedIsLow = runMomentum && grounded && Mathf.Abs(rb.velocity.x) <= 0.0001f;
+            bool groundedSpeedIsLow = runMomentum && grounded && Mathf.Abs(rb.linearVelocity.x) <= 0.0001f;
             if (runCanceled || groundedSpeedIsLow)
             {
                 runMomentumCancelCDTimer += Time.deltaTime;
@@ -695,14 +821,14 @@ namespace TUFF
         }
         public bool CanInteract()
         {
-            return !GameManager.disablePlayerInput && !hardLanded && ((grounded && rb.velocity.y == 0 && input.horizontalInput == 0) || climbing);
+            return !GameManager.disablePlayerInput && !hardLanded && ((grounded && rb.linearVelocity.y == 0 && input.horizontalInput == 0) || climbing);
         }
         private bool FindInteractable(out InteractableObject obj)
         {
             obj = null;
             if (!CanInteract()) return false;
             //Debug.Log($"{gameObject.name}: Check interactable");
-            if (grounded && rb.velocity.y == 0 && input.horizontalInput == 0)
+            if (grounded && rb.linearVelocity.y == 0 && input.horizontalInput == 0)
             {
                 Debug.DrawRay(transform.position, Vector2.right * interactionDistance * faceX, Color.cyan, 3);
                 RaycastHit2D[] hit = Physics2D.RaycastAll(transform.position, Vector2.right * faceX, interactionDistance, LayerMask.GetMask("Interactable"));
@@ -792,14 +918,14 @@ namespace TUFF
                 {
                     return;
                 }
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.MovePosition(new Vector2(ropeCenter.x, rb.position.y));
                 SetClimbAction(ClimbAction.GettingOn, ropeIsDown ? -1 : 1);
                 SetupClimb();
             }
             else if (!grounded) // Find rope while in the air
             {
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.MovePosition(new Vector2(ropeCenter.x, rb.position.y));
                 closestContactPoint = col.ClosestPoint((Vector3)rb.position - new Vector3(0, characterHeight, 0));
                 upperPoint = closestContactPoint + Vector2.up * col.bounds.size.y;
@@ -849,7 +975,7 @@ namespace TUFF
             lastMoveH = moveH;
             lastMoveV = moveV;
             moveH = enableHorizontalVelocity ? input.horizontalInput : 0;
-            moveV = enableVerticalVelocity ? input.verticalInput : rb.velocity.y;
+            moveV = enableVerticalVelocity ? input.verticalInput : rb.linearVelocity.y;
             //if (GameManager.disablePlayerInput)
             //{
             //    moveH = 0;
@@ -861,7 +987,7 @@ namespace TUFF
                     RecoverFromHardLanding();
                 else
                 {
-                    rb.velocity = new Vector3(0, rb.velocity.y);
+                    rb.linearVelocity = new Vector3(0, rb.linearVelocity.y);
                     return;
                 }
             }
@@ -906,7 +1032,7 @@ namespace TUFF
                         RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector2.down, Vector2.Distance(closestContactPoint, rb.position) * 1.5f, walkableLayers);
                         if (hit)
                         {
-                            rb.velocity = Vector2.zero;
+                            rb.linearVelocity = Vector2.zero;
                             rb.MovePosition(new Vector2(rb.position.x, hit.point.y + Vector2.Distance(closestContactPoint, rb.position)) + Vector2.up * 0.005f);
                         }
                         else SetClimbAction(ClimbAction.Climbing, 0);
@@ -978,7 +1104,7 @@ namespace TUFF
                     if (hit)
                     {
                         move = 0;
-                        rb.velocity = Vector2.zero;
+                        rb.linearVelocity = Vector2.zero;
                         rb.MovePosition(new Vector2(rb.position.x, hit.point.y + distanceDownToRb - Physics2D.defaultContactOffset * 1f));
                         DisableWalkableLayersCollision(false);
                     }
@@ -988,7 +1114,7 @@ namespace TUFF
                 //{
                 //    Debug.Log($"{gameObject.name}: {rb.position}. T: {Time.fixedTime}");
                 //}
-                rb.velocity = new Vector3(0, move);
+                rb.linearVelocity = new Vector3(0, move);
             }
             else if (grounded && !jumping) // Walking & Standing
             {
@@ -1002,19 +1128,20 @@ namespace TUFF
                 float movementSpeed = (InRunningState() ? runSpeed : moveSpeed);
                 Vector2 closestContactPoint = col.ClosestPoint((Vector2)col.bounds.center + Vector2.down * col.bounds.size);
                 Vector2 velocity = Vector2.zero;
-                /*if (IsOnSlope()) //if on slope
+                float speed = movementSpeed * moveH;
+                if (IsOnSlope()) //if on slope
                 {
-                    velocity = new Vector3(-touchingWalkablePerp.x, -touchingWalkablePerp.y) * movementSpeed * moveH;
+                    velocity = new Vector3(-touchingWalkablePerp.x, -touchingWalkablePerp.y) * speed;
                 }
-                else*/
+                else
                 {
                     
-                    float speed = movementSpeed * moveH;
+                    
                     velocity = new Vector3(speed, 0);
                 }
                 Vector2 expectedContactPosition = closestContactPoint + velocity * Time.fixedDeltaTime;
                 RaycastHit2D slopeNormalHit = Physics2D.BoxCast(expectedContactPosition, collisionBoxSize, 0f, Vector2.down, collisionBoxDistance, walkableLayers);
-                Debug.DrawRay(slopeNormalHit.point, slopeNormalHit.normal, Color.yellow);
+                //Debug.DrawRay(slopeNormalHit.point, slopeNormalHit.normal, Color.yellow);
                 Debug.DrawLine(expectedContactPosition, slopeNormalHit.point, Color.blue);
                 //Debug.DrawLine(closestContactPoint, expectedPosition, Color.white, 1f);
                 /*if (moveH != 0 && slopeNormalHit && IsOnSlope() && slopeNormalHit.normal.y >= 1f
@@ -1032,8 +1159,9 @@ namespace TUFF
 
                 }*/
                 Debug.DrawLine(closestContactPoint, expectedContactPosition, Color.red, 0f);
-                rb.velocity = velocity;
-                
+                rb.linearVelocity = velocity;
+                //slideResults = rb.Slide(rb.linearVelocity, 0.02f, slideMove);
+
                 if (moveH == 0) //if moving
                 {
                     if (nextYFacing > 0)
@@ -1053,11 +1181,11 @@ namespace TUFF
             }
             else if (hJumpXVelocity != 0) //Horizontal Fall
             {
-                rb.velocity = new Vector3(hJumpXVelocity, rb.velocity.y);
+                rb.linearVelocity = new Vector3(hJumpXVelocity, rb.linearVelocity.y);
             }
             else
             {
-                rb.velocity = new Vector3(0, rb.velocity.y);
+                rb.linearVelocity = new Vector3(0, rb.linearVelocity.y);
             }
             nextXFacing = 0;
             nextYFacing = 0;
@@ -1123,7 +1251,7 @@ namespace TUFF
                         if (rb.position.y - distanceDownToRb <= hit.point.y)
                         {
                             rb.position = new Vector2(rb.position.x, hit.point.y + distanceDownToRb + Physics2D.defaultContactOffset * 0.51f);
-                            rb.velocity = Vector2.zero;
+                            rb.linearVelocity = Vector2.zero;
                         }
                     }
                     else if (climbDir > 0) //Landing Up
@@ -1133,7 +1261,7 @@ namespace TUFF
                         if (rb.position.y - distanceDownToRb >= hit.point.y)
                         {
                             rb.position = new Vector2(rb.position.x, hit.point.y + distanceDownToRb + Physics2D.defaultContactOffset * 0.51f);
-                            rb.velocity = Vector2.zero;
+                            rb.linearVelocity = Vector2.zero;
                             DisableWalkableLayersCollision(false);
                         }
                     }
@@ -1146,7 +1274,7 @@ namespace TUFF
                     hit = Physics2D.Raycast(rb.position, Vector2.down, distanceDownToRb * 1.25f, walkableLayers);
                     if (hit)
                     {
-                        rb.velocity = Vector2.zero;
+                        rb.linearVelocity = Vector2.zero;
                         DisableWalkableLayersCollision(false);
                         enableVerticalVelocity = false;
                         SetFallStart();
@@ -1161,7 +1289,7 @@ namespace TUFF
                     hit = Physics2D.Raycast(rb.position, Vector2.down, distanceDownToRb * 1.25f, walkableLayers);
                     if (hit)
                     {
-                        rb.velocity = Vector2.zero;
+                        rb.linearVelocity = Vector2.zero;
                         
                         enableVerticalVelocity = false;
                         SetFallStart();
@@ -1181,7 +1309,7 @@ namespace TUFF
         private void ClimbFall()
         {
             if (PlayerData.instance.charProperties.disableRopeJump) return;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             CancelLadder();
             ChangeFaceDirection(FaceDirections.South);
             SetClimbing(false);
@@ -1232,12 +1360,14 @@ namespace TUFF
         void EnableGravity(bool activateGravity)
         {
             gravity = activateGravity ? gravityScale : 0;
+            
             rb.gravityScale = gravity;
             if (!activateGravity)
             {
-                rb.velocity = new Vector2(rb.velocity.x, 0);
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
             }
             enableHorizontalVelocity = !activateGravity;
+            slideMove.gravity = new Vector2(0, activateGravity ? 0 : -gravityScale);
         }
         //protected IEnumerator JumpTransition()
         //{
@@ -1424,7 +1554,7 @@ namespace TUFF
                 StopRunMomentum(); //runMomentum = false;
                 PlaySFX(jump, 0f);
                 EnableGravity(true);
-                rb.velocity = Vector3.up * jumpForce;
+                rb.linearVelocity = Vector3.up * jumpForce;
                 SetGrounded(false);
                 SetFallStart();
                 if (landingNormal.y < 1f)
@@ -1443,7 +1573,7 @@ namespace TUFF
                 StopRunMomentum();
                 PlaySFX(jump, 0f);
                 EnableGravity(true);
-                rb.velocity = Vector3.up * jumpDownForce;
+                rb.linearVelocity = Vector3.up * jumpDownForce;
                 SetGrounded(false);
                 SetFallStart();
                 touchingWalkableBeforeFalling = m_touchingWalkable;
@@ -1482,7 +1612,7 @@ namespace TUFF
             }
             else EnableGravity(true);
             hJumpXVelocity = force.x;
-            rb.velocity = new Vector2(0, force.y);
+            rb.linearVelocity = new Vector2(0, force.y);
         }
         protected IEnumerator EnableGravityDelay() //Bruh
         {
@@ -1622,7 +1752,7 @@ namespace TUFF
             StopCoroutine(climbFallAirborneCoroutine);
             hJumpXVelocity = 0;
             hJumpDir = HJumpDir.None;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             DisableWalkableLayersCollision(false);
             CheckLandBehaviour();
 
@@ -1694,13 +1824,17 @@ namespace TUFF
         {
             return runButtonReleaseTime >= runMomentumReleaseGracePeriod;
         }
+        public static bool IsSlope(Vector2 normal)
+        {
+            return normal.y < 0.999f;
+        }
         public bool IsOnSlope()
         {
-            return touchingWalkableNormal.y < maxNormalDirection && touchingWalkableNormal.y < 1f;
+            return touchingWalkableNormal.y <= maxNormalDirection && IsSlope(touchingWalkableNormal);
         }
         public bool WasOnSlope()
         {
-            return lastTouchingWalkableNormal.y < maxNormalDirection && lastTouchingWalkableNormal.y < 1f;
+            return lastTouchingWalkableNormal.y <= maxNormalDirection && IsSlope(lastTouchingWalkableNormal);
         }
 
         public void ChangeClimbMode(CharacterClimbMode climbMode)

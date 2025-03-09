@@ -11,7 +11,7 @@ namespace TUFF.TUFFEditor
         [MenuItem("TUFF/Scene Properties")]
         public static void SelectSceneProperties()
         {
-            if (EditorSceneManager.loadedSceneCount <= 0) return;
+            if (UnityEngine.SceneManagement.SceneManager.loadedSceneCount <= 0) return;
             var sp = GameObject.FindGameObjectWithTag("SceneProperties");
             if (sp != null) Selection.activeTransform = sp.transform;
         }

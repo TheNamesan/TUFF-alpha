@@ -41,6 +41,7 @@ namespace TUFF
         {
             Debug.Log("UpdateScroll", this);
             Initialize();
+            if (uiMenu == null) { Debug.LogWarning("UI Menu is null!"); return; }
             int visibleColumns = uiMenu.GetVisibleColumnsCount();
             //Debug.Log("Visible columns: " + visibleColumns);
             int cursorValue = uiMenu.highlightY;

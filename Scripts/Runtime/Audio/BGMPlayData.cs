@@ -15,5 +15,9 @@ namespace TUFF
         public float pitch = 1f;
         [Tooltip("If true, the BGM will play on loop dynamically based on the Loop Start and Loop End values, or by itself. Else it will play once from start to finish.")]
         public bool loop = true;
+
+        public BGMPlayData() { }
+        public BGMPlayData(BGM bgm) { this.bgm = bgm; }
+        public BGMPlayData(BGM bgm, float volume, float pitch) { this.bgm = bgm; this.volume = volume; this.pitch = pitch; }
     }
 }

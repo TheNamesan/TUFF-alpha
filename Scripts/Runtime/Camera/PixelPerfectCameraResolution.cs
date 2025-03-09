@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
+
 using System.Reflection;
 
 namespace TUFF
@@ -10,12 +10,12 @@ namespace TUFF
     {
         public const int baseHeight = 540;
         public float targetSize = 6f;
-        public PixelPerfectCamera pixelPerfectCamera;
+        public UnityEngine.Rendering.Universal.PixelPerfectCamera pixelPerfectCamera;
         public Camera cam;
 
         private void Awake()
         {
-            if (!pixelPerfectCamera) pixelPerfectCamera = GetComponent<PixelPerfectCamera>();
+            if (!pixelPerfectCamera) pixelPerfectCamera = GetComponent<UnityEngine.Rendering.Universal.PixelPerfectCamera>();
             if (!cam) cam = GetComponent<Camera>();
             if (cam)
             {

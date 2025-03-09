@@ -115,7 +115,7 @@ namespace TUFF
 
             var targetInput = target.lastInput;
 
-            bool hasVelocity = Mathf.Abs(target.rb.velocity.x) >= 0.00001f || Mathf.Abs(target.rb.velocity.y) >= 0.00001f;
+            bool hasVelocity = Mathf.Abs(target.rb.linearVelocity.x) >= 0.00001f || Mathf.Abs(target.rb.linearVelocity.y) >= 0.00001f;
             bool hadVelocity = Mathf.Abs(target.lastVelocity.x) >= 0.00001f || Mathf.Abs(target.lastVelocity.y) >= 0.00001f;
 
             bool selfMove = (targetInput.HasInput() && (hasVelocity || hadVelocity));

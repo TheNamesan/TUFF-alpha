@@ -21,6 +21,7 @@ namespace TUFF
         }
         private void OnHighlightMarkVulnerableTargets(CommandSubmenuHUD commandSubmenuHUD)
         {
+            if (commandSubmenuHUD == null) return;
             var validTargets = BattleManager.instance.GetInvocationValidTargets(commandSubmenuHUD.memberRef, invocation.ScopeData);
             commandSubmenuHUD.battleHUD.MarkVulnerableTargets(invocation, commandSubmenuHUD.memberRef, validTargets);
         }
