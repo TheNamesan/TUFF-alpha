@@ -14,7 +14,7 @@ namespace TUFF
         public PlayBGMAction()
         {
             eventName = "Play BGM";
-            eventColor = new Color(0.5f, 0.85f, 1f, 1f);
+            eventColor = EventGUIColors.sound;
         }
         public override void Invoke()
         {

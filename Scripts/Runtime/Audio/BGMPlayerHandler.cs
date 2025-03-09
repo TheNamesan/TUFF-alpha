@@ -8,6 +8,12 @@ namespace TUFF
 {
     public class BGMPlayerHandler : MonoBehaviour
     {
+        public enum BGMFadeType
+        {
+            None = 0,
+            FadeIn = 1,
+            FadeOut = 2
+        }
         [System.Serializable]
         public class BGMData
         {
@@ -29,6 +35,10 @@ namespace TUFF
         private Tween tweenIntro;
         private Tween tweenLoop;
 
+        public bool IsFading { get {
+                return fadeState != BGMFadeType.None;
+            }}
+        public BGMFadeType fadeState = BGMFadeType.None;
         
 
         public void Initialize()
@@ -156,25 +166,36 @@ namespace TUFF
             sourceIntro.Stop();
             sourceLoop.Stop();
         }
-        private void SetAndApplyVolume()
+        public void MuteVolume()
+        {
+            SetVolume(0f);
+        }
+        public void SetVolume(float newVolume)
         {
             KillTweens();
-            SetVolume();
-            ApplyVolume();
+            data.targetVolume = newVolume;
+            ApplyTargetVolume();
+            if (AudioManager.instance) AudioManager.instance.UpdateGlobalVolume();
+        }
+        private void SetAndApplyVolume()
+        {
+            SetTargetVolumeToDefault();
+            ApplyTargetVolume();
         }
         private void KillTweens()
         {
             tweenIntro.Kill();
             tweenIntro = null;
-            tweenLoop.Kill();
+            tweenLoop.Kill(true);
             tweenLoop = null;
         }
-        private void SetVolume()
+        private void SetTargetVolumeToDefault()
         {
+            KillTweens();
             data.targetVolume = data.volume;
-            if (AudioManager.instance) AudioManager.instance.SetGlobalVolume();
+            if (AudioManager.instance) AudioManager.instance.UpdateGlobalVolume();
         }
-        private void ApplyVolume()
+        private void ApplyTargetVolume()
         {
             float vol = data.targetVolume;
             sourceIntro.volume = vol;
@@ -182,17 +203,18 @@ namespace TUFF
         }
         public void FadeInVolume(float timeDuration)
         {
-            KillTweens();
-            SetVolume();
+            SetTargetVolumeToDefault();
+            fadeState = BGMFadeType.FadeIn;
             tweenIntro = sourceIntro.DOFade(data.targetVolume, timeDuration).From(0f).SetAutoKill();
-            tweenLoop = sourceLoop.DOFade(data.targetVolume, timeDuration).From(0f).SetAutoKill();
+            tweenLoop = sourceLoop.DOFade(data.targetVolume, timeDuration).From(0f).SetAutoKill().OnComplete(() => { fadeState = BGMFadeType.None; } );
         }
         public void FadeOutVolume(float timeDuration, bool stopOnComplete = false)
         {
-            KillTweens();
-            SetVolume();
+            Debug.Log("Fade Out Tween: " + gameObject.name);
+            SetTargetVolumeToDefault();
+            fadeState = BGMFadeType.FadeOut;
             tweenIntro = sourceIntro.DOFade(0f, timeDuration).From(data.targetVolume).SetAutoKill();
-            tweenLoop = sourceLoop.DOFade(0f, timeDuration).From(data.targetVolume).SetAutoKill().OnComplete(() => { if (stopOnComplete) StopMusic(); });
+            tweenLoop = sourceLoop.DOFade(0f, timeDuration).From(data.targetVolume).SetAutoKill().OnComplete(() => { if (stopOnComplete) StopMusic(); fadeState = BGMFadeType.None; } );
         }
     }
 

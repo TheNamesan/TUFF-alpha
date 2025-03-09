@@ -42,7 +42,7 @@ namespace TUFF.TUFFEditor
         [MenuItem("TUFF/Stop BGM")]
         public static void StopBGM()
         {
-            GameObject.FindWithTag("AudioManager")?.GetComponent<AudioManager>()?.StopMusic();
+            GameObject.FindWithTag("AudioManager")?.GetComponent<AudioManager>()?.StopAllMusic();
         }
         [MenuItem("TUFF/Stop All SFXs")]
         public static void StopSFXs()

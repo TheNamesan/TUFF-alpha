@@ -77,14 +77,14 @@ namespace TUFF
             m_canEscape = canEscape;
             m_canLose = canLose;
 
-            if (battle.autoPlayBGM) AudioManager.instance.PlayMusic(battle.bgm);
             //Move To BattleHUD
             eventCallback = evtCallback;
             this.battle = Instantiate(battle, hud.battleStage);
             this.battle.name = "BattleContent";
             //End Move To BattleHUD
             GameManager.instance.DisablePlayerInput(true);
-            AudioManager.instance.ChangeAmbienceVolume(0);
+            if (battle.autoPlayBGM) AudioManager.instance.SetBattleBGM(battle.bgm);
+            AudioManager.instance.OnBattleStart();
             battleState = BattleState.START;
             turn = 0;
             rewards.Clear();
@@ -835,7 +835,7 @@ namespace TUFF
             else if (!CommonEventManager.interactableEventPlaying) GameManager.instance.DisablePlayerInput(false);
 
             UnloadBattle();
-            AudioManager.instance.RestoreAmbienceVolume();
+            AudioManager.instance.OnBattleUnload();
             UIController.instance.FadeInUI(0.25f);
         }
         private IEnumerator OnBattleWon()
@@ -849,7 +849,7 @@ namespace TUFF
         {
             if (m_canLose)
             {
-                AudioManager.instance.StopMusic(1f);
+                AudioManager.instance.OnBattleEnd();
                 yield return new WaitForSeconds(1f);
                 StartCoroutine(EndBattleFade());
                 yield break;
@@ -864,7 +864,7 @@ namespace TUFF
         }
         private IEnumerator OnBattleEscape()
         {
-            AudioManager.instance.StopMusic(1f);
+            AudioManager.instance.OnBattleEnd();
             AudioManager.instance.PlaySFX(TUFFSettings.escapeSFX);
             yield return new WaitForSeconds(1f);
             StartCoroutine(EndBattleFade());
@@ -899,7 +899,7 @@ namespace TUFF
         }
         private void PlayWinAudio()
         {
-            AudioManager.instance.StopMusic(1f); 
+            AudioManager.instance.OnBattleEnd();
             AudioManager.instance.PlaySFX(TUFFSettings.battleVictorySFX);
         }
         public void DisplayHit(BattleAnimationEvent hitInfo, int value, int targetIndex, bool isCrit = false)

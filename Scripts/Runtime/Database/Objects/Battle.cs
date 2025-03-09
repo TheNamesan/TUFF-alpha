@@ -15,7 +15,8 @@ namespace TUFF
         public BattleEvent[] battleEvents = new BattleEvent[0];
         [Header("BGM")]
         public bool autoPlayBGM = false;
-        public BGMPlayData bgm;
+        [Tooltip("BGM to play during battle. Only active if autoPlayBGM is set to true.")]
+        public BGMPlayData bgm = new BGMPlayData();
     }
 }
 

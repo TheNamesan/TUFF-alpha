@@ -287,6 +287,10 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new StopBGMAction(), eventList, eventListPDs);
             }
+            if (GUILayout.Button(new GUIContent("Change Battle BGM", "Changes the BGM played during battles.")))
+            {
+                AddEvent(new ChangeBattleBGMAction(), eventList, eventListPDs);
+            }
             if (GUILayout.Button(new GUIContent("Change Audio Source", "Changes the properties of an Audio Source component in the Scene.")))
             {
                 AddEvent(new ChangeAudioSourceAction(), eventList, eventListPDs);

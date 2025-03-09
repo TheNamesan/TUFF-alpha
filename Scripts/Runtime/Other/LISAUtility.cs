@@ -81,7 +81,6 @@ namespace TUFF
         {
             if (source == null) return null;
             string json = JsonUtility.ToJson(source, true);
-            //Debug.Log(json);
             var destination = JsonUtility.FromJson(json, source.GetType());
             return destination;
         }

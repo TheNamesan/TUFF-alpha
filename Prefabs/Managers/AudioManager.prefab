@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6782691221971583162}
+  - component: {fileID: 4770618182460795396}
   - component: {fileID: 6587184843377480787}
   - component: {fileID: 3030538441538499660}
   m_Layer: 0
@@ -33,6 +34,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1574807136428112172}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4770618182460795396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420674752222299902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac5574af63a6eb47b78acab525f8f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceIntro: {fileID: 6587184843377480787}
+  sourceLoop: {fileID: 3030538441538499660}
+  currentBGM: {fileID: 0}
+  data:
+    volume: 1
+    pitch: 1
+    loop: 1
+    introClip: {fileID: 0}
+    loopClip: {fileID: 0}
+    targetVolume: 1
+    queueLoopMusic: 0
 --- !u!82 &6587184843377480787
 AudioSource:
   m_ObjectHideFlags: 0
@@ -286,7 +310,12 @@ MonoBehaviour:
   sfxManager: {fileID: 6154283186988257529}
   ambsSource: {fileID: 149742635084917670}
   bgmPlayer: {fileID: 3943375156536888684}
-  currentBattleBGM: {fileID: 0}
+  battleBGMPlayer: {fileID: 4770618182460795396}
+  storedBattleBGM:
+    bgm: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 1
   currentAMBS: {fileID: 0}
   ambsVolume: 1
   ambsPitch: 1
