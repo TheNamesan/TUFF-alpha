@@ -231,6 +231,7 @@ namespace TUFF
             {
                 for(int j = 0; j < UIElements[i].Length; j++)
                 {
+                    if (UIElements[i][j] == null) continue;
                     UIElements[i][j].OnOpenMenu();
                 }
             }
@@ -415,7 +416,7 @@ namespace TUFF
                     continue;
                 }
 
-                if(UIElements[highlightY][highlightX].IsActiveInHierarchy())
+                if (UIElements[highlightY][highlightX] != null && UIElements[highlightY][highlightX].IsActiveInHierarchy())
                 {
                     break;
                 }
@@ -440,7 +441,7 @@ namespace TUFF
                 if (highlightX >= UIElements[highlightY].Length) highlightX = 0;
                 else if (highlightX < 0) highlightX = UIElements[highlightY].Length - 1;
 
-                if (UIElements[highlightY][highlightX].IsActiveInHierarchy())
+                if (UIElements[highlightY][highlightX] != null && UIElements[highlightY][highlightX].IsActiveInHierarchy())
                 {
                     break;
                 }
