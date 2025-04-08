@@ -334,15 +334,20 @@ namespace TUFF
             float min = 0.0001f;
             if (Mathf.Abs(rb.linearVelocity.x) <= min)
             {
-                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+                SetVelocity(new Vector2(0, rb.linearVelocity.y));
             }
             if (Mathf.Abs(rb.linearVelocity.y) <= min)
             {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                SetVelocity(new Vector2(rb.linearVelocity.x, 0));
             }
         }
 
-        
+        private void SetVelocity(Vector2 velocity)
+        {
+            if (!rb) return;
+            if (rb.bodyType == RigidbodyType2D.Static) return;
+            rb.linearVelocity = velocity;
+        }
         public void QueueAction(QueuedAction actionToQueue)
         {
             queuedAction = actionToQueue;
@@ -1181,11 +1186,11 @@ namespace TUFF
             }
             else if (hJumpXVelocity != 0) //Horizontal Fall
             {
-                rb.linearVelocity = new Vector3(hJumpXVelocity, rb.linearVelocity.y);
+                SetVelocity(new Vector3(hJumpXVelocity, rb.linearVelocity.y));
             }
             else
             {
-                rb.linearVelocity = new Vector3(0, rb.linearVelocity.y);
+                SetVelocity(new Vector3(0, rb.linearVelocity.y));
             }
             nextXFacing = 0;
             nextYFacing = 0;
