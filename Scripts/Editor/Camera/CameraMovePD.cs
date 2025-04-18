@@ -26,7 +26,7 @@ namespace TUFF.TUFFEditor
             position.height = 20f;
             showContent = EditorGUI.BeginFoldoutHeaderGroup(position, showContent, label);
             EditorGUI.EndFoldoutHeaderGroup();
-            if(showContent)
+            if (showContent)
             {
                 EditorGUI.indentLevel++;
                 Rect rect = EditorGUI.IndentedRect(position);
@@ -37,21 +37,36 @@ namespace TUFF.TUFFEditor
                 AddLine(ref rect);
                 var moveCameraType = prop.FindPropertyRelative("moveCameraType");
                 EditorGUI.PropertyField(rect, moveCameraType);
-                if((MoveCameraType)moveCameraType.enumValueIndex == MoveCameraType.MoveDelta)
+                AddLine(ref rect);
+                float orgWidth = rect.width;
+                float orgX = rect.x;
+                float orgLabelWidth = EditorGUIUtility.labelWidth;
+
+                EditorGUI.LabelField(rect, new GUIContent("Ignore Axis"));
+                rect.x += EditorGUIUtility.labelWidth;
+                EditorGUIUtility.labelWidth = orgLabelWidth * 0.05f;
+                var ignoreX = prop.FindPropertyRelative("ignoreX");
+                var ignoreY = prop.FindPropertyRelative("ignoreY");
+                ignoreX.boolValue = EditorGUI.Toggle(rect, new GUIContent("X", ignoreX.tooltip), ignoreX.boolValue);
+                rect.x += orgLabelWidth * 0.1f;
+                ignoreY.boolValue = EditorGUI.Toggle(rect, new GUIContent("Y", ignoreY.tooltip), ignoreY.boolValue);
+
+                rect.width = orgWidth;
+                rect.x = orgX;
+                EditorGUIUtility.labelWidth = orgLabelWidth;
+                AddLine(ref rect);
+                if ((MoveCameraType)moveCameraType.enumValueIndex == MoveCameraType.MoveDelta)
                 {
-                    AddLine(ref rect);
                     EditorGUI.PropertyField(rect, prop.FindPropertyRelative("moveDelta"));
                     AddLine(ref rect);
                 }
                 else if ((MoveCameraType)moveCameraType.enumValueIndex == MoveCameraType.MoveToWorldPosition)
                 {
-                    AddLine(ref rect);
                     EditorGUI.PropertyField(rect, prop.FindPropertyRelative("targetWorldPosition"));
                     AddLine(ref rect);
                 }
                 else if ((MoveCameraType)moveCameraType.enumValueIndex == MoveCameraType.MoveToTransformPosition)
                 {
-                    AddLine(ref rect);
                     var targetTransform = prop.FindPropertyRelative("targetTransform");
                     EditorGUI.PropertyField(rect, targetTransform);
                     if (LISAUtility.IsPersistentInstance(target.targetTransform))

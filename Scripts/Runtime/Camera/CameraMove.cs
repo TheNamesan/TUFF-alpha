@@ -26,6 +26,10 @@ namespace TUFF
         public Vector2 moveDelta;
         public Vector2 targetWorldPosition;
         public Transform targetTransform;
+        [Tooltip("If true, camera will remain frozen on the X axis.")]
+        public bool ignoreX = false;
+        [Tooltip("If true, camera will remain frozen on the X axis.")]
+        public bool ignoreY = false;
         [Tooltip("Unity Event to call when movement ends.")]
         public UnityEvent onMovementEnd;
 

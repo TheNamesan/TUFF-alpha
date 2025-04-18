@@ -207,6 +207,7 @@ namespace TUFF
 
         public void MoveCamera(CameraMove cameraMove)
         {
+            if (cameraMove == null) return;
             bool rememberToEnableCamera = false;
             DisableCameraFollow(true);
             KillTween();
@@ -235,6 +236,8 @@ namespace TUFF
                     rememberToEnableCamera = true;
                     break;
             }
+            if (cameraMove.ignoreX) target.x = transform.position.x;
+            if (cameraMove.ignoreY) target.y = transform.position.y;
             target = ClampVector(target);
             MoveCameraToTarget(cameraMove, rememberToEnableCamera, target);
         }
