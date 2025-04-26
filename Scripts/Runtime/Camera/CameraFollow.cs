@@ -64,6 +64,10 @@ namespace TUFF
             }
             if (!si) Debug.LogWarning("No Scene Properties found!");
         }
+        private void OnEnable()
+        {
+            GetParallaxOriginalPosition();
+        }
         private void Start()
         {
             previousPosition = transform.position;
@@ -176,6 +180,7 @@ namespace TUFF
             for (int i = 0; i < parallaxElements.Count; i++)
             {
                 if (parallaxElements[i] == null) continue;
+                if (originalParallaxPos[i] == null) continue;
                 float positionZ = parallaxElements[i].transform.position.z == 0 ? 1 : parallaxElements[i].transform.position.z; // Avoid division by zero
                 float scaleX = parallaxHorizontalBaseSpeed / positionZ; //The higher the z position, the slower the parallax will go.
                 float scaleY = parallaxVerticalBaseSpeed / positionZ; //The higher the z position, the slower the parallax will go.
