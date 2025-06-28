@@ -236,8 +236,8 @@ namespace TUFF
                     break;
 
                 case MoveCameraType.ReturnToPlayer:
-                    target = new Vector3(FollowerInstance.player.controller.transform.position.x,
-                        FollowerInstance.player.controller.transform.position.y, transform.position.z);
+                    Vector3 playerPos = GetPlayerPosition();
+                    target = new Vector3(playerPos.x, playerPos.y, transform.position.z);
                     rememberToEnableCamera = true;
                     break;
             }
@@ -245,6 +245,15 @@ namespace TUFF
             if (cameraMove.ignoreY) target.y = transform.position.y;
             target = ClampVector(target);
             MoveCameraToTarget(cameraMove, rememberToEnableCamera, target);
+        }
+        public Vector3 GetPlayerPosition()
+        {
+            if (!FollowerInstance.player || !FollowerInstance.player.controller)
+            {
+
+                return Vector3.zero;
+            }
+            return FollowerInstance.player.controller.transform.position;
         }
 
         private void MoveCameraToTarget(CameraMove cameraMove, bool rememberToEnableCamera, Vector3 target)
