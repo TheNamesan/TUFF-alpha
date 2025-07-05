@@ -36,7 +36,7 @@ namespace TUFF
                     GetAndApplyGuard(ref value);
                     RecoverTPByDamage(value);
                     CalculateHP(-value);
-                    RollForStatesRemovalByDamage();
+                    RollForStatesRemovalByDamage(value);
                     if (value > 0) imageReference.Twitch(Mathf.Lerp(10, 100, Mathf.InverseLerp(0, GetMaxHP(), value)));
                     break;
                 case DamageType.SPDamage:
@@ -519,14 +519,28 @@ namespace TUFF
             UpdateStates();
             BattleManager.instance.ForceUpdateHUD();
         }
-        public virtual void RollForStatesRemovalByDamage()
+        public virtual void RollForStatesRemovalByDamage(int value)
         {
             for (int i = 0; i < states.Count; i++)
             {
                 if (!states[i].state.removeByDamage) continue;
-                if(BattleLogic.RollChance(states[i].state.removeByDamageChance))
+                states[i].damageTaken += value;
+                int threshold = states[i].state.removeByDamageHPThreshold;
+                if (threshold > 0 && states[i].damageTaken >= threshold)
                 {
-                    if (RemoveState(i, true, false)) i--;
+                    if (RemoveState(i, true, false))
+                    {
+                        i--;
+                        continue;
+                    }
+                }
+                if (value > 0 && BattleLogic.RollChance(states[i].state.removeByDamageChance))
+                {
+                    if (RemoveState(i, true, false))
+                    { 
+                        i--;
+                        continue;
+                    }
                 }
             }
             UpdateStates();

@@ -31,8 +31,10 @@ namespace TUFF
         [Tooltip("The minimum/maximum amount of acts/turns the user needs to perform for the state to be removed. The amount is randomized between the minimum and maximum.")]
         public Vector2Int durationInTurns; //Hide if autoRemovalTiming is None
         [Tooltip("If true, the state will have a chance to remove itself when the user takes damage.")]
-        public bool removeByDamage = false; 
-        [Tooltip("Probability % of removing the state when taking damage.")]
+        public bool removeByDamage = false;
+        [Tooltip("If user takes the total amount of HP damage, the state is removed. Set to 0 or lower to ignore removal by damage threshold.")]
+        public int removeByDamageHPThreshold = 0;
+        [Tooltip("Probability % of completely removing the state when taking any damage.")]
         [Range(0, 100)] public int removeByDamageChance = 0; //Hide if remove is false
         [Tooltip("If true, the state will be removed by walking in the overworld.")]
         public bool removeByWalking = false;

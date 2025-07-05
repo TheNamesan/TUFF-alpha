@@ -17,6 +17,7 @@ namespace TUFF
         public int remainingTurns = 0;
         public int startingTurns = 0;
         public float remainingSeconds = 0f;
+        public int damageTaken = 0;
         public bool isAutoState = false;
         
         public ActiveState(State state, Targetable user, bool isAutoState = false)

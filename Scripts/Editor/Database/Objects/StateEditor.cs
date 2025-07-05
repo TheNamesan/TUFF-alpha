@@ -43,6 +43,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(removeByDamage);
             if(removeByDamage.boolValue)
             {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(state.removeByDamageHPThreshold)));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("removeByDamageChance"));
             }
             var removeByWalking = serializedObject.FindProperty("removeByWalking");
