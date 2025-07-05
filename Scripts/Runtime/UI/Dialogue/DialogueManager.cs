@@ -31,7 +31,7 @@ namespace TUFF
         [System.NonSerialized]
         public EventAction actionCallback = null;
         private static bool m_continuedDialogue = false; // Change this to be a brief period of buffer time before a dialogue is called? (For things like SFXs)
-
+        public static bool hasTextboxesQueued { get => openBoxes.Count > 1; }
 
         [Header("Input")]
         public float skipTimeBuffer = 0.03f;
@@ -61,6 +61,11 @@ namespace TUFF
         private static readonly Vector2 DEFAULT_OFFSET = new Vector2(0, 1f);
 
         private Color baseColor = Color.white; //tmp, change to get color from TUFFSettings;
+
+        private bool m_markedForClose = false;
+        public bool markedForClose { get => m_markedForClose; }
+        private bool m_closing = false;
+        public bool closing { get => m_closing; }
 
         private void Awake()
         {
@@ -102,7 +107,10 @@ namespace TUFF
                     text = sentence.text;
                 sentences.Add(text);
             }
-            if (!m_continuedDialogue) transition?.Appear();
+            if (!m_continuedDialogue)
+            {
+                if (transition) transition.Appear();
+            }
             SetPosition();
             SetVoicebank();
             openBoxes.Add(this);
@@ -205,8 +213,8 @@ namespace TUFF
         }
         private void AdjustText()
         {
-            textSizeAdjuster?.Adjust();
-            adjustToOtherRect?.Adjust();
+            if (textSizeAdjuster) textSizeAdjuster.Adjust();
+            if (adjustToOtherRect) adjustToOtherRect.Adjust();
         }
 
         //private void ForceRebuild()
@@ -227,8 +235,21 @@ namespace TUFF
 
         private void Update()
         {
-            SkipTimeTimer();
+            UpdateLogic();
+        }
 
+        private void UpdateLogic()
+        {
+            SkipTimeTimer();
+            if (m_closing)
+            {
+                return;
+            }
+            if (m_markedForClose)
+            {
+                StartCoroutine(EndDialogue());
+                return;
+            }
             if (textboxInitiated)
             {
                 if (UIController.instance.skipButtonHold)
@@ -295,7 +316,6 @@ namespace TUFF
         public void StartDialogue()
         {
             InitialValues();
-            
             DisplayNextSentence();
         }
 
@@ -305,7 +325,11 @@ namespace TUFF
             {
                 if (textboxInitiated)
                 {
-                    if (!ChoicesIsNext()) CloseTextbox(); // Change this to buffer
+                    if (!ChoicesIsNext())
+                    { 
+                        CloseTextbox(); 
+                        // Change this to buffer
+                    }
                     else {
                         if (actionCallback != null) actionCallback.EndEvent();
                         textboxInitiated = false;
@@ -349,37 +373,38 @@ namespace TUFF
         }
         public void CloseTextbox()
         {
-            StartCoroutine(EndDialogue());
+            m_markedForClose = true;
         }
         protected IEnumerator EndDialogue()
         {
             textboxInitiated = false;
-            m_continuedDialogue = false;
+            m_markedForClose = false;
+            m_closing = true;
             dialogue.onDialogueEnd?.Invoke();
             if (uiMenu != null) UIController.instance.SetMenu(null);
             BattleManager.instance.hud.ShowWindowsDynamic(true);
+            m_continuedDialogue = true;
             if (actionCallback != null) actionCallback.EndEvent();
-            if (transition != null)
+            yield return new WaitForEndOfFrame();
+            if (!hasTextboxesQueued)
             {
-                if (DialogueIsNext()) // Change this to buffer
-                {
-                    m_continuedDialogue = true;
-                }
-                else
+                if (transition)
                 {
                     text.enabled = false;
                     DisplayContinuePrompt(false);
-                    transition?.Dissapear();
+                    transition.Dissapear();
                     while (transition.state == BoxTransitionState.Dissapearing)
                     {
                         yield return null;
                     }
                 }
             }
+            m_continuedDialogue = false;
             openBoxes.RemoveAt(openBoxes.IndexOf(this));
             inUse = false;
+            m_closing = false;
             gameObject.SetActive(false);
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
         private bool DialogueIsNext() // Change this to buffer
         {

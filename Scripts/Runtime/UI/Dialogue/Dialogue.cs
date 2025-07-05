@@ -55,8 +55,8 @@ namespace TUFF
         }
         public static IEnumerator InvokeTextboxCoroutine(Dialogue dialogue, EventAction commandCallback = null)
         {
-            var canvas = UIController.instance.uiContent;
-            if (canvas == null) yield break;
+            Transform parent = UIController.instance.textboxesParent;
+            if (parent == null) yield break;
             while (UIController.instance.textbox.inUse || UIController.instance.dimTextbox.inUse)
             {
                 yield return null;
@@ -77,7 +77,7 @@ namespace TUFF
                 //textbox = UIController.instance.textbox.gameObject; // POSITION OFFSET BREAKS WITH THIS! FIX!!
             }
             RectTransform textboxRect = textbox.GetComponent<RectTransform>();
-            textboxRect.SetParent(canvas.transform, false);
+            textboxRect.SetParent(parent, false);
             DialogueManager textboxManager = textbox.GetComponent<DialogueManager>();
             textboxManager.dialogue = dialogue;
             Dialogue textboxDialogue = textboxManager.dialogue;

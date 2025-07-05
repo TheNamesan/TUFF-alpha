@@ -5096,6 +5096,7 @@ MonoBehaviour:
   cameraCanvas: {fileID: 6062925101213854308}
   overlayCanvas: {fileID: 3700494108921351080}
   uiContent: {fileID: 7610931164579471266}
+  textboxesParent: {fileID: 1068166531406915263}
   cameraCanvasSortingLayerName: UI
   dosh: {fileID: 9038228233755887898}
   HP:
@@ -17476,6 +17477,7 @@ RectTransform:
   - {fileID: 6957102001147039493}
   - {fileID: 236993301825513919}
   - {fileID: 3792164793705152001}
+  - {fileID: 1068166531406915263}
   - {fileID: 3848859883262223081}
   - {fileID: 8422778656754290302}
   m_Father: {fileID: 5736709089408828682}
@@ -20189,6 +20191,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!1 &8929459040129449572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1068166531406915263}
+  m_Layer: 5
+  m_Name: TextboxesParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1068166531406915263
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8929459040129449572}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3385183246090208590}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8931623761786448308
 GameObject:
   m_ObjectHideFlags: 0

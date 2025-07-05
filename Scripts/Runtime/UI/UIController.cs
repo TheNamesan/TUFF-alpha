@@ -15,6 +15,7 @@ namespace TUFF
         public Canvas cameraCanvas;
         public Canvas overlayCanvas;
         public GameObject uiContent;
+        public Transform textboxesParent;
         public string cameraCanvasSortingLayerName = "UI";
         [SerializeField]
         TextMeshProUGUI dosh;
