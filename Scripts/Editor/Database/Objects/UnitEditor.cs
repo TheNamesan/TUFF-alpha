@@ -29,6 +29,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("secondaryWeapon"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("head"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("body"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("cape"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("primaryAccessory"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("secondaryAccessory"));
 

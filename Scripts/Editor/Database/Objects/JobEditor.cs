@@ -80,6 +80,14 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("critRate"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("critEvasionRate"));
 
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(Job.canEquipPrimaryWeapon)));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(Job.canEquipSecondaryWeapon)));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(Job.canEquipHead)));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(Job.canEquipBody)));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(Job.canEquipCape)));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(Job.canEquipPrimaryAccessory)));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(Job.canEquipSecondaryAccessory)));
+
             EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponTypes"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("armorTypes"));
 

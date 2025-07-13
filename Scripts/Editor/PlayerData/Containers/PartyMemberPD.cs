@@ -8,11 +8,18 @@ namespace TUFF.TUFFEditor
     [CustomPropertyDrawer(typeof(PartyMember), true)]
     public class PartyMemberPD : PropertyDrawer
     {
+        public enum VariableNames
+        {
+            HP = 0, prevHP = 1, SP = 2, TP = 3, isKOd = 4, states = 5, m_jobID = 6, prevExp = 7, exp = 8, prevLevel = 9,
+            level = 10, m_primaryWeaponID = 11, m_secondaryWeaponID = 12, m_headID = 13, m_bodyID = 14, m_capeID = 15, m_primaryAccessoryID = 16, m_secondaryAccessoryID = 17,
+            learnedSkills = 18
+
+        }
         private static string[] variableNames = new string[]
         { "HP", "prevHP", "SP", "TP", "isKOd", "states",
           "m_jobID", "prevExp", "exp", "prevLevel", "level",
-          "m_primaryWeaponID", "m_secondaryWeaponID", "m_headID", "m_bodyID", "m_primaryAccessoryID", "m_secondaryAccessoryID",
-          "learnedSkills"};
+          "m_primaryWeaponID", "m_secondaryWeaponID", "m_headID", "m_bodyID", "m_capeID", "m_primaryAccessoryID", "m_secondaryAccessoryID",
+          "learnedSkills", };
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             float height = 20f;
@@ -32,7 +39,7 @@ namespace TUFF.TUFFEditor
             PartyMember member = LISAEditorUtility.GetTargetObjectOfProperty(property) as PartyMember;
 
             int index = LISAEditorUtility.GetArrayIndexFromPath(property.propertyPath);
-
+            
             Unit unit = null;
             if (index >= 0 && index < DatabaseLoader.units.Length)
             {
@@ -59,20 +66,20 @@ namespace TUFF.TUFFEditor
                 position.width = totalWidth;
                 position.x = orgX;
 
-                var statesProp = property.FindPropertyRelative(variableNames[5]);
+                var statesProp = property.FindPropertyRelative(variableNames[(int)VariableNames.states]);
                 EditorGUI.PropertyField(position, statesProp);
                 position.y += EditorGUI.GetPropertyHeight(statesProp) + EditorGUIUtility.standardVerticalSpacing;
 
-                DrawJobIDField(position, property.FindPropertyRelative(variableNames[6]), DatabaseLoader.jobs);
+                DrawJobIDField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.m_jobID]), DatabaseLoader.jobs);
                 position.y += 20f;
 
                 DrawLevelInfo(position, property);
                 position.y += (20f * 2f);
 
                 DrawEquipmentInfo(position, property);
-                position.y += (20f * 6f);
+                position.y += (20f * 7f);
 
-                var prop = property.FindPropertyRelative(variableNames[17]);
+                var prop = property.FindPropertyRelative(variableNames[(int)VariableNames.learnedSkills]);
                 EditorGUI.PropertyField(position, prop);
                 position.y += EditorGUI.GetPropertyHeight(prop) + EditorGUIUtility.standardVerticalSpacing;
 
@@ -105,24 +112,19 @@ namespace TUFF.TUFFEditor
             EditorGUIUtility.labelWidth = 50f;
 
             position.width *= 0.5f;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[0]));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.HP]));
             position.x += position.width;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[1]));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.prevHP]));
             position.width = orgWidth;
             position.x = orgX;
             position.y += 20f;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[2]));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.SP]));
             position.y += 20f;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[3]));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.TP]));
             position.y += 20f;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[4]), new GUIContent("Is KO'd"));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.isKOd]), new GUIContent("Is KO'd"));
 
             EditorGUIUtility.labelWidth = orgLabelWidth;
-
-            //position.width *= 0.5f;
-            //EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[0]));
-            //position.x += position.width;
-            //EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[1]));
             position.y += 20f;
         }
         private void DrawLevelInfo(Rect position, SerializedProperty property)
@@ -131,25 +133,26 @@ namespace TUFF.TUFFEditor
             float orgX = position.x;
             float orgLabelWidth = EditorGUIUtility.labelWidth;
             position.width *= 0.5f;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[8]));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.exp]));
             position.x += position.width;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[7]));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.prevExp]));
             position.width = orgWidth;
             position.x = orgX;
             position.y += 20f;
             position.width *= 0.5f;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[10]));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.level]));
             position.x += position.width;
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[9]));
+            EditorGUI.PropertyField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.prevLevel]));
         }
         private void DrawEquipmentInfo(Rect position, SerializedProperty property)
         {
-            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[11]), DatabaseLoader.weapons); position.y += 20f;
-            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[12]), DatabaseLoader.weapons); position.y += 20f;
-            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[13]), DatabaseLoader.armors); position.y += 20f;
-            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[14]), DatabaseLoader.armors); position.y += 20f;
-            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[15]), DatabaseLoader.armors); position.y += 20f;
-            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[16]), DatabaseLoader.armors); position.y += 20f;
+            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.m_primaryWeaponID]), DatabaseLoader.weapons); position.y += 20f;
+            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.m_secondaryWeaponID]), DatabaseLoader.weapons); position.y += 20f;
+            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.m_headID]), DatabaseLoader.armors); position.y += 20f;
+            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.m_bodyID]), DatabaseLoader.armors); position.y += 20f;
+            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.m_capeID]), DatabaseLoader.armors); position.y += 20f;
+            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.m_primaryAccessoryID]), DatabaseLoader.armors); position.y += 20f;
+            DrawEquipIDField(position, property.FindPropertyRelative(variableNames[(int)VariableNames.m_secondaryAccessoryID]), DatabaseLoader.armors); position.y += 20f;
         }
         private void DrawJobIDField(Rect rect, SerializedProperty property, DatabaseElement[] array)
         {

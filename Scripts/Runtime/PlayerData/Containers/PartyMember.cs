@@ -45,6 +45,12 @@ namespace TUFF
             set { m_bodyID = (value != null ? value.id : -1); }
         }
         [SerializeField] protected int m_bodyID = -1;
+        public Armor cape
+        {
+            get => DatabaseLoader.GetArmorFromID(m_capeID);
+            set { m_capeID = (value != null ? value.id : -1); }
+        }
+        [SerializeField] protected int m_capeID = -1;
         public Armor primaryAccessory
         {
             get => DatabaseLoader.GetArmorFromID(m_primaryAccessoryID);
@@ -257,14 +263,7 @@ namespace TUFF
         }
         public List<IEquipable> GetEquipmentAsList()
         {
-            var equipmentList = new List<IEquipable>();
-            equipmentList.Add(primaryWeapon);
-            equipmentList.Add(secondaryWeapon);
-            equipmentList.Add(head);
-            equipmentList.Add(body);
-            equipmentList.Add(primaryAccessory);
-            equipmentList.Add(secondaryAccessory);
-            return equipmentList;
+            return new List<IEquipable> { primaryWeapon, secondaryWeapon, head, body, cape, primaryAccessory, secondaryAccessory };
         }
         public List<IEquipable> GetPreviewEquipment(IEquipable equipable, EquipmentSlotType slot)
         {
@@ -278,15 +277,17 @@ namespace TUFF
             IEquipable secondaryWeapon = this.secondaryWeapon;
             IEquipable head = this.head;
             IEquipable body = this.body;
+            IEquipable cape = this.cape;
             IEquipable primaryAccessory = this.primaryAccessory;
             IEquipable secondaryAccessory = this.secondaryAccessory;
             int pWeaponValue = (primaryWeapon != null ? primaryWeapon.GetBonusesOfStat(stat) : 0);
             int sWeaponValue = (secondaryWeapon != null ? secondaryWeapon.GetBonusesOfStat(stat) : 0);
             int headValue = (head != null ? head.GetBonusesOfStat(stat) : 0);
             int bodyValue = (body != null ? body.GetBonusesOfStat(stat) : 0);
+            int capeValue = (cape != null ? cape.GetBonusesOfStat(stat) : 0);
             int pAccessoryValue = (primaryAccessory != null ? primaryAccessory.GetBonusesOfStat(stat) : 0);
             int sAccessoryValue = (secondaryAccessory != null ? secondaryAccessory.GetBonusesOfStat(stat) : 0);
-            return pWeaponValue + sWeaponValue + headValue + bodyValue + pAccessoryValue + sAccessoryValue;
+            return pWeaponValue + sWeaponValue + headValue + bodyValue + capeValue + pAccessoryValue + sAccessoryValue;
         }
         public int GetEquipmentStats(StatChangeType stat, List<IEquipable> equipables)
         {
@@ -500,7 +501,7 @@ namespace TUFF
         {
             List<Feature> features = featuresRef;
             if (features == null) features = new List<Feature>();
-            List<IEquipable> equipables = new List<IEquipable> { primaryWeapon, secondaryWeapon, head, body, primaryAccessory, secondaryAccessory };
+            List<IEquipable> equipables = GetEquipmentAsList();
             for (int i = 0; i < equipables.Count; i++)
             {
                 if (equipables[i] == null) continue;
@@ -509,11 +510,12 @@ namespace TUFF
             }
             return features;
         }
+
         public List<Feature> GetEquipmentFeaturesOfType(FeatureType featureType, List<IEquipable> equipables, List<Feature> featuresRef = null)
         {
             List<Feature> features = featuresRef;
             if (features == null) features = new List<Feature>();
-            if (equipables == null) equipables = new List<IEquipable> { primaryWeapon, secondaryWeapon, head, body, primaryAccessory, secondaryAccessory };
+            if (equipables == null) equipables = GetEquipmentAsList();
             for (int i = 0; i < equipables.Count; i++)
             {
                 if (equipables[i] == null) continue;
@@ -580,6 +582,7 @@ namespace TUFF
         {
             if (head == armor) return true;
             if (body == armor) return true;
+            if (cape == armor) return true;
             if (primaryAccessory == armor) return true;
             if (secondaryAccessory == armor) return true;
             return false;
@@ -645,6 +648,26 @@ namespace TUFF
                 i--;
             }
             return unitedSkills;
+        }
+        public IEquipable GetEquipmentFromUserSlot(EquipmentSlotType slot)
+        {
+            return PlayerData.instance.GetEquipmentFromUserSlot(this, slot);
+        }
+        public bool CanEquipInSlot(EquipmentSlotType slotType)
+        {
+            Job currentJob = job;
+            if (currentJob == null) return false;
+            switch (slotType)
+            {
+                case EquipmentSlotType.PrimaryWeapon: return currentJob.canEquipPrimaryWeapon;
+                case EquipmentSlotType.SecondaryWeapon: return currentJob.canEquipSecondaryWeapon;
+                case EquipmentSlotType.Head: return currentJob.canEquipHead;
+                case EquipmentSlotType.Body: return currentJob.canEquipBody;
+                case EquipmentSlotType.Cape: return currentJob.canEquipCape;
+                case EquipmentSlotType.PrimaryAccessory: return currentJob.canEquipPrimaryAccessory;
+                case EquipmentSlotType.SecondaryAccessory: return currentJob.canEquipSecondaryAccessory;
+                default: return false;
+            }
         }
     }
 }

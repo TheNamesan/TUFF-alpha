@@ -305,6 +305,8 @@ namespace TUFF
                     user.head = armor; return;
                 case EquipmentSlotType.Body:
                     user.body = armor; return;
+                case EquipmentSlotType.Cape:
+                    user.cape = armor; return;
                 case EquipmentSlotType.PrimaryAccessory:
                     user.primaryAccessory = armor; return;
                 case EquipmentSlotType.SecondaryAccessory:
@@ -328,6 +330,7 @@ namespace TUFF
                 EquipType equipType = EquipType.Head;
                 if (slot == EquipmentSlotType.Head) equipType = EquipType.Head;
                 if (slot == EquipmentSlotType.Body) equipType = EquipType.Body;
+                if (slot == EquipmentSlotType.Cape) equipType = EquipType.Cape;
                 if (slot == EquipmentSlotType.PrimaryAccessory || slot == EquipmentSlotType.SecondaryAccessory) 
                     equipType = EquipType.Accessory;
                 nextEquipable = GetHighestStatsArmor(equipType, user.GetArmorEquipTypes());
@@ -342,7 +345,7 @@ namespace TUFF
                 else EquipToUser(user, nextEquipable, slot);
             }
         }
-        protected IEquipable GetEquipmentFromUserSlot(PartyMember user, EquipmentSlotType slot)
+        public IEquipable GetEquipmentFromUserSlot(PartyMember user, EquipmentSlotType slot)
         {
             if (user == null) return null;
             switch (slot)
@@ -350,11 +353,13 @@ namespace TUFF
                 case EquipmentSlotType.PrimaryWeapon:
                     return user.primaryWeapon;
                 case EquipmentSlotType.SecondaryWeapon:
-                    return user.secondaryWeapon;;
+                    return user.secondaryWeapon;
                 case EquipmentSlotType.Head:
                     return user.head;
                 case EquipmentSlotType.Body:
                     return user.body;
+                case EquipmentSlotType.Cape:
+                    return user.cape;
                 case EquipmentSlotType.PrimaryAccessory:
                     return user.primaryAccessory;
                 case EquipmentSlotType.SecondaryAccessory:
@@ -434,6 +439,7 @@ namespace TUFF
             initMember.secondaryWeapon = unit.secondaryWeapon;
             initMember.head = unit.head;
             initMember.body = unit.body;
+            initMember.cape = unit.cape;
             initMember.primaryAccessory = unit.primaryAccessory;
             initMember.secondaryAccessory = unit.secondaryAccessory;
 

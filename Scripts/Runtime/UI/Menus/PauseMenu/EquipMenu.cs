@@ -83,64 +83,104 @@ namespace TUFF
         }
         public void UpdateEquipment()
         {
-            if (selectedSlot == EquipmentSlotType.PrimaryWeapon)
-                LoadPrimaryWeapons();
-            else if (selectedSlot == EquipmentSlotType.SecondaryWeapon)
-                LoadSecondaryWeapons();
-            else if (selectedSlot == EquipmentSlotType.Head)
-                LoadHeadArmors();
-            else if (selectedSlot == EquipmentSlotType.Body)
-                LoadBodyArmors();
-            else if (selectedSlot == EquipmentSlotType.PrimaryAccessory)
-                LoadPrimaryAccessoryArmors();
-            else if (selectedSlot == EquipmentSlotType.SecondaryAccessory)
-                LoadSecondaryAccessoryArmors();
+            //if (selectedSlot == EquipmentSlotType.PrimaryWeapon)
+            //    LoadPrimaryWeapons();
+            //else if (selectedSlot == EquipmentSlotType.SecondaryWeapon)
+            //    LoadSecondaryWeapons();
+            //else if (selectedSlot == EquipmentSlotType.Head)
+            //    LoadHeadArmors();
+            //else if (selectedSlot == EquipmentSlotType.Body)
+            //    LoadBodyArmors();
+            //else if (selectedSlot == EquipmentSlotType.PrimaryAccessory)
+            //    LoadPrimaryAccessoryArmors();
+            //else if (selectedSlot == EquipmentSlotType.SecondaryAccessory)
+            //    LoadSecondaryAccessoryArmors();
+            LoadFromEquipmentSlotType(selectedSlot);
         }
         public void ClearItemsBox()
         {
             inventoryItemViewer?.LoadItems(new(), false);
         }
-        public void LoadPrimaryWeapons()
+        private void LoadFromEquipmentSlotType(EquipmentSlotType slotType)
         {
-            selectedSlot = EquipmentSlotType.PrimaryWeapon;
+            selectedSlot = slotType;
             var types = new List<int>();
-            if (selectedMember != null) types = selectedMember.GetWeaponEquipTypes();
-            inventoryItemViewer?.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(WeaponWieldType.PrimarySlotOnly, types), true);
+            bool isWeapon = slotType <= EquipmentSlotType.SecondaryWeapon;
+            if (selectedMember != null)
+            {
+                if (isWeapon) types = selectedMember.GetWeaponEquipTypes();
+                else types = selectedMember.GetArmorEquipTypes();
+            }
+            if (inventoryItemViewer)
+            {
+                if (isWeapon)
+                {
+                    WeaponWieldType weaponType = (slotType == EquipmentSlotType.PrimaryWeapon ? WeaponWieldType.PrimarySlotOnly : WeaponWieldType.SecondarySlotOnly);
+                    inventoryItemViewer.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(weaponType, types), true);
+                }
+                else
+                {
+                    EquipType equipType = (EquipType)((int)slotType - 2); // Minus PrimaryWeapon and SecondaryWeapon
+                    inventoryItemViewer.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(equipType, types), true);
+                }
+            }
         }
-        public void LoadSecondaryWeapons()
+        public void LoadPrimaryWeapons() // Called from event
         {
-            selectedSlot = EquipmentSlotType.SecondaryWeapon;
-            var types = new List<int>();
-            if (selectedMember != null) types = selectedMember.GetWeaponEquipTypes();
-            inventoryItemViewer?.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(WeaponWieldType.SecondarySlotOnly, types), true);
+            LoadFromEquipmentSlotType(EquipmentSlotType.PrimaryWeapon);
+            //selectedSlot = EquipmentSlotType.PrimaryWeapon;
+            //var types = new List<int>();
+            //if (selectedMember != null) types = selectedMember.GetWeaponEquipTypes();
+            //inventoryItemViewer?.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(WeaponWieldType.PrimarySlotOnly, types), true);
         }
-        public void LoadHeadArmors()
+        public void LoadSecondaryWeapons() // Called from event
         {
-            selectedSlot = EquipmentSlotType.Head;
-            var types = new List<int>();
-            if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
-            inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Head, types), true);
+            LoadFromEquipmentSlotType(EquipmentSlotType.SecondaryWeapon);
+            //selectedSlot = EquipmentSlotType.SecondaryWeapon;
+            //var types = new List<int>();
+            //if (selectedMember != null) types = selectedMember.GetWeaponEquipTypes();
+            //inventoryItemViewer?.LoadItems(PlayerData.instance.GetWeaponsAndAmountOfType(WeaponWieldType.SecondarySlotOnly, types), true);
         }
-        public void LoadBodyArmors()
+
+        public void LoadHeadArmors() // Called from event
         {
-            selectedSlot = EquipmentSlotType.Body;
-            var types = new List<int>();
-            if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
-            inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Body, types), true);
+            LoadFromEquipmentSlotType(EquipmentSlotType.Head);
+            //selectedSlot = EquipmentSlotType.Head;
+            //var types = new List<int>();
+            //if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
+            //inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Head, types), true);
         }
-        public void LoadPrimaryAccessoryArmors()
+        public void LoadBodyArmors() // Called from event
         {
-            selectedSlot = EquipmentSlotType.PrimaryAccessory;
-            var types = new List<int>();
-            if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
-            inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Accessory, types), true);
+            LoadFromEquipmentSlotType(EquipmentSlotType.Body);
+            //selectedSlot = EquipmentSlotType.Body;
+            //var types = new List<int>();
+            //if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
+            //inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Body, types), true);
         }
-        public void LoadSecondaryAccessoryArmors()
+        public void LoadCapeArmors() // Called from event
         {
-            selectedSlot = EquipmentSlotType.SecondaryAccessory;
-            var types = new List<int>();
-            if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
-            inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Accessory, types), true);
+            LoadFromEquipmentSlotType(EquipmentSlotType.Cape);
+            //selectedSlot = EquipmentSlotType.Cape;
+            //var types = new List<int>();
+            //if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
+            //inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Body, types), true);
+        }
+        public void LoadPrimaryAccessoryArmors() // Called from event
+        {
+            LoadFromEquipmentSlotType(EquipmentSlotType.PrimaryAccessory);
+            //selectedSlot = EquipmentSlotType.PrimaryAccessory;
+            //var types = new List<int>();
+            //if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
+            //inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Accessory, types), true);
+        }
+        public void LoadSecondaryAccessoryArmors() // Called from event
+        {
+            LoadFromEquipmentSlotType(EquipmentSlotType.SecondaryAccessory);
+            //selectedSlot = EquipmentSlotType.SecondaryAccessory;
+            //var types = new List<int>();
+            //if (selectedMember != null) types = selectedMember.GetArmorEquipTypes();
+            //inventoryItemViewer?.LoadItems(PlayerData.instance.GetArmorsAndAmountOfType(EquipType.Accessory, types), true);
         }
         public void DetailedUnitsOnCreate(UIButton button, PartyMember member)
         {

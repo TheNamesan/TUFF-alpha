@@ -16,6 +16,7 @@ namespace TUFF
         public Vector2 max;
         public Vector2 trueMin { get => Vector2.Min(min, max); }
         public Vector2 trueMax { get => Vector2.Max(min, max); }
+        public Vector2 center { get => Vector2.Lerp(trueMin, trueMax, 0.5f); }
 
         [Header("Scene Audio")]
         [Tooltip("If true, will play the BGM when the Scene loads.")]

@@ -56,14 +56,14 @@ namespace TUFF
                 selectedDetailedUnitHUD.UpdateInfo(selectedMember, true);
             if (memberEquipment) memberEquipment.UpdateInfo(selectedMember);
 
-            ATKElement?.UpdateInfo(selectedMember.GetATK());
-            DEFElement?.UpdateInfo(selectedMember.GetDEF());
-            SATKElement?.UpdateInfo(selectedMember.GetSATK());
-            SDEFElement?.UpdateInfo(selectedMember.GetSDEF());
-            AGIElement?.UpdateInfo(selectedMember.GetAGI());
-            LUCKElement?.UpdateInfo(selectedMember.GetLUK());
+            if (ATKElement) ATKElement.UpdateInfo(selectedMember.GetATK());
+            if (DEFElement) DEFElement.UpdateInfo(selectedMember.GetDEF());
+            if (SATKElement) SATKElement.UpdateInfo(selectedMember.GetSATK());
+            if (SDEFElement) SDEFElement.UpdateInfo(selectedMember.GetSDEF());
+            if (AGIElement) AGIElement.UpdateInfo(selectedMember.GetAGI());
+            if (LUCKElement) LUCKElement.UpdateInfo(selectedMember.GetLUK());
 
-            memberBioHUD?.UpdateInfo(selectedMember);
+            if (memberBioHUD) memberBioHUD.UpdateInfo(selectedMember);
         }
 
         public void UpdateLabels()

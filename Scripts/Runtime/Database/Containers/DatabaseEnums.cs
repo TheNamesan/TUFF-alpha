@@ -129,7 +129,8 @@ namespace TUFF
     {
         Head = 0,
         Body = 1,
-        Accessory = 2
+        Cape = 2,
+        Accessory = 3
     }
 
     public enum StateType
@@ -186,8 +187,9 @@ namespace TUFF
         SecondaryWeapon = 1,
         Head = 2,
         Body = 3,
-        PrimaryAccessory = 4,
-        SecondaryAccessory = 5
+        Cape = 4,
+        PrimaryAccessory = 5,
+        SecondaryAccessory = 6
     }
     public enum NumberComparisonType
     {

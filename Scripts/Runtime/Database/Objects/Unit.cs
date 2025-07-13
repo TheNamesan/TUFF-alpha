@@ -27,6 +27,7 @@ namespace TUFF
         public Weapon secondaryWeapon;
         public Armor head;
         public Armor body;
+        public Armor cape;
         public Armor primaryAccessory;
         public Armor secondaryAccessory;
 

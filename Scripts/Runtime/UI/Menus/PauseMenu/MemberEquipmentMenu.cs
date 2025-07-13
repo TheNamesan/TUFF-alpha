@@ -12,6 +12,7 @@ namespace TUFF
         public GeneralInfoDisplay secondaryWeaponInfo;
         public GeneralInfoDisplay headInfo;
         public GeneralInfoDisplay bodyInfo;
+        public GeneralInfoDisplay capeInfo;
         public GeneralInfoDisplay primaryAccessoryInfo;
         public GeneralInfoDisplay secondaryAccessoryInfo;
         public UIMenu uiMenu;
@@ -21,16 +22,20 @@ namespace TUFF
         public virtual void UpdateInfo(PartyMember member)
         {
             memberRef = member;
-            UpdateEquipInfo(primaryWeaponInfo, member.primaryWeapon);
-            UpdateEquipInfo(secondaryWeaponInfo, member.secondaryWeapon);
-            UpdateEquipInfo(headInfo, member.head);
-            UpdateEquipInfo(bodyInfo, member.body);
-            UpdateEquipInfo(primaryAccessoryInfo, member.primaryAccessory);
-            UpdateEquipInfo(secondaryAccessoryInfo, member.secondaryAccessory);
+            UpdateEquipInfo(primaryWeaponInfo, EquipmentSlotType.PrimaryWeapon);
+            UpdateEquipInfo(secondaryWeaponInfo, EquipmentSlotType.SecondaryWeapon);
+            UpdateEquipInfo(headInfo, EquipmentSlotType.Head);
+            UpdateEquipInfo(bodyInfo, EquipmentSlotType.Body);
+            UpdateEquipInfo(capeInfo, EquipmentSlotType.Cape);
+            UpdateEquipInfo(primaryAccessoryInfo, EquipmentSlotType.PrimaryAccessory);
+            UpdateEquipInfo(secondaryAccessoryInfo, EquipmentSlotType.SecondaryAccessory);
         }
-        protected virtual void UpdateEquipInfo(GeneralInfoDisplay infoDisplay, InventoryItem invItem)
+        protected virtual void UpdateEquipInfo(GeneralInfoDisplay infoDisplay, EquipmentSlotType slotType)
         {
             if (infoDisplay == null) return;
+            if (memberRef == null) return;
+            infoDisplay.gameObject.SetActive(memberRef.CanEquipInSlot(slotType));
+            InventoryItem invItem = (InventoryItem)memberRef.GetEquipmentFromUserSlot(slotType);
             if (invItem == null) { infoDisplay.DisplayEmpty(); UpdateSlotDescription(infoDisplay, ""); return; }
             infoDisplay.DisplayInfo(invItem.icon, invItem.GetName());
             UpdateSlotDescription(infoDisplay, invItem.GetDescription());

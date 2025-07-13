@@ -16,7 +16,6 @@ namespace TUFF
         AGI = 8,
         LUK = 9
     }
-
     [CreateAssetMenu(fileName = "Job", menuName = "Database/Job", order = 1)]
     public class Job : DatabaseElement
     {
@@ -100,6 +99,22 @@ namespace TUFF
         [Range(-100, 100)] public int critRate = 4;
         [Tooltip("Reduces the chance for the incoming damage to be dealt as Critical damage. Default: 0")]
         [Range(-100, 100)] public int critEvasionRate = 0;
+
+        [Header("Equipment Slots")]
+        [Tooltip("If true, the Unit with this Job can equip Weapons in the Primary Weapon slot.")]
+        public bool canEquipPrimaryWeapon = true;
+        [Tooltip("If true, the Unit with this Job can equip Weapons in the Secondary Weapon slot.")]
+        public bool canEquipSecondaryWeapon = true;
+        [Tooltip("If true, the Unit with this Job can equip Armors in the Head slot.")]
+        public bool canEquipHead = true;
+        [Tooltip("If true, the Unit with this Job can equip Armors in the Body slot.")]
+        public bool canEquipBody = true;
+        [Tooltip("If true, the Unit with this Job can equip Armors in the Cape slot.")]
+        public bool canEquipCape = false;
+        [Tooltip("If true, the Unit with this Job can equip Armors in the Primary Accessory slot.")]
+        public bool canEquipPrimaryAccessory = true;
+        [Tooltip("If true, the Unit with this Job can equip Armors in the Secondary Accessory slot.")]
+        public bool canEquipSecondaryAccessory = true;
 
         [Header("Equip Types")]
         [Tooltip("The weapons of the specified type the Unit can use by default.")]
