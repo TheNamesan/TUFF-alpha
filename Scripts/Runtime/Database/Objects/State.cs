@@ -58,7 +58,7 @@ namespace TUFF
         [Tooltip("If true, DetailedStatusHUD description will display custom text for this state instead of auto-generating.")]
         public bool useCustomDetailedDescription = false;
         [Tooltip("Custom text to display in DetailedStatusHUD."), TextArea(2, 2)]
-        public string customDetailedDescriptionText = "detailed_key";
+        public string customDetailedDescriptionKey = "detailed_key";
         
         public override string GetName()
         {
@@ -68,9 +68,9 @@ namespace TUFF
         {
             return TUFFTextParser.ParseText(descriptionKey);
         }
-        public string GetCustomDetailedText()
+        public string GetCustomDetailedDescription()
         {
-            return TUFFTextParser.ParseText(customDetailedDescriptionText);
+            return TUFFTextParser.ParseText(customDetailedDescriptionKey);
         }
     }
 }

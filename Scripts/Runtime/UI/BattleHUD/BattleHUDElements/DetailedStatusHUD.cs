@@ -74,7 +74,7 @@ namespace TUFF
             string text = "";
             if (state.useCustomDetailedDescription)
             {
-                return state.GetCustomDetailedText();
+                return state.GetCustomDetailedDescription();
             }
             for (int i = 0; i < state.features.Count; i++)
             {

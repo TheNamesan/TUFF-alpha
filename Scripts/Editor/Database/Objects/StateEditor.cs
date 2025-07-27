@@ -65,7 +65,7 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(useCustomDetail);
             if (useCustomDetail.boolValue)
             {
-                var detailedKey = serializedObject.FindProperty(nameof(State.customDetailedDescriptionText));
+                var detailedKey = serializedObject.FindProperty(nameof(State.customDetailedDescriptionKey));
                 EditorGUILayout.PropertyField(detailedKey);
                 LISAEditorUtility.DrawDatabaseParsedTextPreview("Detailed Desc", detailedKey.stringValue, true);
             }
