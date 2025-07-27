@@ -170,7 +170,7 @@ namespace TUFF
         }
         protected void ToggleDetailedHUD(bool enable)
         {
-            detailedStatusHUD.gameObject.SetActive(enable);
+            detailedStatusHUD.ToggleStatus(enable);
         }
         protected void HideDetailedHUD()
         {

@@ -61,6 +61,15 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("features"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("visual"));
 
+            var useCustomDetail = serializedObject.FindProperty(nameof(State.useCustomDetailedDescription));
+            EditorGUILayout.PropertyField(useCustomDetail);
+            if (useCustomDetail.boolValue)
+            {
+                var detailedKey = serializedObject.FindProperty(nameof(State.customDetailedDescriptionText));
+                EditorGUILayout.PropertyField(detailedKey);
+                LISAEditorUtility.DrawDatabaseParsedTextPreview("Detailed Desc", detailedKey.stringValue, true);
+            }
+
             EditorGUILayout.PropertyField(serializedObject.FindProperty("notes"));
 
             serializedObject.ApplyModifiedProperties();

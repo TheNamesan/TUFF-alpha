@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace TUFF
 {
@@ -11,7 +12,46 @@ namespace TUFF
         public TMP_Text hpText;
         public TMP_Text stateText;
         public ActiveStatesHUDElement activeStateHUDElement;
+        public RectTransform detailedTextContent;
+        public AdjustToPreferredTextSize adjustToPreferredTextSize;
         public TMP_Text detailedText;
+
+        [Header("Scroll")]
+        public float scrollSpeed = 102;
+        public float fastScrollSpeedMult = 8;
+
+        public float timeUntilScroll = 1f;
+        private float m_scrollTimer = 0;
+        public bool IsScrolling { get => m_scrollTimer <= 0; }
+        public void ToggleStatus(bool enable)
+        {
+            gameObject.SetActive(enable);
+            if (enable)
+            {
+                m_scrollTimer = timeUntilScroll;
+                SetDetailedTextPosition(0);
+            }
+        }
+        private void Update()
+        {
+            if (m_scrollTimer > 0)
+            {
+                m_scrollTimer -= Time.deltaTime * GetSkipMult();
+                if (m_scrollTimer < 0) m_scrollTimer = 0;
+            }
+            if (IsScrolling)
+            {
+                AddDetailedTextPosition(GetScrollSpeed());
+            }
+        }
+        private float GetScrollSpeed()
+        {
+            return Time.deltaTime * scrollSpeed * GetSkipMult();
+        }
+        private float GetSkipMult()
+        {
+            return (UIController.instance.skipButtonHold ? fastScrollSpeedMult : 1f);
+        }
         public void UpdateStatus(ActiveState activeState)
         {
             if (activeState == null) { return; }
@@ -20,16 +60,22 @@ namespace TUFF
             var user = activeState.user;
             string HP = $"{(user.CanShowStatus() ? user.HP : "???")}";
             string maxHP = $"{(user.CanShowStatus() ? user.GetMaxHP() : "???")}";
-            nameText.text = $"{user.GetName()}";
-            hpText.text = $"{TUFFSettings.HPShortText}: {HP}/{maxHP}";
-            stateText.text = $"{activeState.state.GetName()}";
-            activeStateHUDElement?.UpdateStateInfo(activeState);
-            detailedText.text = GetDetailedText(activeState.state);
+            if (nameText) nameText.text = $"{user.GetName()}";
+            if (hpText) hpText.text = $"{TUFFSettings.HPShortText}: {HP}/{maxHP}";
+            if (stateText) stateText.text = $"{activeState.state.GetName()}";
+            if (activeStateHUDElement) activeStateHUDElement.UpdateStateInfo(activeState);
+            if (detailedText) { detailedText.text = GetDetailedText(activeState.state); }
+            SetDetailedTextPosition(0);
+            m_scrollTimer = timeUntilScroll;
         }
         public string GetDetailedText(State state)
         {
             if (!state) return "ERROR";
             string text = "";
+            if (state.useCustomDetailedDescription)
+            {
+                return state.GetCustomDetailedText();
+            }
             for (int i = 0; i < state.features.Count; i++)
             {
                 bool valid = false;
@@ -124,6 +170,39 @@ namespace TUFF
         private string GetValue(float value)
         {
             return LISAUtility.FloatToString(value);
+        }
+
+        public void AddDetailedTextPosition(float deltaY)
+        {
+            if (!detailedText) return;
+            RectTransform rectTransform = detailedText.rectTransform;
+            if (!rectTransform) return;
+            if (adjustToPreferredTextSize) adjustToPreferredTextSize.Adjust();
+            //detailedText.ForceMeshUpdate();
+            SetDetailedTextPosition(rectTransform.anchoredPosition.y + deltaY);
+        }
+        public void SetDetailedTextPosition(float posY)
+        {
+            if (!detailedText) return;
+            RectTransform rectTransform = detailedText.rectTransform;
+            if (!rectTransform) return;
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, posY);
+            CapDetailedTextPosition(rectTransform);
+        }
+        private void CapDetailedTextPosition(RectTransform rectTransform)
+        {
+            if (!rectTransform) return;
+            if (!detailedTextContent) return;
+
+            float newAnchorPosY = rectTransform.anchoredPosition.y;
+            if (newAnchorPosY < 0) newAnchorPosY = 0;
+            float max = rectTransform.sizeDelta.y - detailedTextContent.sizeDelta.y;
+            if (newAnchorPosY > max) 
+            {
+                if (max > 0) newAnchorPosY = max;
+                else newAnchorPosY = 0;
+            }
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, newAnchorPosY);
         }
     }
 }

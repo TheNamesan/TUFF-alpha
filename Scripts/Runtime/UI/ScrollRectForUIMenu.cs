@@ -97,19 +97,19 @@ namespace TUFF
         {
             if (!UIMenu.CheckIfUIMenuHasElements(uiMenu))
             {
-                if (upArrow != null) upArrow?.SetActive(false);
-                if (downArrow != null) downArrow?.SetActive(false);
+                if (upArrow != null) upArrow.SetActive(false);
+                if (downArrow != null) downArrow.SetActive(false);
                 return; 
             }
             int visibleColumns = uiMenu.GetVisibleColumnsCount();
             if (visibleColumns < maxVisibleElements)
             {
-                if (upArrow != null) upArrow?.SetActive(false);
-                if (downArrow != null) downArrow?.SetActive(false);
+                if (upArrow != null) upArrow.SetActive(false);
+                if (downArrow != null) downArrow.SetActive(false);
                 return;
             }
-            if (upArrow != null) upArrow?.SetActive(topVisibleIndex > 0);
-            if (downArrow != null) downArrow?.SetActive(bottomVisibleIndex < visibleColumns - 1);
+            if (upArrow != null) upArrow.SetActive(topVisibleIndex > 0);
+            if (downArrow != null) downArrow.SetActive(bottomVisibleIndex < visibleColumns - 1);
         }
     }
 }

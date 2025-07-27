@@ -17,13 +17,16 @@ namespace TUFF
         public float widthPadding = 0;
         public float heightPadding = 0;
 
+        public bool disableWidthAdjust = false;
+        public bool disableHeightAdjust = false;
+
         private void OnEnable()
         {
             Adjust();
         }
         private void Update()
         {
-            Adjust();   
+            Adjust();
         }
 
         public void Adjust()
@@ -31,9 +34,15 @@ namespace TUFF
             if (tmpText == null || rt == null) return;
             if (!tmpText.enabled) return;
             if (tmpText.text.Length <= 0) return;
-            Vector2 prefferedSize = tmpText.GetPreferredValues(tmpText.text, float.PositiveInfinity, float.PositiveInfinity);
+            float maxWidth = float.PositiveInfinity;
+            float maxHeight = float.PositiveInfinity;
+            if (disableWidthAdjust) maxWidth = rt.sizeDelta.x;
+            if (disableHeightAdjust) maxHeight = rt.sizeDelta.y;
+            Vector2 prefferedSize = tmpText.GetPreferredValues(tmpText.text, maxWidth, maxHeight);
             float sizeX = Mathf.Max(minWidth, prefferedSize.x) + widthPadding;
             float sizeY = Mathf.Max(minHeight, prefferedSize.y) + heightPadding;
+            if (disableWidthAdjust) sizeX = rt.sizeDelta.x;
+            if (disableHeightAdjust) sizeY = rt.sizeDelta.y;
             rt.sizeDelta = new Vector2(sizeX, sizeY);
         }
     }
