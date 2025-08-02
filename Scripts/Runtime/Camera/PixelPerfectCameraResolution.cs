@@ -8,7 +8,6 @@ namespace TUFF
 {
     public class PixelPerfectCameraResolution : MonoBehaviour
     {
-        public const int baseHeight = 540;
         public float targetSize = 6f;
         public UnityEngine.Rendering.Universal.PixelPerfectCamera pixelPerfectCamera;
         public Camera cam;
@@ -17,12 +16,14 @@ namespace TUFF
         {
             if (!pixelPerfectCamera) pixelPerfectCamera = GetComponent<UnityEngine.Rendering.Universal.PixelPerfectCamera>();
             if (!cam) cam = GetComponent<Camera>();
+        }
+        private void OnEnable()
+        {
             if (cam)
             {
                 cam.orthographicSize = targetSize;
             }
             AdjustToResolution();
-            
         }
         private void Start()
         {
@@ -47,7 +48,7 @@ namespace TUFF
 
             float size = Mathf.Max(targetSize, 0.00001f);
             pixelPerfectCamera.assetsPPU = LISAUtility.Truncate((pixelPerfectCamera.refResolutionY * 0.5f) / size);
-            
+            //(float)nativePixelResHeight / (float)PPU / 2f; //544x416
         }
     }
 }
