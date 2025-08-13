@@ -96,6 +96,7 @@ namespace TUFF
         {
             ActionList actionList = interactableEvent.actionList;
             yield return actionList.PlayActions();
+            if (interactableEvent.interactableObject) interactableEvent.interactableObject.LoadIndexData();
             m_parallelInteractableEvents.Remove(interactableEvent);
             InteractableObject.CheckParallelProcessTriggers();
         }
