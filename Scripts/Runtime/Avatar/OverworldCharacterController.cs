@@ -203,6 +203,7 @@ namespace TUFF
         [Header("Interaction")]
         [Tooltip("Distance checked to find interactables in the Avatar's facing direction.")]
         [SerializeField] public float interactionDistance = 1f;
+        [HideInInspector] public bool skipInteractionTick = false;
 
 
         [Header("Run")]
@@ -310,6 +311,7 @@ namespace TUFF
             lastVelocity = rb.linearVelocity;
             InputUpdate();
             wasGrounded = grounded;
+            skipInteractionTick = false;
         }
         private IEnumerator LateFixedUpdate()
         {
@@ -731,7 +733,7 @@ namespace TUFF
             //    input.verticalInputTap = 0;
             //}
             // Z
-            if (input.interactionButtonDown)
+            if (input.interactionButtonDown && !skipInteractionTick)
             {
                 bool disallowedByRunMode = false;
                 if (runMode == CharacterRunMode.Prep && (InRunningState() || runCanceled)) disallowedByRunMode = true;

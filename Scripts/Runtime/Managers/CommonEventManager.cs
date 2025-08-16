@@ -12,9 +12,10 @@ namespace TUFF
 
         public static IEnumerator eventsCoroutine;
         public static bool interactableEventPlaying { get => m_interactableEventPlaying; }
-        public static bool parallelProcessPlaying { get => instance.m_parallelInteractableEvents.Count > 0; }
         private static bool m_interactableEventPlaying = false;
-
+        public static bool interactableEventYielded { get => m_interactableEventYielded; }
+        private static bool m_interactableEventYielded = false;
+        public static bool parallelProcessPlaying { get => instance.m_parallelInteractableEvents.Count > 0; }
 
         // Common Events
         [SerializeField] private List<CommonEvent> queuedEvents = new List<CommonEvent>();
@@ -44,54 +45,90 @@ namespace TUFF
             if (m_interactableEventPlaying)
             {
                 if (queue)
+                {
                     m_queuedInteractableEvents.Add(interactableEvent);
-                //else Debug.LogWarning($"Tried to play: {interactableEvent.interactableObject} with {interactableEvent.eventList.content.Count} Events");
+                }  
                 return;
             }
-            if (eventsCoroutine != null) StopEvents();
+            if (eventsCoroutine != null) StopCurrentEventCoroutine();
             eventsCoroutine = TriggerEventsCoroutine(interactableEvent);
             instance.StartCoroutine(eventsCoroutine);
         }
-        public static void StopEvents()
+        public static void StopAllEvents()
+        {
+            StopCurrentEventCoroutine();
+            if (instance) instance.m_queuedInteractableEvents.Clear();
+        }
+
+        private static void StopCurrentEventCoroutine()
         {
             if (eventsCoroutine != null) instance.StopCoroutine(eventsCoroutine);
             m_interactableEventPlaying = false;
+            m_interactableEventYielded = false;
+            Debug.Log("m_interactableEventPlaying: " + m_interactableEventPlaying);
             eventsCoroutine = null;
         }
+
         protected IEnumerator TriggerEventsCoroutine(InteractableEvent interactableEvent)
         {
             ActionList actionList = interactableEvent.actionList;
             m_interactableEventPlaying = true;
+            m_interactableEventYielded = false;
+            Debug.Log("m_interactableEventPlaying: " + m_interactableEventPlaying);
             // This is probably an ugly way of forcing input disabling if a menu is closed for example.
             // Find a better alternative
-            bool yielded = false;
-            yield return actionList.PlayActions(() =>
+            if (actionList.content.Count > 0)
             {
-                if (!GameManager.disablePlayerInput)
+                yield return actionList.PlayActions(() =>
                 {
-                    GameManager.instance.DisablePlayerInput(true);
-                    yielded = true;
-                    Debug.Log("Stop Control");
-                }
-            });
+                    if (!GameManager.disablePlayerInput)
+                    {
+                        GameManager.instance.DisablePlayerInput(true);
+                        m_interactableEventYielded = true;
+                        Debug.Log("Stop Control");
+                    }
+                });
+            }
+            EndCurrentEvent();
+        }
+
+        private void EndCurrentEvent(bool ignoreAutorunChecks = false)
+        {
             InteractableObject.UpdateAll();
-            
-            if (yielded) yield return new WaitForSeconds(.025f);
-            GameManager.instance.DisablePlayerInput(false);
-            Debug.Log("Regain Control");
-            m_interactableEventPlaying = false;
+            StopCurrentEventCoroutine();
             if (m_queuedInteractableEvents.Count > 0)
             {
-                // Dequeue
-                var evt = m_queuedInteractableEvents[0];
-                m_queuedInteractableEvents.RemoveAt(0);
-                TriggerInteractableEvent(evt);
+                DequeueAndPlayNext();
             }
             else
             {
-                InteractableObject.CheckAutorunTriggers();
+                if (!ignoreAutorunChecks) InteractableObject.CheckAutorunTriggers();
+                if (m_queuedInteractableEvents.Count <= 0)
+                {
+                    //if (yielded) yield return new WaitForEndOfFrame();//yield return new WaitForSeconds(.025f);
+                    GameManager.instance.DisablePlayerInput(false);
+                    if (PlayerInputHandler.avatar != null) PlayerInputHandler.avatar.skipInteractionTick = true;
+                    Debug.Log("Regain Control");
+                }
             }
         }
+
+        private void DequeueAndPlayNext()
+        {
+            // Dequeue
+            var evt = m_queuedInteractableEvents[0];
+            m_queuedInteractableEvents.RemoveAt(0);
+            TriggerInteractableEvent(evt);
+        }
+
+        public void ForceEndCurrentEvent(bool ignoreAutorunChecks = false)
+        {
+            if (eventsCoroutine != null)
+            {
+                EndCurrentEvent(ignoreAutorunChecks);
+            }
+        }
+
         protected IEnumerator TriggerParallelProcess(InteractableEvent interactableEvent)
         {
             ActionList actionList = interactableEvent.actionList;
@@ -135,7 +172,7 @@ namespace TUFF
             actionList.index = 0;
             yield return GameManager.instance.StartCoroutine(actionList.PlayActions());
             actionList.index = 0;
-            eventAction.EndEvent();
+            eventAction.isFinished = true;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace TUFF
 {
     public class PlayerInputHandler : MonoBehaviour
     {
-        private OverworldCharacterController avatar { get 
+        public static OverworldCharacterController avatar { get 
             {
                 if (FollowerInstance.player)
                     return FollowerInstance.player.controller;

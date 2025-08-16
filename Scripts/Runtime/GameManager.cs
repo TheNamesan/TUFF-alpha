@@ -186,8 +186,8 @@ namespace TUFF
             {
                 if (input) inputManager.playerInputHandler?.StopInput();
                 else inputManager.playerInputHandler?.ResumeInput();
+                onPlayerInputToggle.Invoke(!input);
             }
-            onPlayerInputToggle.Invoke(!input);
         }
 
         public void DisableActionMaps(bool input)
@@ -313,7 +313,7 @@ namespace TUFF
             gameOver = true;
             Debug.Log("Game Over");
             ChangeTimeScale(0f);
-            CommonEventManager.StopEvents();
+            CommonEventManager.StopAllEvents();
             UIController.instance.SetMenu(null);
             AudioManager.instance.StopAmbience();
             AudioManager.instance.PlayGameOverMusic();
