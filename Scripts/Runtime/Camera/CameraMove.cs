@@ -31,20 +31,11 @@ namespace TUFF
         [Tooltip("If true, camera will remain frozen on the X axis.")]
         public bool ignoreY = false;
         [Tooltip("Unity Event to call when movement ends.")]
-        public UnityEvent onMovementEnd;
+        public UnityEvent onMovementEnd = new UnityEvent();
 
-        public static void InvokeMovement(CameraMove cameraMove, CameraFollow target, EventAction commandCallback = null)
+        public static void InvokeMovement(CameraMove cameraMove, CameraFollow target)
         {
-            if (commandCallback != null)
-            {
-                UnityAction action = null;
-                action = () => {
-                    commandCallback.EndEvent();
-                    cameraMove.onMovementEnd.RemoveListener(action);
-                };
-                cameraMove.onMovementEnd.AddListener(action);
-            }
-            target.MoveCamera(cameraMove);
+            if (target) target.MoveCamera(cameraMove);
         }
     }
 }

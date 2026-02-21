@@ -28,6 +28,7 @@ namespace TUFF.TUFFEditor
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("cameraMove"));
+            EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("waitForCompletion"));
         }
         public override void SummaryGUI(Rect position)
         {

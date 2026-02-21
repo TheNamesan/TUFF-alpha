@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TUFF
 {
@@ -10,18 +11,35 @@ namespace TUFF
         [Tooltip("Reference to the camera to move.")]
         public CameraFollow targetCamera;
         public CameraMove cameraMove = new CameraMove();
+        public bool waitForCompletion = true;
+
         public MoveCameraAction()
         {
             eventName = "Move Camera";
-            eventColor = new Color(0.9f, 1f, 0.5f, 1f);
+            eventColor = EventGUIColors.movement;
         }
         public override void Invoke()
         {
-            if (targetCamera != null)
+            if (cameraMove == null) EndEvent();
+            if (targetCamera == null) EndEvent();
+
+            if (waitForCompletion)
             {
-                CameraMove.InvokeMovement(cameraMove, targetCamera, this);
+                AddWaitForCompletionEvent();
             }
-            else EndEvent();
+            
+            CameraMove.InvokeMovement(cameraMove, targetCamera);
+            if (!waitForCompletion) EndEvent();
+        }
+        protected void AddWaitForCompletionEvent()
+        {
+            UnityAction action = null;
+            action = () => 
+            {
+                EndEvent();
+                cameraMove.onMovementEnd.RemoveListener(action);
+            };
+            cameraMove.onMovementEnd.AddListener(action);
         }
     }
 }
