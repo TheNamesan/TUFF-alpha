@@ -53,7 +53,6 @@ namespace TUFF
         }
         private void PickOption(int index)
         {
-            //Debug.Log("Picked option: " + index);
             if (index >= 0 && index < choices.Count)
             {
                 CommonEventManager.instance.TriggerEventActionBranch(this, choices[index].actionList);

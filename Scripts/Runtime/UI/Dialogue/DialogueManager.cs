@@ -58,6 +58,7 @@ namespace TUFF
         private RectTransform parentRect { get => transform.parent as RectTransform; }
 
         public static List<DialogueManager> openBoxes = new(); // tmp // Change this to be a brief period of buffer time before a dialogue is called? (For things like SFXs)
+        public static DialogueManager OldestOpenBox { get { if (openBoxes.Count <= 0) return null; return openBoxes[0]; } }
         private static readonly Vector2 DEFAULT_OFFSET = new Vector2(0, 1f);
 
         private Color baseColor = Color.white; //tmp, change to get color from TUFFSettings;
@@ -75,7 +76,7 @@ namespace TUFF
         {
             DisplayContinuePrompt(false);
         }
-        void InitialValues()
+        private void SetInitialValues()
         {
             inUse = true;
             StartCoroutine(InitialValuesCoroutine());
@@ -110,6 +111,11 @@ namespace TUFF
             if (!m_continuedDialogue)
             {
                 if (transition) transition.Appear();
+            }
+            else
+            {
+                DialogueManager oldestBox = OldestOpenBox;
+                if (oldestBox) oldestBox.DestroyDialogue();
             }
             SetPosition();
             SetVoicebank();
@@ -247,7 +253,7 @@ namespace TUFF
             }
             if (m_markedForClose)
             {
-                StartCoroutine(EndDialogue());
+                StartCoroutine(EndCoroutine());
                 return;
             }
             if (textboxInitiated)
@@ -315,7 +321,7 @@ namespace TUFF
 
         public void StartDialogue()
         {
-            InitialValues();
+            SetInitialValues();
             DisplayNextSentence();
         }
 
@@ -327,7 +333,7 @@ namespace TUFF
                 {
                     if (!ChoicesIsNext())
                     { 
-                        CloseTextbox(); 
+                        QueueCloseTextbox(); 
                         // Change this to buffer
                     }
                     else {
@@ -371,11 +377,11 @@ namespace TUFF
                 continuePrompt.gameObject.SetActive(display);
             }
         }
-        public void CloseTextbox()
+        public void QueueCloseTextbox()
         {
             m_markedForClose = true;
         }
-        protected IEnumerator EndDialogue()
+        protected IEnumerator EndCoroutine()
         {
             textboxInitiated = false;
             m_markedForClose = false;
@@ -385,20 +391,20 @@ namespace TUFF
             BattleManager.instance.hud.ShowWindowsDynamic(true);
             m_continuedDialogue = true;
             if (actionCallback != null) actionCallback.EndEvent();
-            yield return new WaitForEndOfFrame();
-            if (!hasTextboxesQueued)
+            if (transition)
             {
-                if (transition)
+                text.enabled = false;
+                DisplayContinuePrompt(false);
+                transition.Dissapear();
+                while (transition.state == BoxTransitionState.Dissapearing)
                 {
-                    text.enabled = false;
-                    DisplayContinuePrompt(false);
-                    transition.Dissapear();
-                    while (transition.state == BoxTransitionState.Dissapearing)
-                    {
-                        yield return null;
-                    }
+                    yield return null;
                 }
             }
+            DestroyDialogue();
+        }
+        public void DestroyDialogue()
+        {
             m_continuedDialogue = false;
             openBoxes.RemoveAt(openBoxes.IndexOf(this));
             inUse = false;

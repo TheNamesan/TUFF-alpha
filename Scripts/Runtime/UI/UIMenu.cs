@@ -81,7 +81,12 @@ namespace TUFF
         [Tooltip("Custom Cancel SFX.")]
         public SFX customCancelSFX = new SFX();
 
-        bool ignoreInput = false;
+        [Header("Delay")]
+        [Tooltip("When this menu is open, delay in seconds before Select, Cancel or Skip can be pressed.")]
+        public float openInputDelay = 0f;
+        private float m_delayTimer = 0f;
+
+        private bool m_ignoreInput = false;
         void Awake()
         {
             if (UIElements == null) SetupUIElements();
@@ -123,7 +128,8 @@ namespace TUFF
         }
         private void LateUpdate()
         {
-            ignoreInput = false;
+            if (m_delayTimer > 0) m_delayTimer -= Time.deltaTime;
+            if (m_delayTimer <= 0) { m_delayTimer = 0; m_ignoreInput = false; }
         }
 
         void ResetMenu()
@@ -139,14 +145,14 @@ namespace TUFF
 
         public void SelectMenu(InputAction.CallbackContext context)
         {
-            Select(context);
+            if (!m_ignoreInput) Select(context);
         }
 
         public void CancelMenu(InputAction.CallbackContext context)
         {
             if (closeMenuWithCancel)
             {
-                if (context.performed && !ignoreInput)
+                if (context.performed && !m_ignoreInput)
                 {
                     PlaySound(CancelClip());
                     CloseMenu();
@@ -161,7 +167,7 @@ namespace TUFF
         {
             if (closeMenuWithSkip)
             {
-                if (context.performed && !ignoreInput)
+                if (context.performed && !m_ignoreInput)
                 {
                     PlaySound(CancelClip());
                     CloseMenu();
@@ -213,7 +219,8 @@ namespace TUFF
             UIController.instance.SetMenu(this);
             HighlightCurrent();
             gameObject.SetActive(true);
-            ignoreInput = true;
+            m_ignoreInput = true;
+            m_delayTimer = openInputDelay;
             if (openSFX != null) PlaySound(openSFX);
             onOpenMenu?.Invoke();
             if (scrollRect) scrollRect.UpdateScroll();

@@ -1260,6 +1260,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!1 &904475031979922502
 GameObject:
   m_ObjectHideFlags: 0
@@ -3955,6 +3956,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &1710015920228193372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6486,6 +6488,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &2179993736183868229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7779,6 +7782,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &4121232581394717353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12661,6 +12665,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!1 &5284954013175947347
 GameObject:
   m_ObjectHideFlags: 0
@@ -12830,6 +12835,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &3268018854815913287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13865,6 +13871,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!1 &5772252092647224294
 GameObject:
   m_ObjectHideFlags: 0
@@ -14825,6 +14832,7 @@ MonoBehaviour:
   detailedText: {fileID: 7179591526945311834}
   scrollSpeed: 102
   fastScrollSpeedMult: 8
+  timeUntilScroll: 1
 --- !u!1 &6376789858799066231
 GameObject:
   m_ObjectHideFlags: 0
@@ -16341,6 +16349,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &7189406962540965304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17457,6 +17466,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!1 &7522016735179202697
 GameObject:
   m_ObjectHideFlags: 0
@@ -26839,6 +26849,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &8485235179553533441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34515,6 +34526,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!224 &4600605234396821297 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1193949964449211973, guid: 8336b8b972b6ef94c9da5659f90292d4, type: 3}
@@ -39635,6 +39647,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!224 &5327748135882634403 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8352585110459994546, guid: 8336b8b972b6ef94c9da5659f90292d4, type: 3}
@@ -39851,6 +39864,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!224 &5305738094237540045 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8352585110459994546, guid: 8336b8b972b6ef94c9da5659f90292d4, type: 3}
@@ -45879,6 +45893,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &7979867179264457611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46458,6 +46473,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!224 &6638668292930771879 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1193949964449211973, guid: 8336b8b972b6ef94c9da5659f90292d4, type: 3}
@@ -48750,6 +48766,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!224 &5036791187687327082 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1193949964449211973, guid: 8336b8b972b6ef94c9da5659f90292d4, type: 3}
@@ -49378,6 +49395,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &6416705485393420331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52506,6 +52524,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &9179452244940374585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58519,6 +58538,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0
 --- !u!114 &4432664355099995163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58853,6 +58873,7 @@ MonoBehaviour:
     pitchMode: 0
     pitch: 1
     minPitch: 1
+  openInputDelay: 0.3
 --- !u!1001 &9195511041111059095
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -61,7 +61,7 @@ namespace TUFF
                 uiMenu.transitionHandler.onTransitionChange.AddListener(UpdateOnState);
             initialized = true;
         }
-        private IEnumerator InitialValues(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
+        private IEnumerator SetInitialValues(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
         {
             m_inUse = true;
             actionCallback = callback;
@@ -72,16 +72,16 @@ namespace TUFF
                 yield break;
             }
             onCancelMenu = onMenuCancel;
-            uiMenu.closeMenuWithCancel = closeWithCancel;
+            
             UpdateElements();
             ShowContent(false);
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
             SetPosition();
-            //yield return new WaitForEndOfFrame();
-            uiMenu?.OpenMenu();
+            if (uiMenu) uiMenu.OpenMenu();
             ForceRebuild(); // Fixes Content Size Fitter compontent not updating when opening the choices menu
+            uiMenu.closeMenuWithCancel = closeWithCancel;
         }
         private void SetPosition()
         {
@@ -135,7 +135,7 @@ namespace TUFF
         protected IEnumerator InitialValuesCoroutine(EventAction callback, List<string> options, bool closeWithCancel, System.Action onMenuCancel = null)
         {
             while (m_inUse) yield return null;
-            yield return InitialValues(callback, options, closeWithCancel, onMenuCancel);
+            yield return SetInitialValues(callback, options, closeWithCancel, onMenuCancel);
         }
         protected void UpdateOnState(BoxTransitionState state)
         {
@@ -232,11 +232,8 @@ namespace TUFF
 
         private static void CloseTextbox()
         {
-            // If open textbox exists.
-            if (DialogueManager.openBoxes.Count > 0 && DialogueManager.openBoxes[0])
-            {
-                DialogueManager.openBoxes[0].CloseTextbox();
-            }
+            DialogueManager oldestBox = DialogueManager.OldestOpenBox;
+            if (oldestBox) oldestBox.QueueCloseTextbox();
         }
     }
 }
