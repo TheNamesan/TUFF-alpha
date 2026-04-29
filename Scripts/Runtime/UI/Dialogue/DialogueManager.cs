@@ -89,7 +89,7 @@ namespace TUFF
                 rootLayout = GetComponent<LayoutGroup>();
             parentCanvasScaler = LISAUtility.GetCanvasScalerRoot(transform);
 
-            BattleManager.instance.hud.ShowWindowsDynamic(false);
+            BattleManager.instance.hud.QueueShowWindows(false);
             UIController.instance.SetMenu(uiMenu);
             LISAUtility.SetPivot(rect, new Vector2(rect.pivot.x, 0f));
             parentRT = transform.parent as RectTransform;
@@ -388,7 +388,7 @@ namespace TUFF
             m_closing = true;
             dialogue.onDialogueEnd?.Invoke();
             if (uiMenu != null) UIController.instance.SetMenu(null);
-            BattleManager.instance.hud.ShowWindowsDynamic(true);
+            BattleManager.instance.hud.QueueShowWindows(true);
             m_continuedDialogue = true;
             if (actionCallback != null) actionCallback.EndEvent();
             if (transition)

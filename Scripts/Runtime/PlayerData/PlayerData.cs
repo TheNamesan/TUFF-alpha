@@ -507,6 +507,7 @@ namespace TUFF
         }
         public PartyMember GetPartyMember(Unit unit)
         {
+            if (unit == null) return null;
             return party[unit.id];
         }
         public List<PartyMember> GetAllPartyMembers()

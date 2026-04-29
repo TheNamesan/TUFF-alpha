@@ -301,6 +301,16 @@ namespace TUFF
             }
     }
     [System.Serializable]
+    public struct PartyIndex
+    {
+        public int index;
+        public PartyMember GetPartyMember()
+        {
+            if (index < 0 && index >= BattleManager.instance.activeParty.Length) return null;
+            return BattleManager.instance.activeParty[index];
+        }
+    }
+    [System.Serializable]
     public struct EnemyIndex
     {
         public int index;

@@ -377,13 +377,17 @@ namespace TUFF.TUFFEditor
             GUI.backgroundColor = EventGUIColors.battle;
             EditorGUILayout.BeginVertical("box");
             GUILayout.Label("Battle", EditorStyles.boldLabel);
-            if (GUILayout.Button(new GUIContent("Change Enemy State", "?.")))
+            if (GUILayout.Button(new GUIContent("Change Enemy State [Not coded lmao]", "This doesn't work rn lmao?.")))
             {
                 //AddEvent(new StartBattleAction(), eventList, eventListPDs);
             }
             if (GUILayout.Button(new GUIContent("Change Enemy Graphic", "Changes the selected enemy's rendered graphic.")))
             {
                 AddEvent(new ChangeEnemyGraphicAction(), eventList, eventListPDs);
+            }
+            if (GUILayout.Button(new GUIContent("Show Battle Animation", "Displays an arbitrary animation during battle.")))
+            {
+                AddEvent(new ShowBattleAnimationAction(), eventList, eventListPDs);
             }
             EditorGUILayout.EndVertical();
             GUI.backgroundColor = oldColor;

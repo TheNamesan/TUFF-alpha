@@ -51,7 +51,6 @@ namespace TUFF
         public static void InvokeTextbox(Dialogue dialogue, EventAction commandCallback = null)
         {
             GameManager.instance.StartCoroutine(InvokeTextboxCoroutine(dialogue, commandCallback));
-            //GameManager.instance.StartCoroutine(StartDialogueDelay(textboxManager));
         }
         public static IEnumerator InvokeTextboxCoroutine(Dialogue dialogue, EventAction commandCallback = null)
         {
@@ -69,25 +68,19 @@ namespace TUFF
             else if (dialogue.textboxType == TextboxType.Fixed)
             {
                 textbox = Object.Instantiate(TUFFSettings.fixedTextbox);
-                //textbox = UIController.instance.dimTextbox.gameObject;
             }
             else
             {
                 textbox = Object.Instantiate(TUFFSettings.defaultTextbox);
-                //textbox = UIController.instance.textbox.gameObject; // POSITION OFFSET BREAKS WITH THIS! FIX!!
             }
             RectTransform textboxRect = textbox.GetComponent<RectTransform>();
             textboxRect.SetParent(parent, false);
             DialogueManager textboxManager = textbox.GetComponent<DialogueManager>();
             textboxManager.dialogue = dialogue;
             Dialogue textboxDialogue = textboxManager.dialogue;
-            //textboxDialogue.textboxType = dialogue.textboxType;
-            //textboxDialogue.originType = dialogue.originType;
-            //textboxDialogue.persistentOrigin = dialogue.persistentOrigin;
             if (textboxDialogue.textboxType == TextboxType.Fixed)
             {
                 textboxRect.position = Vector3.zero;
-                //textboxDialogue.fixedTextboxPosition = dialogue.fixedTextboxPosition;
             }
             else
             {
@@ -99,16 +92,7 @@ namespace TUFF
                 {
                     textboxDialogue.origin = LISAUtility.GetPersistentOrigin(textboxDialogue.persistentOrigin);
                 }
-                //textboxDialogue.positionOffset = dialogue.positionOffset;
             }
-            //textboxDialogue.baseVoicebank = dialogue.baseVoicebank;
-            //textboxDialogue.baseTextSpeed = dialogue.baseTextSpeed;
-            //textboxDialogue.sentences = new DialogueSentence[dialogue.sentences.Length];
-            //for (int i = 0; i < dialogue.sentences.Length; i++)
-            //{
-            //    textboxDialogue.sentences[i] = dialogue.sentences[i];
-            //}
-            //textboxDialogue.onDialogueEnd = dialogue.onDialogueEnd;
 
             if (commandCallback != null)
             {
@@ -120,36 +104,6 @@ namespace TUFF
         public static IEnumerator PreloadTextboxes() // Make this a pool
         {
             yield break;
-            //var fixedTextbox = Object.Instantiate(TUFFSettings.fixedTextbox);
-            //var textbox = Object.Instantiate(TUFFSettings.defaultTextbox);
-            //yield return new WaitForEndOfFrame();
-            //Object.Destroy(fixedTextbox);
-            //Object.Destroy(textbox);
         }
-        //public void CopyFrom(Dialogue source)
-        //{
-        //    Dialogue.CopyTo(source, this);
-        //}
-        //public static Dialogue CopyTo(Dialogue original, Dialogue clone)
-        //{
-        //    if (original == null) return null;
-        //    if (clone == null) clone = new Dialogue();
-        //    clone.textboxType = original.textboxType;
-        //    clone.originType = original.originType;
-        //    clone.origin = original.origin;
-        //    clone.positionOffset = original.positionOffset;
-        //    clone.persistentOrigin = original.persistentOrigin;
-        //    clone.fixedTextboxPosition = original.fixedTextboxPosition;
-        //    clone.baseVoicebank = original.baseVoicebank;
-        //    clone.baseTextSpeed = original.baseTextSpeed;
-        //    clone.overrideTextbox = original.overrideTextbox;
-        //    clone.customTextbox = original.customTextbox;
-        //    clone.overrideTextColor = original.overrideTextColor;
-        //    clone.customColor = original.customColor;
-        //    clone.sentences = new DialogueSentence[original.sentences.Length];
-        //    System.Array.Copy(original.sentences, clone.sentences, original.sentences.Length);
-        //    clone.onDialogueEnd = original.onDialogueEnd;
-        //    return clone;
-        //}
     }
 }

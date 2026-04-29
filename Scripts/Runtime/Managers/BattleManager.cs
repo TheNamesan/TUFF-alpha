@@ -97,8 +97,6 @@ namespace TUFF
             ResetNextTurnQueuedCommands();
             hud.battleStage.gameObject.SetActive(false);
             hud.InitializeHUD();
-            ForceUpdateHUD(true);
-
             while (!UIController.instance.BattleStartIsFinished())
             {
                 yield return null;
@@ -106,6 +104,7 @@ namespace TUFF
             hud.battleStage.gameObject.SetActive(true);
             UIController.instance.HideBattleStart();
             hud.gameObject.SetActive(true);
+            ForceUpdateHUD(true);
             StartCoroutine(StartTurn());
         }
         private IEnumerator StartTurn()
@@ -330,7 +329,7 @@ namespace TUFF
             for (int i = 0; i < KOdEnemies.Count; i++)
             {
                 //Say text here
-                hud.ShowWindowsDynamic(false);
+                hud.QueueShowWindows(false);
                 AddEnemyRewards(KOdEnemies[i].enemyRef);
                 KOdEnemies[i].RemoveAllStates();
                 if (won && i == KOdEnemies.Count - 1) PlayWinAudio();
@@ -367,9 +366,7 @@ namespace TUFF
         }
         protected BattleAnimation PlayAnimation(BattleAnimation battleAnimation, TargetedSkill targetedSkill)
         {
-            GameObject skillAnimGO;
-            BattleAnimation skillAnim;
-            CreateAnimation(battleAnimation, targetedSkill, out skillAnimGO, out skillAnim);
+            CreateAnimation(battleAnimation, targetedSkill, out GameObject skillAnimGO, out BattleAnimation skillAnim);
             SetAnimationPosition(skillAnimGO.transform as RectTransform, skillAnim.callRef);
 
             return skillAnim;
@@ -383,10 +380,7 @@ namespace TUFF
         }
         public BattleAnimation PlayAnimation(BattleAnimation battleAnimation, Vector3 position, AnimationPivotType pivot)
         {
-            GameObject skillAnimGO;
-            BattleAnimation skillAnim;
-            CreateAnimation(battleAnimation, null, out skillAnimGO, out skillAnim);
-            //skillAnimGO.GetComponent<RectTransform>().position = position;
+            CreateAnimation(battleAnimation, null, out GameObject skillAnimGO, out BattleAnimation skillAnim);
             AssignAnimationPositionFromPivot(skillAnim.transform as RectTransform, pivot, position);
             return skillAnim;
         }
@@ -395,7 +389,6 @@ namespace TUFF
             skillAnimGO = Instantiate(battleAnimation.gameObject, hud.battleStage);
             skillAnim = skillAnimGO.GetComponent<BattleAnimation>();
             skillAnim.InitiateAnimation(targetedSkill);
-            //hud.AddToBattleStage(skillAnimGO.transform);
         }
         public static void SetAnimationPosition(RectTransform rectTransform, TargetedSkill targetedSkill)
         {
@@ -956,11 +949,8 @@ namespace TUFF
         }
         public void ForceUpdateHUD(bool resetPartyCommandIcons = false)
         {
-            hud.UpdateUnitsHUD(activeParty, resetPartyCommandIcons);
-            hud.UpdateEnemiesHUD();
-            hud.UpdateUPBar();
+            hud.ForceUpdateHUD(activeParty, resetPartyCommandIcons);
         }
-
 
         public static void CheckHitEffects(BattleAnimationEvent hitInfo, int targetIndex)
         {

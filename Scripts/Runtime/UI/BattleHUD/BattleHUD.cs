@@ -48,8 +48,12 @@ namespace TUFF
         public string allAlliesScopeKey = "scope_AllAllies";
 
         public float timeTilTurnSkip = 0.5f;
+
         private bool m_skippingTurn = false;
         private float m_skipTurnTimer = 0f;
+
+        private bool m_queueWindowsActive = true;
+        private bool m_windowsActive = true;
         
         public enum PrimaryWindowContent
         {
@@ -119,6 +123,7 @@ namespace TUFF
         public void Update()
         {
             OpenStatusHUD();
+            if (m_queueWindowsActive != m_windowsActive) ShowWindows(m_queueWindowsActive);
             UpdateSkipTurn();
         }
         public void ResetPrimaryWindow()
@@ -197,7 +202,11 @@ namespace TUFF
             DisplayWindow(primaryWindow, false);
             DisplayWindow(secondaryWindow, false);
         }
-        public void ShowWindowsDynamic(bool show)
+        public void QueueShowWindows(bool show)
+        {
+            m_queueWindowsActive = show;
+        }
+        private void ShowWindows(bool show)
         {
             var state = BattleManager.instance.battleState;
             if (show)
@@ -213,6 +222,8 @@ namespace TUFF
                 if (state == BattleState.PLAYERACTIONS)
                     DisplayWindow(secondaryWindow, false);
             }
+            m_queueWindowsActive = show; 
+            m_windowsActive = show;
         }
         public void HidePrimaryWindowContentExcept(PrimaryWindowContent contentToShow)
         {
@@ -263,6 +274,12 @@ namespace TUFF
             HideAll();
             detailedStatusHUD?.gameObject.SetActive(false);
             yield return resultsScreenHUD.ShowResults();
+        }
+        public void ForceUpdateHUD(PartyMember[] activeParty, bool resetPartyCommandIcons = false)
+        {
+            UpdateUnitsHUD(activeParty, resetPartyCommandIcons);
+            UpdateEnemiesHUD();
+            UpdateUPBar();
         }
         public void UpdateUnitsHUD(PartyMember[] activeParty, bool resetCommandIcons = false)
         {
