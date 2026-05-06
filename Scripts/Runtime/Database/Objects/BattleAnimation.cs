@@ -22,6 +22,9 @@ namespace TUFF
         public List<BattleAnimationEvent> events = new List<BattleAnimationEvent>();
         [System.NonSerialized] public TargetedSkill callRef;
 
+        public bool AnimationOnlyMode { get => m_animationOnlyMode; }
+        private bool m_animationOnlyMode = false;
+
         public bool isFinished { get { return m_isFinished; } }
         protected bool m_isFinished = false;
 
@@ -38,6 +41,9 @@ namespace TUFF
         public static void RunEvent(TargetedSkill targetedSkill, BattleAnimationEvent animEvent)
         {
             if (animEvent == null) return;
+
+            bool isAnimationMode = animEvent.IsAnimationOnlyMode;
+
             List<Targetable> orgTargets = null;
             ScopeData orgScopeData = null;
             if (targetedSkill != null)
@@ -51,7 +57,8 @@ namespace TUFF
                 targetedSkill?.CheckTargetIsRandom();
             }
             animEvent.onEventRun.Invoke();
-            if (animEvent.playSFX && !animEvent.playSFXOnHit)
+            bool playsSFXOnHit = animEvent.playSFXOnHit && !isAnimationMode;
+            if (animEvent.playSFX && !playsSFXOnHit)
             {
                 BattleManager.PlayAnimationEventSFX(animEvent);
             }
@@ -66,17 +73,20 @@ namespace TUFF
                     }
                 }
             }
-            if (animEvent.hit)
+            if (animEvent.hit && !isAnimationMode)
             {
                 BattleManager.instance.HitTarget(animEvent);
             }
             else
             {
-                if (animEvent.flashTarget && targetedSkill != null && targetedSkill.targets != null)
+                if (animEvent.flashTarget)
                 {
-                    for (int i = 0; i < targetedSkill.targets.Count; i++)
+                    if (targetedSkill != null && targetedSkill.targets != null)
                     {
-                        BattleManager.TintTarget(animEvent.skillOrigin.targets[i], animEvent.flashTargetData.flashColor, animEvent.flashTargetData.flashDuration);
+                        for (int i = 0; i < targetedSkill.targets.Count; i++)
+                        {
+                            BattleManager.TintTarget(animEvent.skillOrigin.targets[i], animEvent.flashTargetData.flashColor, animEvent.flashTargetData.flashDuration);
+                        }
                     }
                 }
             }
@@ -200,6 +210,10 @@ namespace TUFF
             if (target == null) return AnimationPivotType.Center;
             if (target is PartyMember) return targetPartyPivot;
             return targetEnemyPivot;
+        }
+        public void SetAnimationMode(bool enable)
+        {
+            m_animationOnlyMode = enable;
         }
         protected void Reset() //Sets variable default values for new entries on List
         {

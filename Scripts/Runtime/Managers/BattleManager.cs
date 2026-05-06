@@ -381,7 +381,9 @@ namespace TUFF
         public BattleAnimation PlayAnimation(BattleAnimation battleAnimation, Vector3 position, AnimationPivotType pivot)
         {
             CreateAnimation(battleAnimation, null, out GameObject skillAnimGO, out BattleAnimation skillAnim);
+            if (!skillAnim) return null; 
             AssignAnimationPositionFromPivot(skillAnim.transform as RectTransform, pivot, position);
+            skillAnim.SetAnimationMode(true);
             return skillAnim;
         }
         private void CreateAnimation(BattleAnimation battleAnimation, TargetedSkill targetedSkill, out GameObject skillAnimGO, out BattleAnimation skillAnim)
@@ -683,12 +685,13 @@ namespace TUFF
             for (int i = 0; i < animEvent.SFXList.Count; i++)
             {
                 if (animEvent.SFXList[i] == null) continue;
-                AudioManager.instance?.PlaySFX(animEvent.SFXList[i]);
+                if (AudioManager.instance) AudioManager.instance.PlaySFX(animEvent.SFXList[i]);
             }
         }
         public void HitTarget(BattleAnimationEvent animEvent)
         {
             if (animEvent == null) { Debug.Log("event is null"); return; }
+            if (animEvent.IsAnimationOnlyMode) return;
             if (animEvent.skillOrigin == null) { Debug.Log("origin is null"); return; }
             if (animEvent.skillOrigin.user == null) { Debug.Log("user is null"); return; }
             if (animEvent.skillOrigin.targets == null) { Debug.Log("targets is null"); return; }

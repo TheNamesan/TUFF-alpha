@@ -7,8 +7,8 @@ namespace TUFF
     [System.Serializable]
     public class BattleAnimationEvent
     {
-        [HideInInspector] public BattleAnimation animationInstance;
-        [HideInInspector] public TargetedSkill skillOrigin;
+        [HideInInspector] public BattleAnimation animationInstance = null;
+        [HideInInspector] public TargetedSkill skillOrigin = null;
         [Tooltip("If true, will play Audio clips as SFXs when RunEvent is called.")]
         public bool playSFX = false;
         [Tooltip("If true, audio clips will only be played when target is hit.")]
@@ -78,6 +78,7 @@ namespace TUFF
 
         public UnityEvent onEventRun = new UnityEvent();
 
+        public bool IsAnimationOnlyMode { get { if (!animationInstance) return false; return animationInstance.AnimationOnlyMode; }}
         public void InitiateAnimationEvent(BattleAnimation battleAnimation, TargetedSkill targetedSkill)
         {
             animationInstance = battleAnimation;
