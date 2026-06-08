@@ -6,14 +6,14 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 namespace TUFF
-{ 
+{
     public class SceneNode
     {
         public Scene currentScene;
         public SceneProperties sceneProperties;
         public List<string> neighbourScenes = new List<string>();
         public List<Scene> cachedNeighbourScenes = new List<Scene>();
-        
+
         public SceneNode() { }
         public SceneNode(Scene scene)
         {
@@ -120,19 +120,34 @@ namespace TUFF
         {
             onSceneLoad?.Invoke();
         }
-
+        public bool IsValidScene(string newScene)
+        {
+            bool isValid = SceneUtility.GetBuildIndexByScenePath(newScene) >= 0;
+            if (!isValid) Debug.LogWarning($"Scene '{newScene}' is not in Scene List or is invalid!");
+            return isValid;
+        }
         public void LoadScene(string newScene, Vector2 playerPosition = new Vector2(), FaceDirections faceDirection = FaceDirections.East, bool hideLoadingIcon = false, bool disableActionMap = false, bool enablePlayerInput = false, Action onLoad = null)
         {
+            if (!IsValidScene(newScene))
+            {
+                onLoad?.Invoke();
+                return;
+            }
             GameManager.instance.ChangeTimeScale(0);
             StartCoroutine(AsyncSceneLoad(newScene, playerPosition, faceDirection, hideLoadingIcon, disableActionMap, enablePlayerInput, onLoad));
         }
 
         public void LoadSceneWithFadeIn(string newScene, float fadeDuration, Vector2 playerPosition = new Vector2(), FaceDirections faceDirection = FaceDirections.East, bool disableActionMap = false, bool enablePlayerInputAction = false, Action onLoad = null)
         {
+            if (!IsValidScene(newScene))
+            {
+                onLoad?.Invoke();
+                return;
+            }
             StartCoroutine(AsyncSceneLoadFadeIn(newScene, fadeDuration, playerPosition, faceDirection, disableActionMap, enablePlayerInputAction, onLoad));
         }
 
-        IEnumerator AsyncSceneLoad(string newScene, Vector2 playerPosition, FaceDirections faceDirection, bool hideLoadingIcon, bool disableActionMap, bool enablePlayerInput, Action onLoad = null)
+        private IEnumerator AsyncSceneLoad(string newScene, Vector2 playerPosition, FaceDirections faceDirection, bool hideLoadingIcon, bool disableActionMap, bool enablePlayerInput, Action onLoad = null)
         {
             UpdateCurrentScene(SceneManager.GetActiveScene());
             AddToLoadedScenes(currentScene);
@@ -169,7 +184,6 @@ namespace TUFF
                         }
                         yield return null;
                     }
-                    //
                     //SetAllRootGameObjectsActive(currentScene.GetRootGameObjects(), false);
                     yield return new WaitForEndOfFrame();
                     targetScene = SceneManager.GetSceneByName(newScene);
@@ -184,7 +198,7 @@ namespace TUFF
                 }
                 else
                 {
-                    Debug.Log("Has Scene Index in Loaded Scenes");
+                    //Debug.Log("Has Scene Index in Loaded Scenes");
                     SetAllRootGameObjectsActive(currentScene.GetRootGameObjects(), false);
                     UpdateCurrentScene(preloadedScenes[sceneIndex]);
                     SceneManager.SetActiveScene(currentScene);
@@ -196,8 +210,8 @@ namespace TUFF
                 StartCoroutine(UnloadScenes());
             }
             else // Scene name is same as current, so just reposition the player
-            { 
-                SetPlayerPosition(playerPosition, faceDirection); 
+            {
+                SetPlayerPosition(playerPosition, faceDirection);
             }
             m_loading = false;
             UIController.instance.TriggerLoadingIcon(false);
@@ -228,6 +242,7 @@ namespace TUFF
             yield return new WaitForEndOfFrame();
             while (neighbourOperations.Count > 0)
             {
+                Debug.Log("Waiting for Neighbour ops: " + neighbourOperations.Count);
                 yield return null;
             }
             //Debug.Log($"Current Scene Node: { currentSceneNode.currentScene.name }");
@@ -247,6 +262,7 @@ namespace TUFF
         }
         public void LoadNeighbourScene(string sceneName)
         {
+            if (!IsValidScene(sceneName)) { return; }
             StartCoroutine(AsyncLoadNeighbourScene(sceneName));
         }
         private IEnumerator AsyncLoadNeighbourScene(string sceneName)
@@ -308,7 +324,7 @@ namespace TUFF
                 AddToLoadedScenes(currentScene);
                 //SetAllRootGameObjectsActive(currentScene.GetRootGameObjects(), true); // Temporarily removed to avoid double SceneProp spawning after Game Over Continue
                 UpdateNodes(currentScene);
-                SetPlayerPosition(playerPosition, faceDirection); 
+                SetPlayerPosition(playerPosition, faceDirection);
             };
             while (!operation.isDone)
             {
@@ -326,15 +342,13 @@ namespace TUFF
         }
         public void SetPlayerPosition(Vector2 position, FaceDirections faceDirection)
         {
-            if (FollowerInstance.player == null) return;
-            var controller = FollowerInstance.player.controller;
+            if (PlayerInputHandler.avatar == null) return;
+            var controller = PlayerInputHandler.avatar;
             controller.transform.position = (Vector3)position + Vector3.up * Physics2D.defaultContactOffset * 0.5f;
             controller.ChangeFaceDirection(faceDirection);
             controller.SetSceneChangeFrameConditions();
             controller.fallStart = position;
-            FollowerInstance.ResetFollowers();
         }
-        
         private void SetAllRootGameObjectsActive(GameObject[] rootGOs, bool active)
         {
             Debug.Log("Setting all root objs active: " + active);
