@@ -389,6 +389,10 @@ namespace TUFF.TUFFEditor
             {
                 AddEvent(new ShowBattleAnimationAction(), eventList, eventListPDs);
             }
+            if (GUILayout.Button(new GUIContent("Force Skill", "Forcibly runs a specified skill from a target.")))
+            {
+                AddEvent(new ForceSkillAction(), eventList, eventListPDs);
+            }
             EditorGUILayout.EndVertical();
             GUI.backgroundColor = oldColor;
         }

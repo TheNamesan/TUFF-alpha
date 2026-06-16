@@ -88,7 +88,7 @@ namespace TUFF.TUFFEditor
                         DrawIconPreview(position, keyItemIcons[i]);
                         string name = "???";
                         if (i < DatabaseLoader.keyItems.Length) name = $"{i}: " + DatabaseLoader.keyItems[i].GetName();
-                        EditorGUI.PropertyField(position, items.GetArrayElementAtIndex(i), new GUIContent(name));
+                        EditorGUI.PropertyField(position, keyItems.GetArrayElementAtIndex(i), new GUIContent(name));
                         position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
                     }
                     position.x -= 15f;
@@ -111,7 +111,7 @@ namespace TUFF.TUFFEditor
                         DrawIconPreview(position, weaponIcons[i]);
                         string name = "???";
                         if (i < DatabaseLoader.weapons.Length) name = $"{i}: " + DatabaseLoader.weapons[i].GetName();
-                        EditorGUI.PropertyField(position, items.GetArrayElementAtIndex(i), new GUIContent(name));
+                        EditorGUI.PropertyField(position, weapons.GetArrayElementAtIndex(i), new GUIContent(name));
                         position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
                     }
                     position.x -= 15f;
@@ -134,7 +134,7 @@ namespace TUFF.TUFFEditor
                         DrawIconPreview(position, armorIcons[i]);
                         string name = "???";
                         if (i < DatabaseLoader.armors.Length) name = $"{i}: " + DatabaseLoader.armors[i].GetName();
-                        EditorGUI.PropertyField(position, items.GetArrayElementAtIndex(i), new GUIContent(name));
+                        EditorGUI.PropertyField(position, armors.GetArrayElementAtIndex(i), new GUIContent(name));
                         position.y += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
                     }
                     position.x -= 15f;

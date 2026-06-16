@@ -22,6 +22,7 @@ namespace TUFF
         [SerializeField] private Battle battle;
         public int queuedSkillsIndex = 0;
         public List<TargetedSkill> queuedSkills = new List<TargetedSkill>();
+        public List<TargetedSkill> queuedForcedSkills = new List<TargetedSkill>();
         public List<TargetedSkill> nextTurnQueuedSkills = new List<TargetedSkill>();
         public UnityEvent onActionEnd = new UnityEvent();
         public UnityEvent onTurnEnd = new UnityEvent();
@@ -109,12 +110,21 @@ namespace TUFF
         }
         private IEnumerator StartTurn()
         {
-            yield return CheckBattleEvents();
-            UncheckBattleConditionsPlayedState(SpanType.OncePerTurn);
-            turn += 1;
-
             ResetTargetablesActedCheck();
             ResetQueuedCommands();
+
+            yield return CheckBattleEvents();
+            UncheckBattleConditionsPlayedState(SpanType.OncePerTurn);
+
+            CheckGameOver(); // Check if battle ended by forced skills
+            CheckWin();
+            if (CheckBattleEnd())
+            {
+                EndBattle();
+                yield break;
+            }
+
+            turn += 1;
             AssignNextTurnQueuedCommands();
             ResetNextTurnQueuedCommands();
             UpdateTargetablesStates();
@@ -185,6 +195,12 @@ namespace TUFF
                 }
             }
             return user;
+        }
+        public void QueueForcedCommand(TargetedSkill targetedSkill)
+        {
+            if (targetedSkill == null) return;
+            targetedSkill.user = CheckForUnitedSkillUser(targetedSkill.skill, targetedSkill.user);
+            queuedForcedSkills.Add(targetedSkill);
         }
         public void QueueCommandNextTurn(TargetedSkill targetedSkill)
         {
@@ -265,32 +281,33 @@ namespace TUFF
             battleState = BattleState.ESCAPED;
             EndBattle();
         }
-        public void RunBattleActions()
+        
+        public void OnPlayerActionsEnd()
         {
             QueueEnemyActions();
             QueueTargetablesForcedActions();
+            RunBattleActions();
+        }
+        public void RunForcedSkills(EventAction eventActionCallback)
+        {
+            StartCoroutine(RunForcedBattleSkillsCoroutine(eventActionCallback));
+        }
+        private IEnumerator RunForcedBattleSkillsCoroutine(EventAction eventActionCallback)
+        {
+            yield return PlayQueuedInvocations(queuedForcedSkills, false);
+            queuedForcedSkills.Clear();
+            eventActionCallback?.EndEvent();
+        }
+        public void RunBattleActions()
+        {
             SortQueuedSkillBySpeed(); // Organize actions by Speed
             battleState = BattleState.BATTLE;
             StartCoroutine(RunBattleActionsCoroutine());
         }
-        IEnumerator RunBattleActionsCoroutine() //Need to optimize some code here...
+        private IEnumerator RunBattleActionsCoroutine() //Need to optimize some code here...
         {
-            yield return new WaitForSeconds(1f);
-            // Play all the queued invocations
-            for (queuedSkillsIndex = 0; queuedSkillsIndex < queuedSkills.Count; queuedSkillsIndex++)
-            {
-                yield return StartCoroutine(queuedSkills[queuedSkillsIndex].InvokeSkill());
-                if (queuedSkills[queuedSkillsIndex].markIgnore) continue;
-                onActionEnd.Invoke();
-                yield return new WaitForSeconds(0.5f);
-                hud.ShowDescriptionDisplay(false);
-                if (queuedSkills[queuedSkillsIndex].user != null) CheckActionEndStatesDuration(queuedSkills[queuedSkillsIndex].user);
-                CheckGameOver();
-                CheckWin();
-                yield return CheckActEndEvents();
-                UncheckBattleConditionsPlayedState(SpanType.OncePerAct);
-                if (CheckBattleEnd()) break; 
-            }
+            yield return new WaitForSeconds(0.5f);
+            yield return PlayQueuedInvocations(queuedSkills, true);
             // If battle ended from party KO or Enemy KO, end battle
             if (CheckBattleEnd())
             {
@@ -316,6 +333,30 @@ namespace TUFF
             onTurnEnd.Invoke();
             StartCoroutine(StartTurn());
         }
+        private IEnumerator PlayQueuedInvocations(List<TargetedSkill> queuedSkillsList, bool isMainSkillQueue)
+        {
+            int i;
+            for (i = 0; i < queuedSkillsList.Count; i++)
+            {
+                if (isMainSkillQueue) queuedSkillsIndex = i;
+                yield return StartCoroutine(queuedSkillsList[i].InvokeSkill());
+                if (queuedSkillsList[i].markIgnore) continue;
+                onActionEnd.Invoke();
+                yield return new WaitForSeconds(0.5f);
+                hud.ShowDescriptionDisplay(false);
+                if (queuedSkillsList[i].user != null) CheckActionEndStatesDuration(queuedSkillsList[i].user);
+                if (isMainSkillQueue)
+                {
+                    yield return CheckActEndEvents();
+                    UncheckBattleConditionsPlayedState(SpanType.OncePerAct);
+                }
+                CheckGameOver(); // Check if won or lost by forced skills or state removal
+                CheckWin();
+                if (CheckBattleEnd()) break;
+            }
+            if (isMainSkillQueue) queuedSkillsIndex = i;
+        }
+
         private IEnumerator CheckActEndEvents()
         {
             yield return CheckBattleEvents();
@@ -464,9 +505,8 @@ namespace TUFF
             {
                 if (!enemies[i].CanControlAct()) continue;
                 if (HasQueuedCommandFromUser(enemies[i])) continue; // Change this to work with act times
-                Skill skill;
                 List<Targetable> targets = new List<Targetable>();
-                if (!GetPatternSkillAndTargets(enemies[i], enemies[i].enemyRef.actionPatterns, out skill, out targets, turn)) continue;
+                if (!GetPatternSkillAndTargets(enemies[i], enemies[i].enemyRef.actionPatterns, out Skill skill, out targets, turn)) continue;
                 QueueCommand(skill, targets, enemies[i]);
             }
         }

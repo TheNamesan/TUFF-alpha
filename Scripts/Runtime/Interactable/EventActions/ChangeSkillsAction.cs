@@ -8,7 +8,7 @@ namespace TUFF
     {
         [Tooltip("Specifies the Unit's skill to learn/forget.")]
         public PartyScope scope = PartyScope.EntireParty;
-        [Tooltip("Reference to the Unit.")]
+        [Tooltip("Reference to the Unit to add or remove the skill.")]
         public Unit unit;
         [Tooltip("Reference to the Skill.")]
         public Skill skill;

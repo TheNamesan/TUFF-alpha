@@ -801,7 +801,7 @@ namespace TUFF
         private void EndPlayerActions()
         {
             ResetCommandListUI();
-            BattleManager.instance.RunBattleActions();
+            BattleManager.instance.OnPlayerActionsEnd();
         }
 
         private void ResetCommandListUI()
