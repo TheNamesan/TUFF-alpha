@@ -475,7 +475,18 @@ namespace TUFF
         /// <summary>
         /// An active Party Member is a Unit that can participate in battle.
         /// </summary>
-        /// <param name="unit"></param>
+        /// <param name="partyMember">Party Member to check if is in active party.</param>
+        /// <returns>Returns the slot index of the specified Unit. 
+        /// Returns -1 if the PartyMember is not in the active party.</returns>
+        public int GetActivePartyMemberIndex(PartyMember partyMember)
+        {
+            if (partyMember == null) return -1;
+            return GetActivePartyMemberIndex(partyMember.unitRef);
+        }
+        /// <summary>
+        /// An active Party Member is a Unit that can participate in battle.
+        /// </summary>
+        /// <param name="unit">Unit to check if is in active party.</param>
         /// <returns>Returns the slot index of the specified Unit. 
         /// Returns -1 if the Unit is not in the active party.</returns>
         public int GetActivePartyMemberIndex(Unit unit)
@@ -491,6 +502,10 @@ namespace TUFF
         public bool IsInActiveParty(Unit unit)
         {
             return GetActivePartyMemberIndex(unit) >= 0;
+        }
+        public bool IsInActiveParty(PartyMember partyMember)
+        {
+            return GetActivePartyMemberIndex(partyMember) >= 0;
         }
         public int GetPartySize()
         {
@@ -508,7 +523,9 @@ namespace TUFF
         public PartyMember GetPartyMember(Unit unit)
         {
             if (unit == null) return null;
-            return party[unit.id];
+            int id = unit.id;
+            if (id < 0 || id >= party.Length) return null;
+            return party[id];
         }
         public List<PartyMember> GetAllPartyMembers()
         {

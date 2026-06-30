@@ -11,8 +11,8 @@ namespace TUFF.TUFFEditor
         {
             //EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative("enemyIndex"));
             SerializedProperty posTypeProp = targetProperty.FindPropertyRelative(nameof(ShowBattleAnimationAction.animationPositionType));
-            var posType = (ShowBattleAnimationAction.ShowAnimationPositionType)posTypeProp.enumValueIndex;
             EditorGUILayout.PropertyField(posTypeProp);
+            var posType = (ShowBattleAnimationAction.ShowAnimationPositionType)posTypeProp.enumValueIndex;
             if (posType == ShowBattleAnimationAction.ShowAnimationPositionType.RelativeToEnemy)
             {
                 EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative(nameof(ShowBattleAnimationAction.enemyIndex)));

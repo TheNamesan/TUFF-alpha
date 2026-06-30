@@ -71,6 +71,7 @@ namespace TUFF
         {
 
         }
+        public bool IsInActiveParty() => PlayerData.instance.IsInActiveParty(this);
         public override void TakeHit(BattleAnimationEvent hitInfo, int targetIndex)
         {
             base.TakeHit(hitInfo, targetIndex);

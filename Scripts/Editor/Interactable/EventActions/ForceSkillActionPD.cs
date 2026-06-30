@@ -11,10 +11,19 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.LabelField(new GUIContent("Subject"), EditorStyles.boldLabel);
             SerializedProperty skillSubjectProp = targetProperty.FindPropertyRelative(nameof(ForceSkillAction.skillSubject));
+            EditorGUILayout.PropertyField(skillSubjectProp);
             var subjectType = (ForceSkillAction.SkillSubject)skillSubjectProp.enumValueIndex;
             if (subjectType == ForceSkillAction.SkillSubject.Enemy)
             {
                 EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative(nameof(ForceSkillAction.enemyIndex)));
+            }
+            else if (subjectType == ForceSkillAction.SkillSubject.ActivePartyMember)
+            {
+                EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative(nameof(ForceSkillAction.partyIndex)));
+            }
+            else if (subjectType == ForceSkillAction.SkillSubject.SpecificPartyMember)
+            {
+                EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative(nameof(ForceSkillAction.unit)));
             }
             EditorGUILayout.EndVertical();
 
@@ -34,9 +43,12 @@ namespace TUFF.TUFFEditor
             string subjectString = ObjectNames.NicifyVariableName(action.skillSubject.ToString());
             string skillName = (action.skill == null ? "null" : action.skill.GetName());
 
-            string indexString = (action.enemyIndex.index.ToString());
+            string indexString = "";
+            if (action.skillSubject == ForceSkillAction.SkillSubject.Enemy) indexString = $"#{(action.enemyIndex.index.ToString())}";
+            else if (action.skillSubject == ForceSkillAction.SkillSubject.ActivePartyMember) indexString = $"#{(action.partyIndex.index.ToString())}";
+            else if (action.skillSubject == ForceSkillAction.SkillSubject.SpecificPartyMember) indexString = $"({(action.unit == null ? "null" : action.unit.GetName())})";
 
-            return $"Force Skill ({skillName}) on {subjectString} #{indexString}";
+            return $"Force Skill ({skillName}) on {subjectString} {indexString}";
         }
     }
 

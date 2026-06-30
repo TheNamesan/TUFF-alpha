@@ -669,8 +669,8 @@ namespace TUFF
             {
                 var userA = PlayerData.instance.GetPartyMember(skill.unitedUserA);
                 var userB = PlayerData.instance.GetPartyMember(skill.unitedUserB);
-                bool userAInActiveParty = PlayerData.instance.IsInActiveParty(userA.unitRef);
-                bool userBInActiveParty = PlayerData.instance.IsInActiveParty(userB.unitRef);
+                bool userAInActiveParty = PlayerData.instance.IsInActiveParty(userA);
+                bool userBInActiveParty = PlayerData.instance.IsInActiveParty(userB);
                 return userAInActiveParty && userBInActiveParty;
             }
             return false;
