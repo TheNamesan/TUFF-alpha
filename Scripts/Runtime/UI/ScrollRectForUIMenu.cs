@@ -12,6 +12,7 @@ namespace TUFF
         public GameObject upArrow;
         public GameObject downArrow;
         public int maxVisibleElements;
+        public int lastElementsToIgnore;
         public float UIElementsHeight;
         public float layoutSpaceValue;
         ScrollRect scroll;
@@ -39,11 +40,11 @@ namespace TUFF
         }
         public void UpdateScroll()
         {
-            Debug.Log("UpdateScroll", this);
+            //Debug.Log("UpdateScroll", this);
             Initialize();
             if (uiMenu == null) { Debug.LogWarning("UI Menu is null!"); return; }
-            int visibleColumns = uiMenu.GetVisibleColumnsCount();
-            //Debug.Log("Visible columns: " + visibleColumns);
+            int visibleColumns = GetValidVisibleColumns();
+            //Debug.Log("Visible columns with ignore: " + visibleColumns);
             int cursorValue = uiMenu.highlightY;
             if (visibleColumns > 0)
             {
@@ -55,25 +56,26 @@ namespace TUFF
                     SetScroll(0);
                 }
                 // If last element on menu on highlighted
-                else if (cursorValue == Mathf.Max(maxVisibleElements, visibleColumns - 1))
+                else if (cursorValue >= Mathf.Max(maxVisibleElements, visibleColumns - 1))
                 {
-                    topVisibleIndex = uiMenu.highlightY - maxVisibleElements + 1;
-                    bottomVisibleIndex = uiMenu.highlightY;
+                    topVisibleIndex = visibleColumns - maxVisibleElements;
+                    bottomVisibleIndex = visibleColumns - 1;
                     SetScroll((visibleColumns - maxVisibleElements) * scrollValue);
                 }
                 else if (cursorValue > bottomVisibleIndex)
                 {
                     int valueDiff = cursorValue - bottomVisibleIndex;
-                    topVisibleIndex += valueDiff;
-                    bottomVisibleIndex += valueDiff;
+                    topVisibleIndex = Mathf.Clamp(topVisibleIndex + valueDiff, 0, visibleColumns - 1);
+                    bottomVisibleIndex = Mathf.Clamp(bottomVisibleIndex + valueDiff, 0, visibleColumns - 1);
                     ScrollDown(valueDiff);
                 }
                 else if (cursorValue < topVisibleIndex)
                 {
                     int valueDiff = Mathf.Abs(cursorValue - topVisibleIndex);
-                    topVisibleIndex -= valueDiff;
-                    bottomVisibleIndex -= valueDiff;
+                    topVisibleIndex = Mathf.Clamp(topVisibleIndex - valueDiff, 0, visibleColumns - 1);
+                    bottomVisibleIndex = Mathf.Clamp(bottomVisibleIndex - valueDiff, 0, visibleColumns - 1);
                     ScrollUp(valueDiff);
+                    //Debug.Log("Scrol up");
                 }
             }
             UpdateArrows();
@@ -101,7 +103,8 @@ namespace TUFF
                 if (downArrow != null) downArrow.SetActive(false);
                 return; 
             }
-            int visibleColumns = uiMenu.GetVisibleColumnsCount();
+            int visibleColumns = GetValidVisibleColumns();
+
             if (visibleColumns < maxVisibleElements)
             {
                 if (upArrow != null) upArrow.SetActive(false);
@@ -110,6 +113,11 @@ namespace TUFF
             }
             if (upArrow != null) upArrow.SetActive(topVisibleIndex > 0);
             if (downArrow != null) downArrow.SetActive(bottomVisibleIndex < visibleColumns - 1);
+        }
+        public int GetValidVisibleColumns()
+        {
+            if (!uiMenu) return 0;
+            return uiMenu.GetVisibleColumnsCount() - lastElementsToIgnore;
         }
     }
 }
