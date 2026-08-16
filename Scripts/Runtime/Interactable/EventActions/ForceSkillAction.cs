@@ -4,9 +4,13 @@ using System.Collections.Generic;
 
 namespace TUFF
 {
+    // TODO
+    // Add SpecificPartyMember to TargetType
+    // Add LastTarget functionality to TargetType
     public class ForceSkillAction : EventAction
     {
         public enum SkillSubject { Enemy = 0, ActivePartyMember = 1, SpecificPartyMember = 2 }
+        public enum TargetType { Random = 0, LastTarget = 1, SpecificIndex = 2 }
         public SkillSubject skillSubject = SkillSubject.Enemy;
         public EnemyIndex enemyIndex = new();
         public PartyIndex partyIndex = new();
@@ -14,6 +18,9 @@ namespace TUFF
         public Unit unit;
         [Tooltip("Reference to the Skill.")]
         public Skill skill;
+        public TargetType target = TargetType.Random;
+        public int targetIndex = 0;
+
         public ForceSkillAction()
         {
             eventName = "Force Skill";
@@ -41,17 +48,49 @@ namespace TUFF
             }
 
             if (user == null) { EndEvent(); return; }
-            BattleManager.instance.QueueForcedCommand(GetTargetedSkill(skill, user));
+            TargetedSkill targetedSkill = GetTargetedSkill(skill, user);
+            BattleManager.instance.QueueForcedCommand(targetedSkill);
             BattleManager.instance.RunForcedSkills(this);
         }
 
         private TargetedSkill GetTargetedSkill(Skill baseSkill, Targetable user)
         {
             List<Targetable> targets = new();
+            ScopeData scopeData = skill.scopeData;
 
-            var validTargets = BattleManager.instance.GetInvocationValidTargets(user, skill.scopeData);
-            targets = BattleLogic.GetDefaultTargets(validTargets, skill.scopeData); // Tmp, should add target field for ForceSkillAction
-            
+            var validTargets = BattleManager.instance.GetInvocationValidTargets(user, scopeData);
+
+            switch (target)
+            {
+                case TargetType.Random:
+                    targets = BattleLogic.GetDefaultTargets(validTargets, scopeData);
+                    break;
+                case TargetType.LastTarget:
+                    // Get last target from user => Use target[0] if CURRENT SKILL is single target, use all if multiple target 
+                    break;
+                case TargetType.SpecificIndex:
+                { 
+                    if (BattleLogic.IsSingleScope(scopeData.scopeType))
+                    {
+                        if (user is PartyMember)
+                        {
+                            var expectedTarget = BattleManager.instance.GetEnemyInstanceAtIndex(targetIndex);
+                            if (validTargets.Contains(expectedTarget)) targets.Add(expectedTarget);
+                        }
+                        else if (user is EnemyInstance)
+                        {
+                            var expectedTarget = BattleManager.instance.GetPartyMemberAtIndex(targetIndex);
+                            if (validTargets.Contains(expectedTarget)) targets.Add(expectedTarget);
+                        }
+                    }
+                    else
+                    {
+                        targets = BattleLogic.GetDefaultTargets(validTargets, scopeData);
+                    }
+                    break;
+                }  
+            }
+
             return new TargetedSkill(baseSkill, targets, user);
         }
     }

@@ -306,8 +306,7 @@ namespace TUFF
         public int index;
         public PartyMember GetPartyMember()
         {
-            if (index < 0 && index >= BattleManager.instance.activeParty.Length) return null;
-            return BattleManager.instance.activeParty[index];
+            return BattleManager.instance.GetPartyMemberAtIndex(index);
         }
     }
     [System.Serializable]
@@ -316,8 +315,7 @@ namespace TUFF
         public int index;
         public EnemyInstance GetEnemyInstance()
         {
-            if (index < 0 && index >= BattleManager.instance.enemies.Count) return null;
-            return BattleManager.instance.enemies[index];
+            return BattleManager.instance.GetEnemyInstanceAtIndex(index);
         }
     }
     [System.Serializable]

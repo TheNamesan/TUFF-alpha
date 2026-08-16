@@ -169,6 +169,16 @@ namespace TUFF
                 enemies[i]?.OnBattleStart();
             }
         }
+        public PartyMember GetPartyMemberAtIndex(int index)
+        {
+            if (index < 0 && index >= activeParty.Length) return null;
+            return activeParty[index];
+        }
+        public EnemyInstance GetEnemyInstanceAtIndex(int index)
+        {
+            if (index < 0 && index >= enemies.Count) return null;
+            return enemies[index];
+        }
         public bool IsPartOfQueuedUnitedSkill(Targetable user)
         {
             for (int i = 0; i < queuedSkills.Count; i++)

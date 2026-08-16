@@ -30,6 +30,12 @@ namespace TUFF.TUFFEditor
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.LabelField(new GUIContent("Skill"), EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative(nameof(ForceSkillAction.skill)));
+            SerializedProperty targetProp = targetProperty.FindPropertyRelative(nameof(ForceSkillAction.target));
+            EditorGUILayout.PropertyField(targetProp);
+            if (targetProp.enumValueIndex == (int)ForceSkillAction.TargetType.SpecificIndex)
+            {
+                EditorGUILayout.PropertyField(targetProperty.FindPropertyRelative(nameof(ForceSkillAction.targetIndex)));
+            }
             EditorGUILayout.EndVertical();
         }
         public override void SummaryGUI(Rect position)
@@ -48,7 +54,10 @@ namespace TUFF.TUFFEditor
             else if (action.skillSubject == ForceSkillAction.SkillSubject.ActivePartyMember) indexString = $"#{(action.partyIndex.index.ToString())}";
             else if (action.skillSubject == ForceSkillAction.SkillSubject.SpecificPartyMember) indexString = $"({(action.unit == null ? "null" : action.unit.GetName())})";
 
-            return $"Force Skill ({skillName}) on {subjectString} {indexString}";
+            string target = ObjectNames.NicifyVariableName(action.target.ToString());
+            if (action.target == ForceSkillAction.TargetType.SpecificIndex) { target += $" #{action.targetIndex}"; }
+
+            return $"Force Skill ({skillName}) on {subjectString} {indexString}, Target ({target})";
         }
     }
 
