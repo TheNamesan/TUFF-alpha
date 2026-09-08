@@ -37,7 +37,7 @@ namespace TUFF
         public float skipTimeBuffer = 0.03f;
 
         List<string> sentences = new();
-        public Camera cam { get => UIController.instance.cameraCanvas.worldCamera; }
+        public Camera cam { get => UIController.instance.WorldCamera; }
 
         [SerializeField] public float skipTime = 0;
         public bool autoContinue = false;

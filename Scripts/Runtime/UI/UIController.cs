@@ -13,6 +13,16 @@ namespace TUFF
         [Header("References")]
         public GameObject eventSystem;
         public Canvas cameraCanvas;
+        public Camera WorldCamera
+        {
+            get
+            {
+                if (!cameraCanvas) return null;
+                var cam = cameraCanvas.worldCamera;
+                if (!cam) AssignCanvasCamera();
+                return cameraCanvas.worldCamera;
+            }
+        }
         public Canvas overlayCanvas;
         public GameObject uiContent;
         public Transform textboxesParent;
@@ -102,7 +112,7 @@ namespace TUFF
             {
                 instance = this;
                 eventSystem.SetActive(true);
-                SceneLoaderManager.onSceneLoad.AddListener(GetCanvasCamera);
+                SceneLoaderManager.onSceneLoad.AddListener(AssignCanvasCamera);
                 DontDestroyOnLoad(gameObject);
             }
         }
@@ -118,7 +128,7 @@ namespace TUFF
             StartCoroutine(UpdateFPSText());
         }
 
-        public void GetCanvasCamera()
+        public void AssignCanvasCamera()
         {
             if (cameraCanvas == null) return;
             //Debug.Log(SceneLoaderManager.currentSceneNode);

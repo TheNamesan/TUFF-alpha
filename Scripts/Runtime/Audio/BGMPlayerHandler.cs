@@ -149,6 +149,7 @@ namespace TUFF
         public void StopMusic()
         {
             StopClips();
+            KillTweens();
             currentBGM = null;
         }
         public void StopMusic(float fadeOutDuration)
@@ -184,9 +185,9 @@ namespace TUFF
         }
         private void KillTweens()
         {
-            tweenIntro.Kill();
+            tweenIntro?.Kill();
             tweenIntro = null;
-            tweenLoop.Kill(true);
+            tweenLoop?.Kill(true);
             tweenLoop = null;
         }
         private void SetTargetVolumeToDefault()

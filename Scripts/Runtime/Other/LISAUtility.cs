@@ -185,13 +185,13 @@ namespace TUFF
 
         public static Vector2 GetCanvasOverlayToCameraPosition(Vector2 position)
         {
-            var cam = UIController.instance.cameraCanvas.worldCamera;
+            var cam = UIController.instance.WorldCamera;
             var pos = cam.ScreenToWorldPoint(position);
             return pos;
         }
         public static Vector2 GetCanvasCameraToOverlayPosition(Vector2 position)
         {
-            var cam = UIController.instance.cameraCanvas.worldCamera;
+            var cam = UIController.instance.WorldCamera;
             var overlay = UIController.instance.overlayCanvas;
             var pos = cam.WorldToScreenPoint(position);
             pos = new Vector2(
