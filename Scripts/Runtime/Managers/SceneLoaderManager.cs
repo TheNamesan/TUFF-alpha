@@ -68,6 +68,7 @@ namespace TUFF
         public static UnityEvent onSceneLoadStart = new();
         public static UnityEvent onSceneLoad = new();
         public static UnityEvent onSceneChanged = new();
+        public static UnityEvent onSceneLoadFailed = new();
 
         public static bool loading { get => m_loading; }
         private static bool m_loading = false;
@@ -131,6 +132,7 @@ namespace TUFF
             if (!IsValidScene(newScene))
             {
                 onLoad?.Invoke();
+                onSceneLoadFailed?.Invoke();
                 return;
             }
             GameManager.instance.ChangeTimeScale(0);
@@ -142,6 +144,7 @@ namespace TUFF
             if (!IsValidScene(newScene))
             {
                 onLoad?.Invoke();
+                onSceneLoadFailed?.Invoke();
                 return;
             }
             StartCoroutine(AsyncSceneLoadFadeIn(newScene, fadeDuration, playerPosition, faceDirection, disableActionMap, enablePlayerInputAction, onLoad));
