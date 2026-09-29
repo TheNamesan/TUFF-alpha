@@ -80,8 +80,13 @@ namespace TUFF
             UpdateCamera();
         }
 
-        public void GetParallaxOriginalPosition()
+        /// <summary>
+        /// Caches the original position of each parallax to calculate distance from screen.
+        /// By default, only logs it once so it doesn't break in OnEnable.
+        /// </summary>
+        public void GetParallaxOriginalPosition(bool forceUpdate = false)
         {
+            if (originalParallaxPos.Count > 0 && !forceUpdate) return;
             originalParallaxPos.Clear();
             for (int i = 0; i < parallaxElements.Count; i++)
             {
