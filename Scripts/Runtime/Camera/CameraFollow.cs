@@ -20,7 +20,10 @@ namespace TUFF
 
         public float camHalfHeight { get { return (2f * cam.orthographicSize) / 2; } }
         public float camHalfWidth { get { return camHalfHeight * cam.aspect; } }
-        Vector3 previousPosition;
+        private Vector3 previousPosition;
+        [Header("Update")]
+        public bool manualUpdate = false;
+        public bool forceDisableBoundaries = false;
 
         [Header("Background")]
         public bool anchorBackgroundX = false;
@@ -52,7 +55,7 @@ namespace TUFF
         [HideInInspector] public Vector3 orgPosition;
         private Vector2 min { get { return si.trueMin; } }
         private Vector2 max { get { return si.trueMax; } }
-        Tween tween;
+        private Tween tween;
 
         private void Awake()
         {
@@ -72,12 +75,18 @@ namespace TUFF
         {
             previousPosition = transform.position;
             GetParallaxOriginalPosition();
-            UpdateCamera();
+            if (!manualUpdate)
+            {
+                UpdateCamera();
+            }
         }
 
         private void Update()
         {
-            UpdateCamera();
+            if (!manualUpdate)
+            {
+                UpdateCamera();
+            }
         }
 
         /// <summary>
@@ -111,11 +120,25 @@ namespace TUFF
 
             //Debug.Log($"W: {camHalfWidth}, H: {camHalfHeight}");
             if (!si) return;
-            transform.position = ClampVector(transform.position);
             GetCameraBoundaries(out Vector2 clampMinPos, out Vector2 clampMaxPos);
+            ClampCamera();
 
             UpdateParallax(clampMinPos, clampMaxPos);
         }
+
+        public void ClampCamera()
+        {
+            if (!si) return;
+            if (forceDisableBoundaries) return;
+            GetCameraBoundaries(out Vector2 clampMinPos, out Vector2 clampMaxPos);
+            transform.position = new Vector3
+                    (
+                        Mathf.Clamp(transform.position.x, clampMinPos.x, clampMaxPos.x),
+                        Mathf.Clamp(transform.position.y, clampMinPos.y, clampMaxPos.y),
+                        transform.position.z
+                    );
+        }
+
         public void GetCameraBoundaries(out Vector2 clampMinPos, out Vector2 clampMaxPos)
         {
             clampMinPos = Vector2.zero;
@@ -144,7 +167,6 @@ namespace TUFF
 
         public void UpdateParallax(Vector2 minPos, Vector2 maxPos)
         {
-
             if (background != null)
             {
                 Vector2 minimumPos = min + (Vector2)backgroundSpr.bounds.size * 0.5f;
@@ -255,7 +277,6 @@ namespace TUFF
         {
             if (!FollowerInstance.player || !FollowerInstance.player.controller)
             {
-
                 return Vector3.zero;
             }
             return FollowerInstance.player.controller.transform.position;
@@ -273,6 +294,10 @@ namespace TUFF
                                         if (rememberToEnableCamera) DisableCameraFollow(false);
                                         cameraMove.onMovementEnd?.Invoke();
                                     });
+            if (cameraMove.timeDuration <= 0)
+            {
+                tween.Complete();
+            }
         }
 
         public void ShakeCamera(CameraShake cameraShake)
@@ -294,13 +319,12 @@ namespace TUFF
                     KillTween();
                     DisableCameraFollow(cameraShake.disableCameraFollow);
                     cameraShake.onShakeEnd?.Invoke();
-                }
-                );
+                });
         }
         public Vector3 ClampVector(Vector3 vector)
         {
-            //return vector;
             if (!si) return vector;
+            if (forceDisableBoundaries) return vector;
 
             GetCameraBoundaries(out Vector2 clampMinPos, out Vector2 clampMaxPos);
             vector = new Vector3
