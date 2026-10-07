@@ -7,7 +7,7 @@ namespace TUFF
 {
     public static class SaveDataConverter
     {
-        public static readonly string SAVE_PATH = Application.dataPath + @"/PlayerData/"; 
+        public static readonly string SAVE_PATH = Application.persistentDataPath + @"/PlayerData/"; 
         public const string SAVE_FILE_NAME = @"save";
         public const string SAVE_FILE_EXT = @".sav";
         public const string CONFIG_FILE = @"config.cfg";
